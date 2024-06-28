@@ -1,7 +1,549 @@
-# Applications
+# ARIMA Model
 
-Some _significant_ applications are demonstrated in this chapter.
+```{r}
+library(kableExtra)
+library(tidyverse)
+library(forecast)
+library(tseries)
+library(lmtest)
 
-## Example one
+ 
 
-## Example two
+#load csv from github(uploaded for Assignment_02_Group_04)
+BitCoin <- read.csv("https://raw.githubusercontent.com/shakibed/Final_Project_Group_04/main/BTC-Monthly.csv", stringsAsFactors = FALSE)
+
+#convert it to date
+BitCoin$Date <- as.Date(BitCoin$Date)
+
+#it shows no missing value found
+# Copy the bitcoin data frame to a new data frame named BitCoin_df
+BitCoin_df<- BitCoin
+
+
+# Create 'month' and 'year' columns in the BitCoin_df data frame
+BitCoin_df <- BitCoin_df %>%
+  mutate(
+    month = format(Date, "%m"),
+    year = format(Date, "%Y")
+  ) 
+```
+
+
+
+```{r}
+# Convert to time series object
+bitcoin_ts <- ts(BitCoin_df$Close, start = c(as.numeric(format(min(BitCoin_df$Date), "%Y")), as.numeric(format(min(BitCoin_df$Date), "%m"))), frequency = 12)
+```
+ 
+ 
+ 
+  - Create ACF & PACF plots of the time series data set with maximum lag of 24. Explain the outcome and comment on the dataset’s nature.
+  - Perform ADF test. Explain the outcome.
+  - Explain if the dataset is stationary or not.
+  - Create QQ plot & perform Shapiro-Wilk test.
+  - If the dataset is not stationary, then make it stationary by differencing. Show a plot of the dataset after differencing and perform ADF test on differenced dataset to check stationarity again.
+  - Perform ACF & PACF test to find the probable model candidates. Explain the outcome of the plots.
+  - Perform EACF test to comprehensively test the possible candidate models. Mention the models that you have selected for modeling (select at least 3 models).
+  - Estimate the ARIMA parameters by creating the above selected models. Perform coeftest on each model. Explain the outcome from the level of significance.
+  - Evaluate the models through AIC & BIC tests.
+  - From outcome of above two steps select best two models. Explain why you have chosen those two models.
+  - Assess the chosen two models through accuracy test.
+  - Perform residual analysis of the two models and create line & scatter plot of the residuals. Explain the outcome.
+  - Create a histogram plot of the residuals of the two models. Explain the outcome.
+  - Create ACF & PACF plots of residuals of the two models. Explain the outcome.
+  - Create QQ plot of residuals of the two models. Explain the outcome.
+  - Perform Shapiro-Wilk test on residuals of the two models. Explain the outcome.
+  - Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model. 
+ 
+## Create ACF & PACF plots of the time series data set with maximum lag of 24. Explain the outcome and comment on the dataset’s nature.
+
+
+```{r, figures-side, fig.show="hold", out.width="50%"}
+
+# ACF & PACF plots with maximum lag of 24
+acf(bitcoin_ts, lag.max = 24, main = "ACF of Bitcoin Prices")
+pacf(bitcoin_ts, lag.max = 24, main = "PACF of Bitcoin Prices")
+
+
+```
+
+_**Explanation of ACF Plot**_
+
+- The ACF (Autocorrelation Function) plot provided shows the autocorrelation of Bitcoin prices over different lags up to 24 days.
+- The first few lags show very high autocorrelation, close to 1.0. This indicates that Bitcoin prices are strongly correlated with their recent past values.
+
+- The autocorrelation values gradually decline as the lag increases. This tells us that the data has a pattern that lasts a while and what happened in the past continues to influence what happens in the future for a longer period.
+
+_**Nature of the Dataset:**_
+
+- Non-Stationarity: The high initial autocorrelation and gradual decline suggest that the Bitcoin price series is likely non-stationary. Non-stationary time series often exhibit trends, seasonal patterns, or other forms of long-term dependencies.
+- Trend: The high autocorrelation at lag 1 and significant autocorrelation at subsequent lags imply that the series likely has a trend component. 
+- Seasonality: The plot does not clearly indicate strong seasonality, but further investigation might be needed to confirm this.
+
+_**In summary,**_ 
+- We identified data is likely non-stationary with a trend. 
+- Differencing and possibly transformation (e.g., logarithms) might be necessary to stabilize the mean and variance before applying forecasting models.
+
+
+_**Explanation of PACF Plot**_
+
+The PACF (Partial Autocorrelation Function) plot of Bitcoin prices provides insights into the time series data's nature, after removing the effects of intervening values.
+- The PACF at lag 1 is significantly high, close to 0.8. This indicates a strong direct relationship between the current value and its immediate past value.
+- After lag 1, the partial autocorrelations drop significantly and most of them are within the 95% confidence interval .This implies that differencing the series (likely once, i.e., d=1d=1) may help in achieving stationarity.
+
+- The PACF does not show significant spikes at higher lags, which suggests that the direct influence of past values decreases quickly after the first lag.
+
+_**Nature of the Dataset:**_
+
+- Non-Stationarity:Similar to the ACF plot, the high initial value in the PACF suggests that the series is non-stationary and likely has a trend component.
+
+- Seasonality: The absence of significant spikes at higher lags suggests that there is no strong seasonality in the dataset.
+
+_**In summary,**_ 
+
+- The PACF plot supports the earlier observation that the Bitcoin price series is non-stationary with a trend and follows an autoregressive process, primarily influenced by its immediate past value. 
+- Using differencing to make the series stationary, followed by fitting an ARIMA model, should yield a good forecasting model. 
+- The high initial PACF value suggests that an AR(1) term will be significant in the model.
+
+## Perform ADF test. Explain the outcome. 
+
+
+
+```{r}
+# Perform ADF test
+adf_test <- adf.test(bitcoin_ts)
+print(adf_test)
+
+```
+
+_**In summary,Augmented Dickey-Fuller Test**_ 
+
+- The Augmented Dickey-Fuller (ADF) test is used to check if a time series is stationary. 
+
+- The time series data is likely not stationary. 
+- Since the p-value is greater than 0.05 we fail to reject the null hypothesis. Means time series is non-stationary.
+- differencing might be needed to make it stationary before further analysis.
+
+Outcome:
+- This means that we do not have enough evidence to say that the Bitcoin time series is stationary.
+
+
+
+## Explain if the dataset is stationary or not. 
+
+Based on the results from the ACF, PACF, and Augmented Dickey-Fuller (ADF) tests, we can conclude the following:
+
+ACF and PACF Results:
+
+ACF: The high autocorrelation at the initial lags and gradual decline suggest a persistent pattern and trend in the data, indicating non-stationarity.
+PACF: The significant spike at lag 1 and quick drop-off thereafter further support the presence of a trend and non-stationarity.
+ADF Test Result:
+
+p-value = 0.3385: This high p-value indicates that we fail to reject the null hypothesis of the ADF test, suggesting that the Bitcoin price series is non-stationary.
+Conclusion:
+
+Non-Stationary Data: The combined evidence from the ACF, PACF, and ADF tests strongly indicates that the Bitcoin price series is non-stationary and exhibits a trend component. Differencing the series is likely required to achieve stationarity for further analysis and modeling.
+ 
+
+
+## Create QQ plot & perform Shapiro-Wilk test. 
+
+
+```{r}
+# Perform QQ plot and Shapiro-Wilk test
+qqnorm(bitcoin_ts, main = "QQ Plot of Bitcoin Prices")
+qqline(bitcoin_ts, col = "red")
+
+shapiro_test <- shapiro.test(bitcoin_ts)
+print(shapiro_test)
+
+```
+
+_**Code explanation here**_
+
+- The Bitcoin prices do not follow a normal distribution. 
+- The points on the left side of the plot (lower quantiles) and right side (higher quantiles) deviate significantly from the red line,and the clustering indicate that the data is skewed and has heavier tails than a normal distribution. 
+- The points in the middle are somewhat closer to the red line but still show noticeable deviation. This suggests that the central part of the distribution does not perfectly follow a normal distribution.
+ 
+
+## If the dataset is not stationary, then make it stationary by differencing. Show a plot of the dataset after differencing and perform ADF test on differenced dataset to check stationarity again.
+
+
+```{r}
+# If the dataset is not stationary, then make it stationary by differencing
+bitcoin_diff <- diff(bitcoin_ts, differences = 1)
+
+# Plot the differenced data
+plot(bitcoin_diff, main = "Differenced Bitcoin Prices", ylab = "Differenced Prices", xlab = "Time")
+
+# Perform ADF test on differenced data
+adf_test_diff <- adf.test(bitcoin_diff)
+print(adf_test_diff)
+
+```
+
+Stationarity:
+- Given a very small p-value (typically less than 0.05) from the ADF test, we reject the null hypothesis, indicating that the series is stationary.
+- The differencing appears to have stabilized the mean of the time series, making it more suitable for further time series modeling techniques.
+- The plot appears to be centered around zero and does not exhibit a clear trend or seasonal pattern. 
+- Stationarity means the statistical properties of the series (like mean and variance) are constant over time.
+
+
+## Perform ACF & PACF test to find the probable model candidates. Explain the outcome of the plots.
+
+
+```{r}
+
+# ACF & PACF plots of differenced data to find the probable model candidates
+acf(bitcoin_diff, lag.max = 24, main = "ACF of Differenced Bitcoin Prices")
+pacf(bitcoin_diff, lag.max = 24, main = "PACF of Differenced Bitcoin Prices")
+
+
+```
+
+Code explanation here
+
+Stationarity:
+The ACF plot of the differenced Bitcoin prices shows a significant autocorrelation at lag 1 and quickly diminishing autocorrelations at higher lags. This suggests that the first differencing has effectively made the series stationary and has successfully removed trends and seasonality
+ 
+
+Model Identification:
+The significant autocorrelation at lag 1 suggests that an ARIMA model with an AR (autoregressive) term might be appropriate. Specifically, an ARIMA(1,1,0) or ARIMA(1,1,1) model could be considered, 
+where:
+- The first "1" indicates one AR term.
+- The "1" indicates first differencing.
+- The last "0" or "1" indicates the number of MA (moving average) terms.
+ 
+- he differenced Bitcoin prices seem to have eliminated much of the non-stationarity, but there is still some autocorrelation present, as indicated by the significant spikes at certain lags.
+- This suggests that while differencing has helped stabilize the series, it may not have completely removed all dependencies between observations.
+- An ARIMA model could be appropriate for further analysis, with the AR component determined by the significant lags observed in the PACF plot.
+
+
+## Perform EACF test to comprehensively test the possible candidate models. Mention the models that you have selected for modeling (select at least 3 models).
+
+
+```{r}
+# Perform EACF test (Enhanced ACF test)
+# Install and load eacf package if necessary
+# install.packages("TSA")
+library(TSA)
+eacf(bitcoin_diff,ar.max = 3,ma.max = 3)
+
+
+
+```
+ARIMA(0, d, 0)
+
+ARIMA(0, d, 3)
+
+ARIMA(1, d, 3)
+ARIMA(2, d, 0)
+
+ARIMA(2, d, 3)
+ARIMA(3, d, 1)
+ARIMA(3, d, 3)
+
+-ARIMA(0, d, 1)
+-ARIMA(0, d, 2)
+-ARIMA(1, d, 2)
+-ARIMA(2, d, 2)
+
+Code explanation here
+The EACF (Extended Autocorrelation Function) table is used in the identification of ARMA (AutoRegressive Moving Average) models. In the table, 'o' indicates non-significant (near zero) values, and 'x' indicates significant values.
+In this case, the smallest rectangle of 'o's is found for AR = 0 and MA = 2:
+
+Thus, an ARMA(0, 2) model might be a good starting point.
+
+This is just one method for model identification. 
+we will use other diagnostics and criteria, such as AIC (Akaike Information Criterion) or BIC (Bayesian Information Criterion), to confirm the best model fit.
+
+
+## Estimate the ARIMA parameters by creating the above selected models. Perform coeftest on each model. Explain the outcome from the level of significance.
+-ARIMA(0, d, 1)
+-ARIMA(0, d, 2)
+-ARIMA(1, d, 2)
+-ARIMA(2, d, 2)
+Based on the EACF, we select the ARIMA parameters of models (0,1,1), (0,1,2), (3,1,1)
+
+
+```{r}
+#ARIMA(0, 1, 1)
+model_011 <- Arima(bitcoin_diff, order = c(0, 1, 1))
+coeftest(model_011)
+
+```
+
+```{r}
+#ARIMA(0, 1, 2)
+model_012 <- Arima(bitcoin_diff, order = c(0, 1, 2))
+coeftest(model_012)
+
+```
+
+```{r}
+#ARIMA(1, 1, 2)
+model_112 <- Arima(bitcoin_diff, order = c(1, 1, 2))
+coeftest(model_112)
+
+```
+
+
+```{r}
+#ARIMA(2, 1, 2)
+model_212 <- Arima(bitcoin_diff, order = c(2, 1, 2))
+coeftest(model_212)
+
+```
+
+
+```{r}
+#-ARIMA(0, d, 1)
+#-ARIMA(0, d, 2)
+#-ARIMA(1, d, 2)
+#-ARIMA(2, d, 2)
+# Selecting at least 3 models based on the tests
+
+
+# Estimate the ARIMA parameters by creating the models and perform coeftest on each model
+
+```
+
+-ARIMA(1, d, 2)
+-ARIMA(0, d, 1)
+-ARIMA(0, d, 2)
+-ARIMA(2, d, 2)
+
+Code explanation here
+Explanation of Coefficient Test Results for ARIMA Models
+Background: The coeftest function in R is used to test the statistical significance of the coefficients in an ARIMA model. The significance is assessed using a z-test, where the p-value helps us determine whether each coefficient is significantly different from zero.
+
+Model 1: ARIMA(1, 1, 1)
+Outcome Explanation:
+
+- ar1 (Autoregressive term): The p-value is 0.60682, which is greater than 0.05. This means the ar1 term is not statistically significant, indicating it may not be necessary for the model.
+- ma1 (Moving Average term): The p-value is 0.08135, which is slightly higher than 0.05 but below 0.1. This term is marginally significant (often denoted with a dot), meaning it has a weak influence on the model.
+Interpretation: In simple terms, neither of the coefficients in Model 1 are strongly significant, suggesting this model might not be the best fit for the data.
+
+Model 2: ARIMA(2, 1, 2)
+Outcome Explanation:
+
+-ar1: The p-value is 0.0007635, which is much less than 0.05. This term is highly significant.
+-ar2: The p-value is 0.0041544, which is also less than 0.05. This term is significant.
+-ma1: The p-value is 1.312e-07, which is extremely small. This term is highly significant.
+-ma2: The p-value is 3.469e-05, which is also very small. This term is highly significant.
+Interpretation: All coefficients in Model 2 are highly significant, suggesting that this model is a very good fit for the data.
+
+Model 3: ARIMA(0, 1, 1)
+Outcome Explanation:
+
+ma1: The p-value is 0.006454, which is less than 0.05. This term is significant.
+Interpretation: The coefficient in Model 3 is significant, indicating that this model also fits the data reasonably well.
+
+Summary
+Model 1: The coefficients are not significant, suggesting this model might not be the best fit for the data.
+Model 2: All coefficients are highly significant, indicating this model is a very good fit for the data.
+Model 3: The coefficient is significant, suggesting this model fits the data reasonably well.
+
+In simple terms, Model 2 (ARIMA(2, 1, 2)) appears to be the best model among the three tested, as all its coefficients are highly significant. This suggests that the features it includes are very important for accurately modeling the Bitcoin time series data.
+
+
+
+
+
+## Evaluate the models through AIC & BIC tests.
+```{r}
+# Extract AIC and BIC values
+model_011
+model_012
+model_112
+model_212
+
+aic_values <- c(AIC(model_011), AIC(model_012), AIC(model_112),AIC(model_212))
+bic_values <- c(BIC(model_011), BIC(model_012), BIC(model_112), BIC(model_212))
+
+# Create a data frame
+print_all_model_AIC_BIC <- data.frame(
+  Model = c("model_011", "model_012", "model_112", "model_212"),
+  AIC = aic_values,
+  BIC = bic_values
+)
+
+print(print_all_model_AIC_BIC)
+
+```
+
+
+
+Code explanation here
+- Based on AIC, Model 2 (ARIMA(2, 1, 2)) is the best model, as it has the lowest AIC value, suggesting a good fit to the data.
+- Based on BIC, Model 3 (ARIMA(0, 1, 1)) is the best model, as it has the lowest BIC value, indicating it strikes the best balance between fit and simplicity.
+- Thus, Model 2 is preferable for a better fit, but if simplicity and avoiding overfitting are more important, Model 3 would be the better choice.
+
+## From outcome of above two steps select best two models. Explain why you have chosen those two models.
+
+
+```{r}
+# Select best two models based on AIC and BIC
+#best_model1 <- model2
+#best_model2 <- model3
+
+```
+
+Code explanation here
+
+
+## Assess the chosen two models through accuracy test.
+
+
+```{r}
+# Assess the chosen two models through accuracy test
+
+model_012 = Arima(bitcoin_diff, order = c(0, 1, 2))
+model_212 = Arima(bitcoin_diff, order = c(2, 1, 2))
+
+accuracy_012 <- accuracy(model_012)
+accuracy_212 <- accuracy(model_212)
+
+
+
+df_models <- data.frame(
+rbind(accuracy_012, accuracy_212)
+)
+colnames(df_models) <- c("ME", "RMSE", "MAE", "MPE", "MAPE", "MASE", "ACF1")
+rownames(df_models) <- c("ARIMA(0,1,2)",  "ARIMA(2,1,2)")
+
+kable(df_models, digits = 2, formats="html", row.names = TRUE) %>%
+  kable_styling(full_width = F, font_size = 12, position = "center")
+```
+
+Code explanation here
+
+
+### Perform residual analysis of the two models and create line & scatter plot of the residuals. Explain the outcome.
+
+
+```{r}
+# Extract residuals from the models
+residuals_012 <- residuals(model_012)
+residuals_212 <- residuals(model_212)
+
+# Set up the plotting area to have 2 rows and 2 columns for 4 plots
+par(mfrow = c(1, 1))
+
+# Plot 1: Time series plot of standardized residuals for Model 112 (line plot)
+plot(residuals_012,
+     xlab = "Year Index", ylab = "Residuals",
+     main = "Time series plot of standardized residuals - Model 012",
+     type = "l", col = "blue")
+abline(h = 0, col = "red", lty = 2)
+
+# Plot 2: Scatter plot of standardized residuals for Model 012
+plot(residuals_012,
+     xlab = "Year Index", ylab = "Residuals",
+     main = "Scatter plot of standardized residuals - Model 012",
+     pch = 16, col = "blue")
+abline(h = 0, col = "red", lty = 2)
+
+# Plot 3: Time series plot of standardized residuals for Model 212 (line plot)
+plot(residuals_212,
+     xlab = "Year Index", ylab = "Residuals",
+     main = "Time series plot of standardized residuals - Model 212",
+     type = "l", col = "green")
+abline(h = 0, col = "red", lty = 2)
+
+# Plot 4: Scatter plot of standardized residuals for Model 212
+plot(residuals_212,
+     xlab = "Year Index", ylab = "Residuals",
+     main = "Scatter plot of standardized residuals - Model 212",
+     pch = 16, col = "green")
+abline(h = 0, col = "red", lty = 2)
+
+ 
+
+```
+
+Code explanation here
+
+
+
+## Create a histogram plot of the residuals of the two models. Explain the outcome.
+
+
+```{r}
+# Histogram plot of the residuals
+ggplot() +
+  geom_histogram(aes(x = residuals_012), binwidth = 500, color = "black", fill = "blue", alpha = 0.7) +
+  labs(title = "Histogram of Residuals for Best Model 012", x = "Residuals", y = "Frequency") +
+  theme_minimal()
+
+ggplot() +
+  geom_histogram(aes(x = residuals_212), binwidth = 500, color = "black", fill = "blue", alpha = 0.7) +
+  labs(title = "Histogram of Residuals for Best Model 212", x = "Residuals", y = "Frequency") +
+  theme_minimal()
+```
+
+Code explanation here
+
+## Create ACF & PACF plots of residuals of the two models. Explain the outcome.
+
+
+```{r}
+# ACF & PACF plots of residuals
+acf(residuals_012, main = "ACF of Residuals for Best Model 012")
+pacf(residuals_012, main = "PACF of Residuals for Best Model 1")
+
+acf(residuals_212, main = "ACF of Residuals for Best Model 212")
+pacf(residuals_212, main = "PACF of Residuals for Best Model 212")
+
+
+```
+
+Code explanation here
+
+
+
+
+
+
+## Create QQ plot of residuals of the two models. Explain the outcome.
+
+
+```{r}
+# Create QQ plot of residuals
+qqnorm(residuals_012, main = "QQ Plot of Residuals for Best Model 011")
+qqline(residuals_012, col = "red")
+
+qqnorm(residuals_212, main = "QQ Plot of Residuals for Best Model 212")
+qqline(residuals_212, col = "red")
+
+```
+
+Code explanation here
+
+
+## Perform Shapiro-Wilk test on residuals of the two models. Explain the outcome.
+
+
+```{r}
+# Perform Shapiro-Wilk test on residuals
+shapiro_test_model012 <- shapiro.test(residuals_012)
+shapiro_test_model212 <- shapiro.test(residuals_212)
+
+# Print the result of the Shapiro-Wilk test
+print(shapiro_test_model012)
+print(shapiro_test_model212)
+
+```
+
+Code explanation here
+
+
+### Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model.
+
+
+```{r}
+ 
+
+```
+
+Code explanation here

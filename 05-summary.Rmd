@@ -1,3 +1,53 @@
-# Final Words
+# Forecasting
 
-We have finished a nice book.
+
+```{r}
+# Load necessary libraries
+library(forecast)
+library(tidyverse)
+library(kableExtra)
+# Load the data
+BitCoin <- read.csv("https://raw.githubusercontent.com/shakibed/Final_Project_Group_04/main/BTC-Monthly.csv", stringsAsFactors = FALSE)
+
+# Convert date
+BitCoin$Date <- as.Date(BitCoin$Date)
+
+# Convert to time series object
+bitcoin_ts <- ts(BitCoin$Close, start = c(as.numeric(format(min(BitCoin$Date), "%Y")), as.numeric(format(min(BitCoin$Date), "%m"))), frequency = 12)
+
+
+```
+
+
+
+### Explanation of the Forecast Table  
+
+```{r}
+bitcoin_forecast_fit_model <- Arima(bitcoin_ts,c(2,1,2))
+forecast_next_12 <- forecast(bitcoin_forecast_fit_model,h=12)
+kable(forecast_next_12, digits = 2, formats="html", row.names = TRUE) %>%
+  kable_styling(full_width = F, font_size = 12, position = "center")
+```
+
+
+The forecast table provides the projected Bitcoin prices for the next 12 months along with their confidence intervals. Here's what each column represents:
+
+
+  -Point Forecast: This is the predicted value of the Bitcoin price for each month. It's the best estimate based on the ARIMA(2,1,2) model.
+  - Lo 80 and Hi 80: These columns represent the lower and upper bounds of the 80% confidence interval. There's an 80% chance that the actual Bitcoin price will fall within this range.
+  - Lo 95 and Hi 95: These columns represent the lower and upper bounds of the 95% confidence interval. There's a 95% chance that the actual Bitcoin price will fall within this range.
+
+## Key Insights
+  - Predicted Growth: The point forecasts show a general upward trend in Bitcoin prices over the next 12 months, with the price starting at approximately $36,802.62 in December 2023 and gradually increasing to approximately $37,310.22 by November 2024.
+  - Confidence Intervals: The confidence intervals (both 80% and 95%) widen over time. This indicates increasing uncertainty in the forecast as we move further into the future. For example, the 80% confidence interval for December 2023 is $31,342.01 to $42,263.23, while for November 2024, it is $14,844.41 to $59,776.03.
+  - Risk and Uncertainty: The widening confidence intervals highlight the volatility and uncertainty inherent in forecasting Bitcoin prices. This is important for decision-making and risk management.
+
+### Create a plot of the forecasted data points 
+
+```{r}
+plot(forecast_next_12, main = "ARIMA(2,1,2) Model Forecast")
+```
+
+```
+ 
+

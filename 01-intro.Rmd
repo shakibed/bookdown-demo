@@ -1,4 +1,94 @@
-# Introduction {#intro}
+# Data Preprocessing/Cleaning {#intro}
+ 
+## Loading the Dataset{-}
+  
+  - Load the dataset from csv into a data frame named BitCoin.
+  - Check the data types of the features.
+  - Assign appropriate data type to features.
+  - Check the structure of the data frame.
+  - Check if there’s any missing value. If yes, treat missing values through         appropriate methodology.
+
+
+### Load the dataset from csv into a data frame named BitCoin.{-}
+```{r}
+
+#("tidyverse")
+#Load the dataset from csv into a data frame named BitCoin.
+library(tidyverse)
+#load csv from github(uploaded for Assignment_02_Group_04)
+bitcoin <- read.csv("https://raw.githubusercontent.com/shakibed/Final_Project_Group_04/main/BTC-Monthly.csv", stringsAsFactors = FALSE)
+view(bitcoin)
+```
+
+## Check the data types of the features.{-}
+
+
+```{r}
+#Check the data types of the features.
+glimpse(bitcoin)
+
+
+```
+
+_**Code explanation here**_
+
+We checked the data types using glimpse(bitcoin) and found we have two columns in data set.
+We need to convert the Date column from chr (character) type to Date type because our target is to work with a time series object or perform linear regression analysis.
+
+
+
+## Assign appropriate data type to features.{-}
+
+
+```{r}
+bitcoin$Date <- as.Date(bitcoin$Date)
+glimpse(bitcoin)
+
+
+```
+
+
+_**Code explanation here**_
+
+* This will allow us to properly utilize the Date column in time series analysis or linear regression models.
+
+## Check the structure of the data frame.{-}
+
+
+```{r}
+#Check the data types of the features.
+str(bitcoin)
+
+
+```
+
+_**Code explanation here**_
+
+* We checked the structure of the data frame using str(bitcoin) and found the following:
+* The Date column is already in the Date format, and the Close column is of type num (numeric). 
+* Since the Date column is correctly formatted as a date, it is ready for time series analysis or linear regression models without any further modification.
+
+
+## Check if there’s any missing value. If yes, treat missing values through  appropriate methodology.{-}
+
+
+```{r}
+#Check if there’s any missing value. If yes, treat missing values through appropriate methodology
+colSums(is.na(bitcoin))
+#it shows no missing value found
+
+
+```
+
+_**Code explanation here**_
+
+
+* We checked for missing values in the bitcoin data frame using colSums(is.na(bitcoin)) and found the following:
+* This indicates that there are no missing values in either the Date or Close columns. Since there are no missing values, no further action is needed to treat missing values.
+
+
+
+
 
 You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
 
@@ -6,10 +96,11 @@ Figures and tables with captions will be placed in `figure` and `table` environm
 
 ```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center'}
 par(mar = c(4, 4, .1, .1))
-plot(pressure, type = 'b', pch = 19)
-```
-
-Reference a figure by its code chunk label with the `fig:` prefix, e.g., see Figure \@ref(fig:nice-fig). Similarly, you can reference tables generated from `knitr::kable()`, e.g., see Table \@ref(tab:nice-tab).
+plot(pressure, type = 'b', pch = 19)  
+  
+  
+  
+  
 
 ```{r nice-tab, tidy=FALSE}
 knitr::kable(
