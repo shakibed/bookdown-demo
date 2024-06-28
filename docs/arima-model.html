@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 ARIMA Model | Final Project-Group 04</title>
+  <meta name="description" content="Regression &amp; Time Series analysis and forecasting techniques on Bitcoin historical price." />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 ARIMA Model | Final Project-Group 04" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Regression &amp; Time Series analysis and forecasting techniques on Bitcoin historical price." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 ARIMA Model | Final Project-Group 04" />
+  
+  <meta name="twitter:description" content="Regression &amp; Time Series analysis and forecasting techniques on Bitcoin historical price." />
+  
+
+<meta name="author" content="Shakib-241001661,Shudeshna-241000261,Mithun-241002261,Pradipto-241002161,Mufrad-241001461,Shahriar Islam-241000461" />
+
+
+<meta name="date" content="2024-06-29" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="regression-analysis.html"/>
+<link rel="next" href="forecasting.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Objective of the Project</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#applied-model"><i class="fa fa-check"></i>Applied Model</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Data Preprocessing/Cleaning</a>
+<ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#loading-the-dataset"><i class="fa fa-check"></i>Loading the Dataset</a>
+<ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#load-the-dataset-from-csv-into-a-data-frame-named-bitcoin."><i class="fa fa-check"></i>Load the dataset from csv into a data frame named BitCoin.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#check-the-data-types-of-the-features."><i class="fa fa-check"></i>Check the data types of the features.</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#assign-appropriate-data-type-to-features."><i class="fa fa-check"></i>Assign appropriate data type to features.</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#check-the-structure-of-the-data-frame."><i class="fa fa-check"></i>Check the structure of the data frame.</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#check-if-theres-any-missing-value.-if-yes-treat-missing-values-through-appropriate-methodology."><i class="fa fa-check"></i>Check if there’s any missing value. If yes, treat missing values through appropriate methodology.</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html"><i class="fa fa-check"></i><b>2</b> Descriptive Analytics</a>
+<ul>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#create-a-monthly-boxplot-of-prices."><i class="fa fa-check"></i>Create a monthly boxplot of prices.</a></li>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#create-a-yearly-boxplot-of-prices."><i class="fa fa-check"></i>Create a yearly boxplot of prices.</a></li>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#create-year-wise-trend-lines-of-prices."><i class="fa fa-check"></i>Create year wise trend lines of prices.</a>
+<ul>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#convert-the-bitcoin-data-frame-to-a-time-series-object-with-frequency-1"><i class="fa fa-check"></i>Convert the BitCoin data frame to a time series object with frequency 1</a></li>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#plot-the-time-series-of-monthly-prices-on-years.-use-blue-color-dots-to-plot-the-data-points.-connect-the-points-with-a-line."><i class="fa fa-check"></i>Plot the time series of monthly prices on years. Use blue color dots to plot the data points. Connect the points with a line.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#find-the-relationship-between-consecutive-months.-show-the-correlation-through-a-scatter-plot."><i class="fa fa-check"></i>Find the relationship between consecutive months. Show the correlation through a scatter plot.</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="regression-analysis.html"><a href="regression-analysis.html"><i class="fa fa-check"></i><b>3</b> Regression Analysis</a>
+<ul>
+<li class="chapter" data-level="3.0.1" data-path="regression-analysis.html"><a href="regression-analysis.html#linear-regression"><i class="fa fa-check"></i><b>3.0.1</b> Linear Regression</a></li>
+<li class="chapter" data-level="3.0.2" data-path="regression-analysis.html"><a href="regression-analysis.html#quadratic-regression"><i class="fa fa-check"></i><b>3.0.2</b> Quadratic Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="arima-model.html"><a href="arima-model.html"><i class="fa fa-check"></i><b>4</b> ARIMA Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="arima-model.html"><a href="arima-model.html#create-acf-pacf-plots-of-the-time-series-data-set-with-maximum-lag-of-24.-explain-the-outcome-and-comment-on-the-datasets-nature."><i class="fa fa-check"></i><b>4.1</b> Create ACF &amp; PACF plots of the time series data set with maximum lag of 24. Explain the outcome and comment on the dataset’s nature.</a></li>
+<li class="chapter" data-level="4.2" data-path="arima-model.html"><a href="arima-model.html#perform-adf-test.-explain-the-outcome."><i class="fa fa-check"></i><b>4.2</b> Perform ADF test. Explain the outcome.</a></li>
+<li class="chapter" data-level="4.3" data-path="arima-model.html"><a href="arima-model.html#explain-if-the-dataset-is-stationary-or-not."><i class="fa fa-check"></i><b>4.3</b> Explain if the dataset is stationary or not.</a></li>
+<li class="chapter" data-level="4.4" data-path="arima-model.html"><a href="arima-model.html#create-qq-plot-perform-shapiro-wilk-test."><i class="fa fa-check"></i><b>4.4</b> Create QQ plot &amp; perform Shapiro-Wilk test.</a></li>
+<li class="chapter" data-level="4.5" data-path="arima-model.html"><a href="arima-model.html#if-the-dataset-is-not-stationary-then-make-it-stationary-by-differencing.-show-a-plot-of-the-dataset-after-differencing-and-perform-adf-test-on-differenced-dataset-to-check-stationarity-again."><i class="fa fa-check"></i><b>4.5</b> If the dataset is not stationary, then make it stationary by differencing. Show a plot of the dataset after differencing and perform ADF test on differenced dataset to check stationarity again.</a></li>
+<li class="chapter" data-level="4.6" data-path="arima-model.html"><a href="arima-model.html#perform-acf-pacf-test-to-find-the-probable-model-candidates.-explain-the-outcome-of-the-plots."><i class="fa fa-check"></i><b>4.6</b> Perform ACF &amp; PACF test to find the probable model candidates. Explain the outcome of the plots.</a></li>
+<li class="chapter" data-level="4.7" data-path="arima-model.html"><a href="arima-model.html#perform-eacf-test-to-comprehensively-test-the-possible-candidate-models.-mention-the-models-that-you-have-selected-for-modeling-select-at-least-3-models."><i class="fa fa-check"></i><b>4.7</b> Perform EACF test to comprehensively test the possible candidate models. Mention the models that you have selected for modeling (select at least 3 models).</a></li>
+<li class="chapter" data-level="4.8" data-path="arima-model.html"><a href="arima-model.html#estimate-the-arima-parameters-by-creating-the-above-selected-models.-perform-coeftest-on-each-model.-explain-the-outcome-from-the-level-of-significance."><i class="fa fa-check"></i><b>4.8</b> Estimate the ARIMA parameters by creating the above selected models. Perform coeftest on each model. Explain the outcome from the level of significance.</a></li>
+<li class="chapter" data-level="4.9" data-path="arima-model.html"><a href="arima-model.html#evaluate-the-models-through-aic-bic-tests."><i class="fa fa-check"></i><b>4.9</b> Evaluate the models through AIC &amp; BIC tests.</a></li>
+<li class="chapter" data-level="4.10" data-path="arima-model.html"><a href="arima-model.html#from-outcome-of-above-two-steps-select-best-two-models.-explain-why-you-have-chosen-those-two-models."><i class="fa fa-check"></i><b>4.10</b> From outcome of above two steps select best two models. Explain why you have chosen those two models.</a></li>
+<li class="chapter" data-level="4.11" data-path="arima-model.html"><a href="arima-model.html#assess-the-chosen-two-models-through-accuracy-test."><i class="fa fa-check"></i><b>4.11</b> Assess the chosen two models through accuracy test.</a>
+<ul>
+<li class="chapter" data-level="4.11.1" data-path="arima-model.html"><a href="arima-model.html#perform-residual-analysis-of-the-two-models-and-create-line-scatter-plot-of-the-residuals.-explain-the-outcome."><i class="fa fa-check"></i><b>4.11.1</b> Perform residual analysis of the two models and create line &amp; scatter plot of the residuals. Explain the outcome.</a></li>
+</ul></li>
+<li class="chapter" data-level="4.12" data-path="arima-model.html"><a href="arima-model.html#create-a-histogram-plot-of-the-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.12</b> Create a histogram plot of the residuals of the two models. Explain the outcome.</a></li>
+<li class="chapter" data-level="4.13" data-path="arima-model.html"><a href="arima-model.html#create-acf-pacf-plots-of-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.13</b> Create ACF &amp; PACF plots of residuals of the two models. Explain the outcome.</a></li>
+<li class="chapter" data-level="4.14" data-path="arima-model.html"><a href="arima-model.html#create-qq-plot-of-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.14</b> Create QQ plot of residuals of the two models. Explain the outcome.</a></li>
+<li class="chapter" data-level="4.15" data-path="arima-model.html"><a href="arima-model.html#perform-shapiro-wilk-test-on-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.15</b> Perform Shapiro-Wilk test on residuals of the two models. Explain the outcome.</a>
+<ul>
+<li class="chapter" data-level="4.15.1" data-path="arima-model.html"><a href="arima-model.html#select-the-best-model-from-the-above-two-models-using-the-outcome-of-all-the-above-analysis.-this-is-going-to-be-your-final-model."><i class="fa fa-check"></i><b>4.15.1</b> Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model.</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>5</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="5.0.1" data-path="forecasting.html"><a href="forecasting.html#explanation-of-the-forecast-table"><i class="fa fa-check"></i><b>5.0.1</b> Explanation of the Forecast Table</a></li>
+<li class="chapter" data-level="5.1" data-path="forecasting.html"><a href="forecasting.html#key-insights"><i class="fa fa-check"></i><b>5.1</b> Key Insights</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="forecasting.html"><a href="forecasting.html#create-a-plot-of-the-forecasted-data-points"><i class="fa fa-check"></i><b>5.1.1</b> Create a plot of the forecasted data points</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Final Project-Group 04</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="arima-model" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> ARIMA Model<a href="arima-model.html#arima-model" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="arima-model.html#cb53-1" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;kableExtra&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:dplyr&#39;:
+## 
+##     group_rows</code></pre>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="arima-model.html#cb56-1" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb56-2"><a href="arima-model.html#cb56-2" tabindex="-1"></a><span class="fu">library</span>(forecast)</span></code></pre></div>
+<pre><code>## Registered S3 method overwritten by &#39;quantmod&#39;:
+##   method            from
+##   as.zoo.data.frame zoo</code></pre>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="arima-model.html#cb58-1" tabindex="-1"></a><span class="fu">library</span>(tseries)</span>
+<span id="cb58-2"><a href="arima-model.html#cb58-2" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span></code></pre></div>
+<pre><code>## Loading required package: zoo</code></pre>
+<pre><code>## 
+## Attaching package: &#39;zoo&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     as.Date, as.Date.numeric</code></pre>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="arima-model.html#cb62-1" tabindex="-1"></a><span class="co">#load csv from github(uploaded for Assignment_02_Group_04)</span></span>
+<span id="cb62-2"><a href="arima-model.html#cb62-2" tabindex="-1"></a>BitCoin <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/shakibed/Final_Project_Group_04/main/BTC-Monthly.csv&quot;</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb62-3"><a href="arima-model.html#cb62-3" tabindex="-1"></a></span>
+<span id="cb62-4"><a href="arima-model.html#cb62-4" tabindex="-1"></a><span class="co">#convert it to date</span></span>
+<span id="cb62-5"><a href="arima-model.html#cb62-5" tabindex="-1"></a>BitCoin<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(BitCoin<span class="sc">$</span>Date)</span>
+<span id="cb62-6"><a href="arima-model.html#cb62-6" tabindex="-1"></a></span>
+<span id="cb62-7"><a href="arima-model.html#cb62-7" tabindex="-1"></a><span class="co">#it shows no missing value found</span></span>
+<span id="cb62-8"><a href="arima-model.html#cb62-8" tabindex="-1"></a><span class="co"># Copy the bitcoin data frame to a new data frame named BitCoin_df</span></span>
+<span id="cb62-9"><a href="arima-model.html#cb62-9" tabindex="-1"></a>BitCoin_df<span class="ot">&lt;-</span> BitCoin</span>
+<span id="cb62-10"><a href="arima-model.html#cb62-10" tabindex="-1"></a></span>
+<span id="cb62-11"><a href="arima-model.html#cb62-11" tabindex="-1"></a></span>
+<span id="cb62-12"><a href="arima-model.html#cb62-12" tabindex="-1"></a><span class="co"># Create &#39;month&#39; and &#39;year&#39; columns in the BitCoin_df data frame</span></span>
+<span id="cb62-13"><a href="arima-model.html#cb62-13" tabindex="-1"></a>BitCoin_df <span class="ot">&lt;-</span> BitCoin_df <span class="sc">%&gt;%</span></span>
+<span id="cb62-14"><a href="arima-model.html#cb62-14" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb62-15"><a href="arima-model.html#cb62-15" tabindex="-1"></a>    <span class="at">month =</span> <span class="fu">format</span>(Date, <span class="st">&quot;%m&quot;</span>),</span>
+<span id="cb62-16"><a href="arima-model.html#cb62-16" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">format</span>(Date, <span class="st">&quot;%Y&quot;</span>)</span>
+<span id="cb62-17"><a href="arima-model.html#cb62-17" tabindex="-1"></a>  ) </span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="arima-model.html#cb63-1" tabindex="-1"></a><span class="co"># Convert to time series object</span></span>
+<span id="cb63-2"><a href="arima-model.html#cb63-2" tabindex="-1"></a>bitcoin_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(BitCoin_df<span class="sc">$</span>Close, <span class="at">start =</span> <span class="fu">c</span>(<span class="fu">as.numeric</span>(<span class="fu">format</span>(<span class="fu">min</span>(BitCoin_df<span class="sc">$</span>Date), <span class="st">&quot;%Y&quot;</span>)), <span class="fu">as.numeric</span>(<span class="fu">format</span>(<span class="fu">min</span>(BitCoin_df<span class="sc">$</span>Date), <span class="st">&quot;%m&quot;</span>))), <span class="at">frequency =</span> <span class="dv">12</span>)</span></code></pre></div>
+<ul>
+<li>Create ACF &amp; PACF plots of the time series data set with maximum lag of 24. Explain the outcome and comment on the dataset’s nature.</li>
+<li>Perform ADF test. Explain the outcome.</li>
+<li>Explain if the dataset is stationary or not.</li>
+<li>Create QQ plot &amp; perform Shapiro-Wilk test.</li>
+<li>If the dataset is not stationary, then make it stationary by differencing. Show a plot of the dataset after differencing and perform ADF test on differenced dataset to check stationarity again.</li>
+<li>Perform ACF &amp; PACF test to find the probable model candidates. Explain the outcome of the plots.</li>
+<li>Perform EACF test to comprehensively test the possible candidate models. Mention the models that you have selected for modeling (select at least 3 models).</li>
+<li>Estimate the ARIMA parameters by creating the above selected models. Perform coeftest on each model. Explain the outcome from the level of significance.</li>
+<li>Evaluate the models through AIC &amp; BIC tests.</li>
+<li>From outcome of above two steps select best two models. Explain why you have chosen those two models.</li>
+<li>Assess the chosen two models through accuracy test.</li>
+<li>Perform residual analysis of the two models and create line &amp; scatter plot of the residuals. Explain the outcome.</li>
+<li>Create a histogram plot of the residuals of the two models. Explain the outcome.</li>
+<li>Create ACF &amp; PACF plots of residuals of the two models. Explain the outcome.</li>
+<li>Create QQ plot of residuals of the two models. Explain the outcome.</li>
+<li>Perform Shapiro-Wilk test on residuals of the two models. Explain the outcome.</li>
+<li>Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model.</li>
+</ul>
+<div id="create-acf-pacf-plots-of-the-time-series-data-set-with-maximum-lag-of-24.-explain-the-outcome-and-comment-on-the-datasets-nature." class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Create ACF &amp; PACF plots of the time series data set with maximum lag of 24. Explain the outcome and comment on the dataset’s nature.<a href="arima-model.html#create-acf-pacf-plots-of-the-time-series-data-set-with-maximum-lag-of-24.-explain-the-outcome-and-comment-on-the-datasets-nature." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="arima-model.html#cb64-1" tabindex="-1"></a><span class="co"># ACF &amp; PACF plots with maximum lag of 24</span></span>
+<span id="cb64-2"><a href="arima-model.html#cb64-2" tabindex="-1"></a><span class="fu">acf</span>(bitcoin_ts, <span class="at">lag.max =</span> <span class="dv">24</span>, <span class="at">main =</span> <span class="st">&quot;ACF of Bitcoin Prices&quot;</span>)</span>
+<span id="cb64-3"><a href="arima-model.html#cb64-3" tabindex="-1"></a><span class="fu">pacf</span>(bitcoin_ts, <span class="at">lag.max =</span> <span class="dv">24</span>, <span class="at">main =</span> <span class="st">&quot;PACF of Bitcoin Prices&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/figures-side-1.png" width="50%" /><img src="bookdown-demo_files/figure-html/figures-side-2.png" width="50%" /></p>
+<p><em><strong>Explanation of ACF Plot</strong></em></p>
+<ul>
+<li><p>The ACF (Autocorrelation Function) plot provided shows the autocorrelation of Bitcoin prices over different lags up to 24 days.</p></li>
+<li><p>The first few lags show very high autocorrelation, close to 1.0. This indicates that Bitcoin prices are strongly correlated with their recent past values.</p></li>
+<li><p>The autocorrelation values gradually decline as the lag increases. This tells us that the data has a pattern that lasts a while and what happened in the past continues to influence what happens in the future for a longer period.</p></li>
+</ul>
+<p><em><strong>Nature of the Dataset:</strong></em></p>
+<ul>
+<li>Non-Stationarity: The high initial autocorrelation and gradual decline suggest that the Bitcoin price series is likely non-stationary. Non-stationary time series often exhibit trends, seasonal patterns, or other forms of long-term dependencies.</li>
+<li>Trend: The high autocorrelation at lag 1 and significant autocorrelation at subsequent lags imply that the series likely has a trend component.</li>
+<li>Seasonality: The plot does not clearly indicate strong seasonality, but further investigation might be needed to confirm this.</li>
+</ul>
+<p><em><strong>In summary,</strong></em>
+- We identified data is likely non-stationary with a trend.
+- Differencing and possibly transformation (e.g., logarithms) might be necessary to stabilize the mean and variance before applying forecasting models.</p>
+<p><em><strong>Explanation of PACF Plot</strong></em></p>
+<p>The PACF (Partial Autocorrelation Function) plot of Bitcoin prices provides insights into the time series data’s nature, after removing the effects of intervening values.
+- The PACF at lag 1 is significantly high, close to 0.8. This indicates a strong direct relationship between the current value and its immediate past value.
+- After lag 1, the partial autocorrelations drop significantly and most of them are within the 95% confidence interval .This implies that differencing the series (likely once, i.e., d=1d=1) may help in achieving stationarity.</p>
+<ul>
+<li>The PACF does not show significant spikes at higher lags, which suggests that the direct influence of past values decreases quickly after the first lag.</li>
+</ul>
+<p><em><strong>Nature of the Dataset:</strong></em></p>
+<ul>
+<li><p>Non-Stationarity:Similar to the ACF plot, the high initial value in the PACF suggests that the series is non-stationary and likely has a trend component.</p></li>
+<li><p>Seasonality: The absence of significant spikes at higher lags suggests that there is no strong seasonality in the dataset.</p></li>
+</ul>
+<p><em><strong>In summary,</strong></em></p>
+<ul>
+<li>The PACF plot supports the earlier observation that the Bitcoin price series is non-stationary with a trend and follows an autoregressive process, primarily influenced by its immediate past value.</li>
+<li>Using differencing to make the series stationary, followed by fitting an ARIMA model, should yield a good forecasting model.</li>
+<li>The high initial PACF value suggests that an AR(1) term will be significant in the model.</li>
+</ul>
+</div>
+<div id="perform-adf-test.-explain-the-outcome." class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Perform ADF test. Explain the outcome.<a href="arima-model.html#perform-adf-test.-explain-the-outcome." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="arima-model.html#cb65-1" tabindex="-1"></a><span class="co"># Perform ADF test</span></span>
+<span id="cb65-2"><a href="arima-model.html#cb65-2" tabindex="-1"></a>adf_test <span class="ot">&lt;-</span> <span class="fu">adf.test</span>(bitcoin_ts)</span>
+<span id="cb65-3"><a href="arima-model.html#cb65-3" tabindex="-1"></a><span class="fu">print</span>(adf_test)</span></code></pre></div>
+<pre><code>## 
+##  Augmented Dickey-Fuller Test
+## 
+## data:  bitcoin_ts
+## Dickey-Fuller = -2.5743, Lag order = 4, p-value = 0.3385
+## alternative hypothesis: stationary</code></pre>
+<p><em><strong>In summary,Augmented Dickey-Fuller Test</strong></em></p>
+<ul>
+<li><p>The Augmented Dickey-Fuller (ADF) test is used to check if a time series is stationary.</p></li>
+<li><p>The time series data is likely not stationary.</p></li>
+<li><p>Since the p-value is greater than 0.05 we fail to reject the null hypothesis. Means time series is non-stationary.</p></li>
+<li><p>differencing might be needed to make it stationary before further analysis.</p></li>
+</ul>
+<p>Outcome:
+- This means that we do not have enough evidence to say that the Bitcoin time series is stationary.</p>
+</div>
+<div id="explain-if-the-dataset-is-stationary-or-not." class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Explain if the dataset is stationary or not.<a href="arima-model.html#explain-if-the-dataset-is-stationary-or-not." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Based on the results from the ACF, PACF, and Augmented Dickey-Fuller (ADF) tests, we can conclude the following:</p>
+<p>ACF and PACF Results:</p>
+<p>ACF: The high autocorrelation at the initial lags and gradual decline suggest a persistent pattern and trend in the data, indicating non-stationarity.
+PACF: The significant spike at lag 1 and quick drop-off thereafter further support the presence of a trend and non-stationarity.
+ADF Test Result:</p>
+<p>p-value = 0.3385: This high p-value indicates that we fail to reject the null hypothesis of the ADF test, suggesting that the Bitcoin price series is non-stationary.
+Conclusion:</p>
+<p>Non-Stationary Data: The combined evidence from the ACF, PACF, and ADF tests strongly indicates that the Bitcoin price series is non-stationary and exhibits a trend component. Differencing the series is likely required to achieve stationarity for further analysis and modeling.</p>
+</div>
+<div id="create-qq-plot-perform-shapiro-wilk-test." class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> Create QQ plot &amp; perform Shapiro-Wilk test.<a href="arima-model.html#create-qq-plot-perform-shapiro-wilk-test." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="arima-model.html#cb67-1" tabindex="-1"></a><span class="co"># Perform QQ plot and Shapiro-Wilk test</span></span>
+<span id="cb67-2"><a href="arima-model.html#cb67-2" tabindex="-1"></a><span class="fu">qqnorm</span>(bitcoin_ts, <span class="at">main =</span> <span class="st">&quot;QQ Plot of Bitcoin Prices&quot;</span>)</span>
+<span id="cb67-3"><a href="arima-model.html#cb67-3" tabindex="-1"></a><span class="fu">qqline</span>(bitcoin_ts, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="arima-model.html#cb68-1" tabindex="-1"></a>shapiro_test <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(bitcoin_ts)</span>
+<span id="cb68-2"><a href="arima-model.html#cb68-2" tabindex="-1"></a><span class="fu">print</span>(shapiro_test)</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  bitcoin_ts
+## W = 0.83358, p-value = 1.258e-09</code></pre>
+<p><em><strong>Code explanation here</strong></em></p>
+<ul>
+<li>The Bitcoin prices do not follow a normal distribution.</li>
+<li>The points on the left side of the plot (lower quantiles) and right side (higher quantiles) deviate significantly from the red line,and the clustering indicate that the data is skewed and has heavier tails than a normal distribution.</li>
+<li>The points in the middle are somewhat closer to the red line but still show noticeable deviation. This suggests that the central part of the distribution does not perfectly follow a normal distribution.</li>
+</ul>
+</div>
+<div id="if-the-dataset-is-not-stationary-then-make-it-stationary-by-differencing.-show-a-plot-of-the-dataset-after-differencing-and-perform-adf-test-on-differenced-dataset-to-check-stationarity-again." class="section level2 hasAnchor" number="4.5">
+<h2><span class="header-section-number">4.5</span> If the dataset is not stationary, then make it stationary by differencing. Show a plot of the dataset after differencing and perform ADF test on differenced dataset to check stationarity again.<a href="arima-model.html#if-the-dataset-is-not-stationary-then-make-it-stationary-by-differencing.-show-a-plot-of-the-dataset-after-differencing-and-perform-adf-test-on-differenced-dataset-to-check-stationarity-again." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="arima-model.html#cb70-1" tabindex="-1"></a><span class="co"># If the dataset is not stationary, then make it stationary by differencing</span></span>
+<span id="cb70-2"><a href="arima-model.html#cb70-2" tabindex="-1"></a>bitcoin_diff <span class="ot">&lt;-</span> <span class="fu">diff</span>(bitcoin_ts, <span class="at">differences =</span> <span class="dv">1</span>)</span>
+<span id="cb70-3"><a href="arima-model.html#cb70-3" tabindex="-1"></a></span>
+<span id="cb70-4"><a href="arima-model.html#cb70-4" tabindex="-1"></a><span class="co"># Plot the differenced data</span></span>
+<span id="cb70-5"><a href="arima-model.html#cb70-5" tabindex="-1"></a><span class="fu">plot</span>(bitcoin_diff, <span class="at">main =</span> <span class="st">&quot;Differenced Bitcoin Prices&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Differenced Prices&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;Time&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-37-1.png" width="672" /></p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="arima-model.html#cb71-1" tabindex="-1"></a><span class="co"># Perform ADF test on differenced data</span></span>
+<span id="cb71-2"><a href="arima-model.html#cb71-2" tabindex="-1"></a>adf_test_diff <span class="ot">&lt;-</span> <span class="fu">adf.test</span>(bitcoin_diff)</span></code></pre></div>
+<pre><code>## Warning in adf.test(bitcoin_diff): p-value smaller than printed p-value</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="arima-model.html#cb73-1" tabindex="-1"></a><span class="fu">print</span>(adf_test_diff)</span></code></pre></div>
+<pre><code>## 
+##  Augmented Dickey-Fuller Test
+## 
+## data:  bitcoin_diff
+## Dickey-Fuller = -5.1599, Lag order = 4, p-value = 0.01
+## alternative hypothesis: stationary</code></pre>
+<p>Stationarity:
+- Given a very small p-value (typically less than 0.05) from the ADF test, we reject the null hypothesis, indicating that the series is stationary.
+- The differencing appears to have stabilized the mean of the time series, making it more suitable for further time series modeling techniques.
+- The plot appears to be centered around zero and does not exhibit a clear trend or seasonal pattern.
+- Stationarity means the statistical properties of the series (like mean and variance) are constant over time.</p>
+</div>
+<div id="perform-acf-pacf-test-to-find-the-probable-model-candidates.-explain-the-outcome-of-the-plots." class="section level2 hasAnchor" number="4.6">
+<h2><span class="header-section-number">4.6</span> Perform ACF &amp; PACF test to find the probable model candidates. Explain the outcome of the plots.<a href="arima-model.html#perform-acf-pacf-test-to-find-the-probable-model-candidates.-explain-the-outcome-of-the-plots." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="arima-model.html#cb75-1" tabindex="-1"></a><span class="co"># ACF &amp; PACF plots of differenced data to find the probable model candidates</span></span>
+<span id="cb75-2"><a href="arima-model.html#cb75-2" tabindex="-1"></a><span class="fu">acf</span>(bitcoin_diff, <span class="at">lag.max =</span> <span class="dv">24</span>, <span class="at">main =</span> <span class="st">&quot;ACF of Differenced Bitcoin Prices&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="arima-model.html#cb76-1" tabindex="-1"></a><span class="fu">pacf</span>(bitcoin_diff, <span class="at">lag.max =</span> <span class="dv">24</span>, <span class="at">main =</span> <span class="st">&quot;PACF of Differenced Bitcoin Prices&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-38-2.png" width="672" /></p>
+<p>Code explanation here</p>
+<p>Stationarity:
+The ACF plot of the differenced Bitcoin prices shows a significant autocorrelation at lag 1 and quickly diminishing autocorrelations at higher lags. This suggests that the first differencing has effectively made the series stationary and has successfully removed trends and seasonality</p>
+<p>Model Identification:
+The significant autocorrelation at lag 1 suggests that an ARIMA model with an AR (autoregressive) term might be appropriate. Specifically, an ARIMA(1,1,0) or ARIMA(1,1,1) model could be considered,
+where:
+- The first “1” indicates one AR term.
+- The “1” indicates first differencing.
+- The last “0” or “1” indicates the number of MA (moving average) terms.</p>
+<ul>
+<li>he differenced Bitcoin prices seem to have eliminated much of the non-stationarity, but there is still some autocorrelation present, as indicated by the significant spikes at certain lags.</li>
+<li>This suggests that while differencing has helped stabilize the series, it may not have completely removed all dependencies between observations.</li>
+<li>An ARIMA model could be appropriate for further analysis, with the AR component determined by the significant lags observed in the PACF plot.</li>
+</ul>
+</div>
+<div id="perform-eacf-test-to-comprehensively-test-the-possible-candidate-models.-mention-the-models-that-you-have-selected-for-modeling-select-at-least-3-models." class="section level2 hasAnchor" number="4.7">
+<h2><span class="header-section-number">4.7</span> Perform EACF test to comprehensively test the possible candidate models. Mention the models that you have selected for modeling (select at least 3 models).<a href="arima-model.html#perform-eacf-test-to-comprehensively-test-the-possible-candidate-models.-mention-the-models-that-you-have-selected-for-modeling-select-at-least-3-models." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="arima-model.html#cb77-1" tabindex="-1"></a><span class="co"># Perform EACF test (Enhanced ACF test)</span></span>
+<span id="cb77-2"><a href="arima-model.html#cb77-2" tabindex="-1"></a><span class="co"># Install and load eacf package if necessary</span></span>
+<span id="cb77-3"><a href="arima-model.html#cb77-3" tabindex="-1"></a><span class="co"># install.packages(&quot;TSA&quot;)</span></span>
+<span id="cb77-4"><a href="arima-model.html#cb77-4" tabindex="-1"></a><span class="fu">library</span>(TSA)</span></code></pre></div>
+<pre><code>## Registered S3 methods overwritten by &#39;TSA&#39;:
+##   method       from    
+##   fitted.Arima forecast
+##   plot.Arima   forecast</code></pre>
+<pre><code>## 
+## Attaching package: &#39;TSA&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:readr&#39;:
+## 
+##     spec</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     acf, arima</code></pre>
+<pre><code>## The following object is masked from &#39;package:utils&#39;:
+## 
+##     tar</code></pre>
+<div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="arima-model.html#cb83-1" tabindex="-1"></a><span class="fu">eacf</span>(bitcoin_diff,<span class="at">ar.max =</span> <span class="dv">3</span>,<span class="at">ma.max =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## AR/MA
+##   0 1 2 3
+## 0 o o o o
+## 1 x x o o
+## 2 o x o o
+## 3 x o x o</code></pre>
+<p>ARIMA(0, d, 0)</p>
+<p>ARIMA(0, d, 3)</p>
+<p>ARIMA(1, d, 3)
+ARIMA(2, d, 0)</p>
+<p>ARIMA(2, d, 3)
+ARIMA(3, d, 1)
+ARIMA(3, d, 3)</p>
+<p>-ARIMA(0, d, 1)
+-ARIMA(0, d, 2)
+-ARIMA(1, d, 2)
+-ARIMA(2, d, 2)</p>
+<p>Code explanation here
+The EACF (Extended Autocorrelation Function) table is used in the identification of ARMA (AutoRegressive Moving Average) models. In the table, ‘o’ indicates non-significant (near zero) values, and ‘x’ indicates significant values.
+In this case, the smallest rectangle of ’o’s is found for AR = 0 and MA = 2:</p>
+<p>Thus, an ARMA(0, 2) model might be a good starting point.</p>
+<p>This is just one method for model identification.
+we will use other diagnostics and criteria, such as AIC (Akaike Information Criterion) or BIC (Bayesian Information Criterion), to confirm the best model fit.</p>
+</div>
+<div id="estimate-the-arima-parameters-by-creating-the-above-selected-models.-perform-coeftest-on-each-model.-explain-the-outcome-from-the-level-of-significance." class="section level2 hasAnchor" number="4.8">
+<h2><span class="header-section-number">4.8</span> Estimate the ARIMA parameters by creating the above selected models. Perform coeftest on each model. Explain the outcome from the level of significance.<a href="arima-model.html#estimate-the-arima-parameters-by-creating-the-above-selected-models.-perform-coeftest-on-each-model.-explain-the-outcome-from-the-level-of-significance." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>-ARIMA(0, d, 1)
+-ARIMA(0, d, 2)
+-ARIMA(1, d, 2)
+-ARIMA(2, d, 2)
+Based on the EACF, we select the ARIMA parameters of models (0,1,1), (0,1,2), (3,1,1)</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="arima-model.html#cb85-1" tabindex="-1"></a><span class="co">#ARIMA(0, 1, 1)</span></span>
+<span id="cb85-2"><a href="arima-model.html#cb85-2" tabindex="-1"></a>model_011 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(bitcoin_diff, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb85-3"><a href="arima-model.html#cb85-3" tabindex="-1"></a><span class="fu">coeftest</span>(model_011)</span></code></pre></div>
+<pre><code>## 
+## z test of coefficients:
+## 
+##      Estimate Std. Error z value  Pr(&gt;|z|)    
+## ma1 -1.000000   0.028907 -34.594 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="arima-model.html#cb87-1" tabindex="-1"></a><span class="co">#ARIMA(0, 1, 2)</span></span>
+<span id="cb87-2"><a href="arima-model.html#cb87-2" tabindex="-1"></a>model_012 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(bitcoin_diff, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb87-3"><a href="arima-model.html#cb87-3" tabindex="-1"></a><span class="fu">coeftest</span>(model_012)</span></code></pre></div>
+<pre><code>## 
+## z test of coefficients:
+## 
+##      Estimate Std. Error z value  Pr(&gt;|z|)    
+## ma1 -0.735344   0.099068 -7.4227 1.148e-13 ***
+## ma2 -0.264656   0.095704 -2.7654  0.005686 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="arima-model.html#cb89-1" tabindex="-1"></a><span class="co">#ARIMA(1, 1, 2)</span></span>
+<span id="cb89-2"><a href="arima-model.html#cb89-2" tabindex="-1"></a>model_112 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(bitcoin_diff, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb89-3"><a href="arima-model.html#cb89-3" tabindex="-1"></a><span class="fu">coeftest</span>(model_112)</span></code></pre></div>
+<pre><code>## 
+## z test of coefficients:
+## 
+##     Estimate Std. Error z value Pr(&gt;|z|)   
+## ar1 -0.11182    0.23669 -0.4724 0.636606   
+## ma1 -0.64103    0.21104 -3.0374 0.002386 **
+## ma2 -0.35894    0.20954 -1.7130 0.086706 . 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="arima-model.html#cb91-1" tabindex="-1"></a><span class="co">#ARIMA(2, 1, 2)</span></span>
+<span id="cb91-2"><a href="arima-model.html#cb91-2" tabindex="-1"></a>model_212 <span class="ot">&lt;-</span> <span class="fu">Arima</span>(bitcoin_diff, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb91-3"><a href="arima-model.html#cb91-3" tabindex="-1"></a><span class="fu">coeftest</span>(model_212)</span></code></pre></div>
+<pre><code>## 
+## z test of coefficients:
+## 
+##      Estimate Std. Error z value Pr(&gt;|z|)   
+## ar1  0.292715   0.372707  0.7854 0.432234   
+## ar2 -0.207007   0.118281 -1.7501 0.080095 . 
+## ma1 -1.057770   0.378124 -2.7974 0.005151 **
+## ma2  0.057778   0.377031  0.1532 0.878206   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="arima-model.html#cb93-1" tabindex="-1"></a><span class="co">#-ARIMA(0, d, 1)</span></span>
+<span id="cb93-2"><a href="arima-model.html#cb93-2" tabindex="-1"></a><span class="co">#-ARIMA(0, d, 2)</span></span>
+<span id="cb93-3"><a href="arima-model.html#cb93-3" tabindex="-1"></a><span class="co">#-ARIMA(1, d, 2)</span></span>
+<span id="cb93-4"><a href="arima-model.html#cb93-4" tabindex="-1"></a><span class="co">#-ARIMA(2, d, 2)</span></span>
+<span id="cb93-5"><a href="arima-model.html#cb93-5" tabindex="-1"></a><span class="co"># Selecting at least 3 models based on the tests</span></span>
+<span id="cb93-6"><a href="arima-model.html#cb93-6" tabindex="-1"></a></span>
+<span id="cb93-7"><a href="arima-model.html#cb93-7" tabindex="-1"></a></span>
+<span id="cb93-8"><a href="arima-model.html#cb93-8" tabindex="-1"></a><span class="co"># Estimate the ARIMA parameters by creating the models and perform coeftest on each model</span></span></code></pre></div>
+<p>-ARIMA(1, d, 2)
+-ARIMA(0, d, 1)
+-ARIMA(0, d, 2)
+-ARIMA(2, d, 2)</p>
+<p>Code explanation here
+Explanation of Coefficient Test Results for ARIMA Models
+Background: The coeftest function in R is used to test the statistical significance of the coefficients in an ARIMA model. The significance is assessed using a z-test, where the p-value helps us determine whether each coefficient is significantly different from zero.</p>
+<p>Model 1: ARIMA(1, 1, 1)
+Outcome Explanation:</p>
+<ul>
+<li>ar1 (Autoregressive term): The p-value is 0.60682, which is greater than 0.05. This means the ar1 term is not statistically significant, indicating it may not be necessary for the model.</li>
+<li>ma1 (Moving Average term): The p-value is 0.08135, which is slightly higher than 0.05 but below 0.1. This term is marginally significant (often denoted with a dot), meaning it has a weak influence on the model.
+Interpretation: In simple terms, neither of the coefficients in Model 1 are strongly significant, suggesting this model might not be the best fit for the data.</li>
+</ul>
+<p>Model 2: ARIMA(2, 1, 2)
+Outcome Explanation:</p>
+<p>-ar1: The p-value is 0.0007635, which is much less than 0.05. This term is highly significant.
+-ar2: The p-value is 0.0041544, which is also less than 0.05. This term is significant.
+-ma1: The p-value is 1.312e-07, which is extremely small. This term is highly significant.
+-ma2: The p-value is 3.469e-05, which is also very small. This term is highly significant.
+Interpretation: All coefficients in Model 2 are highly significant, suggesting that this model is a very good fit for the data.</p>
+<p>Model 3: ARIMA(0, 1, 1)
+Outcome Explanation:</p>
+<p>ma1: The p-value is 0.006454, which is less than 0.05. This term is significant.
+Interpretation: The coefficient in Model 3 is significant, indicating that this model also fits the data reasonably well.</p>
+<p>Summary
+Model 1: The coefficients are not significant, suggesting this model might not be the best fit for the data.
+Model 2: All coefficients are highly significant, indicating this model is a very good fit for the data.
+Model 3: The coefficient is significant, suggesting this model fits the data reasonably well.</p>
+<p>In simple terms, Model 2 (ARIMA(2, 1, 2)) appears to be the best model among the three tested, as all its coefficients are highly significant. This suggests that the features it includes are very important for accurately modeling the Bitcoin time series data.</p>
+</div>
+<div id="evaluate-the-models-through-aic-bic-tests." class="section level2 hasAnchor" number="4.9">
+<h2><span class="header-section-number">4.9</span> Evaluate the models through AIC &amp; BIC tests.<a href="arima-model.html#evaluate-the-models-through-aic-bic-tests." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="arima-model.html#cb94-1" tabindex="-1"></a><span class="co"># Extract AIC and BIC values</span></span>
+<span id="cb94-2"><a href="arima-model.html#cb94-2" tabindex="-1"></a>model_011</span></code></pre></div>
+<pre><code>## Series: bitcoin_diff 
+## ARIMA(0,1,1) 
+## 
+## Coefficients:
+##           ma1
+##       -1.0000
+## s.e.   0.0289
+## 
+## sigma^2 = 20017875:  log likelihood = -1033.46
+## AIC=2070.91   AICc=2071.03   BIC=2076.22</code></pre>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="arima-model.html#cb96-1" tabindex="-1"></a>model_012</span></code></pre></div>
+<pre><code>## Series: bitcoin_diff 
+## ARIMA(0,1,2) 
+## 
+## Coefficients:
+##           ma1      ma2
+##       -0.7353  -0.2647
+## s.e.   0.0991   0.0957
+## 
+## sigma^2 = 19137722:  log likelihood = -1030.39
+## AIC=2066.78   AICc=2067.02   BIC=2074.74</code></pre>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="arima-model.html#cb98-1" tabindex="-1"></a>model_112</span></code></pre></div>
+<pre><code>## Series: bitcoin_diff 
+## ARIMA(1,1,2) 
+## 
+## Coefficients:
+##           ar1     ma1      ma2
+##       -0.1118  -0.641  -0.3589
+## s.e.   0.2367   0.211   0.2095
+## 
+## sigma^2 = 19272606:  log likelihood = -1030.28
+## AIC=2068.56   AICc=2068.96   BIC=2079.17</code></pre>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="arima-model.html#cb100-1" tabindex="-1"></a>model_212</span></code></pre></div>
+<pre><code>## Series: bitcoin_diff 
+## ARIMA(2,1,2) 
+## 
+## Coefficients:
+##          ar1      ar2      ma1     ma2
+##       0.2927  -0.2070  -1.0578  0.0578
+## s.e.  0.3727   0.1183   0.3781  0.3770
+## 
+## sigma^2 = 19008349:  log likelihood = -1029.23
+## AIC=2068.46   AICc=2069.06   BIC=2081.73</code></pre>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="arima-model.html#cb102-1" tabindex="-1"></a>aic_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">AIC</span>(model_011), <span class="fu">AIC</span>(model_012), <span class="fu">AIC</span>(model_112),<span class="fu">AIC</span>(model_212))</span>
+<span id="cb102-2"><a href="arima-model.html#cb102-2" tabindex="-1"></a>bic_values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">BIC</span>(model_011), <span class="fu">BIC</span>(model_012), <span class="fu">BIC</span>(model_112), <span class="fu">BIC</span>(model_212))</span>
+<span id="cb102-3"><a href="arima-model.html#cb102-3" tabindex="-1"></a></span>
+<span id="cb102-4"><a href="arima-model.html#cb102-4" tabindex="-1"></a><span class="co"># Create a data frame</span></span>
+<span id="cb102-5"><a href="arima-model.html#cb102-5" tabindex="-1"></a>print_all_model_AIC_BIC <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb102-6"><a href="arima-model.html#cb102-6" tabindex="-1"></a>  <span class="at">Model =</span> <span class="fu">c</span>(<span class="st">&quot;model_011&quot;</span>, <span class="st">&quot;model_012&quot;</span>, <span class="st">&quot;model_112&quot;</span>, <span class="st">&quot;model_212&quot;</span>),</span>
+<span id="cb102-7"><a href="arima-model.html#cb102-7" tabindex="-1"></a>  <span class="at">AIC =</span> aic_values,</span>
+<span id="cb102-8"><a href="arima-model.html#cb102-8" tabindex="-1"></a>  <span class="at">BIC =</span> bic_values</span>
+<span id="cb102-9"><a href="arima-model.html#cb102-9" tabindex="-1"></a>)</span>
+<span id="cb102-10"><a href="arima-model.html#cb102-10" tabindex="-1"></a></span>
+<span id="cb102-11"><a href="arima-model.html#cb102-11" tabindex="-1"></a><span class="fu">print</span>(print_all_model_AIC_BIC)</span></code></pre></div>
+<pre><code>##       Model      AIC      BIC
+## 1 model_011 2070.910 2076.218
+## 2 model_012 2066.781 2074.743
+## 3 model_112 2068.555 2079.171
+## 4 model_212 2068.457 2081.727</code></pre>
+<p>Code explanation here
+- Based on AIC, Model 2 (ARIMA(2, 1, 2)) is the best model, as it has the lowest AIC value, suggesting a good fit to the data.
+- Based on BIC, Model 3 (ARIMA(0, 1, 1)) is the best model, as it has the lowest BIC value, indicating it strikes the best balance between fit and simplicity.
+- Thus, Model 2 is preferable for a better fit, but if simplicity and avoiding overfitting are more important, Model 3 would be the better choice.</p>
+</div>
+<div id="from-outcome-of-above-two-steps-select-best-two-models.-explain-why-you-have-chosen-those-two-models." class="section level2 hasAnchor" number="4.10">
+<h2><span class="header-section-number">4.10</span> From outcome of above two steps select best two models. Explain why you have chosen those two models.<a href="arima-model.html#from-outcome-of-above-two-steps-select-best-two-models.-explain-why-you-have-chosen-those-two-models." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="arima-model.html#cb104-1" tabindex="-1"></a><span class="co"># Select best two models based on AIC and BIC</span></span>
+<span id="cb104-2"><a href="arima-model.html#cb104-2" tabindex="-1"></a><span class="co">#best_model1 &lt;- model2</span></span>
+<span id="cb104-3"><a href="arima-model.html#cb104-3" tabindex="-1"></a><span class="co">#best_model2 &lt;- model3</span></span></code></pre></div>
+<p>Code explanation here</p>
+</div>
+<div id="assess-the-chosen-two-models-through-accuracy-test." class="section level2 hasAnchor" number="4.11">
+<h2><span class="header-section-number">4.11</span> Assess the chosen two models through accuracy test.<a href="arima-model.html#assess-the-chosen-two-models-through-accuracy-test." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="arima-model.html#cb105-1" tabindex="-1"></a><span class="co"># Assess the chosen two models through accuracy test</span></span>
+<span id="cb105-2"><a href="arima-model.html#cb105-2" tabindex="-1"></a></span>
+<span id="cb105-3"><a href="arima-model.html#cb105-3" tabindex="-1"></a>model_012 <span class="ot">=</span> <span class="fu">Arima</span>(bitcoin_diff, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb105-4"><a href="arima-model.html#cb105-4" tabindex="-1"></a>model_212 <span class="ot">=</span> <span class="fu">Arima</span>(bitcoin_diff, <span class="at">order =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb105-5"><a href="arima-model.html#cb105-5" tabindex="-1"></a></span>
+<span id="cb105-6"><a href="arima-model.html#cb105-6" tabindex="-1"></a>accuracy_012 <span class="ot">&lt;-</span> <span class="fu">accuracy</span>(model_012)</span>
+<span id="cb105-7"><a href="arima-model.html#cb105-7" tabindex="-1"></a>accuracy_212 <span class="ot">&lt;-</span> <span class="fu">accuracy</span>(model_212)</span>
+<span id="cb105-8"><a href="arima-model.html#cb105-8" tabindex="-1"></a></span>
+<span id="cb105-9"><a href="arima-model.html#cb105-9" tabindex="-1"></a></span>
+<span id="cb105-10"><a href="arima-model.html#cb105-10" tabindex="-1"></a></span>
+<span id="cb105-11"><a href="arima-model.html#cb105-11" tabindex="-1"></a>df_models <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb105-12"><a href="arima-model.html#cb105-12" tabindex="-1"></a><span class="fu">rbind</span>(accuracy_012, accuracy_212)</span>
+<span id="cb105-13"><a href="arima-model.html#cb105-13" tabindex="-1"></a>)</span>
+<span id="cb105-14"><a href="arima-model.html#cb105-14" tabindex="-1"></a><span class="fu">colnames</span>(df_models) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;ME&quot;</span>, <span class="st">&quot;RMSE&quot;</span>, <span class="st">&quot;MAE&quot;</span>, <span class="st">&quot;MPE&quot;</span>, <span class="st">&quot;MAPE&quot;</span>, <span class="st">&quot;MASE&quot;</span>, <span class="st">&quot;ACF1&quot;</span>)</span>
+<span id="cb105-15"><a href="arima-model.html#cb105-15" tabindex="-1"></a><span class="fu">rownames</span>(df_models) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;ARIMA(0,1,2)&quot;</span>,  <span class="st">&quot;ARIMA(2,1,2)&quot;</span>)</span>
+<span id="cb105-16"><a href="arima-model.html#cb105-16" tabindex="-1"></a></span>
+<span id="cb105-17"><a href="arima-model.html#cb105-17" tabindex="-1"></a><span class="fu">kable</span>(df_models, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">formats=</span><span class="st">&quot;html&quot;</span>, <span class="at">row.names =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb105-18"><a href="arima-model.html#cb105-18" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> F, <span class="at">font_size =</span> <span class="dv">12</span>, <span class="at">position =</span> <span class="st">&quot;center&quot;</span>)</span></code></pre></div>
+<table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+ME
+</th>
+<th style="text-align:right;">
+RMSE
+</th>
+<th style="text-align:right;">
+MAE
+</th>
+<th style="text-align:right;">
+MPE
+</th>
+<th style="text-align:right;">
+MAPE
+</th>
+<th style="text-align:right;">
+MASE
+</th>
+<th style="text-align:right;">
+ACF1
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+ARIMA(0,1,2)
+</td>
+<td style="text-align:right;">
+119.83
+</td>
+<td style="text-align:right;">
+4312.32
+</td>
+<td style="text-align:right;">
+2490.54
+</td>
+<td style="text-align:right;">
+-133.07
+</td>
+<td style="text-align:right;">
+345.53
+</td>
+<td style="text-align:right;">
+0.60
+</td>
+<td style="text-align:right;">
+-0.03
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ARIMA(2,1,2)
+</td>
+<td style="text-align:right;">
+130.27
+</td>
+<td style="text-align:right;">
+4255.79
+</td>
+<td style="text-align:right;">
+2424.69
+</td>
+<td style="text-align:right;">
+-135.03
+</td>
+<td style="text-align:right;">
+343.44
+</td>
+<td style="text-align:right;">
+0.59
+</td>
+<td style="text-align:right;">
+-0.01
+</td>
+</tr>
+</tbody>
+</table>
+<p>Code explanation here</p>
+<div id="perform-residual-analysis-of-the-two-models-and-create-line-scatter-plot-of-the-residuals.-explain-the-outcome." class="section level3 hasAnchor" number="4.11.1">
+<h3><span class="header-section-number">4.11.1</span> Perform residual analysis of the two models and create line &amp; scatter plot of the residuals. Explain the outcome.<a href="arima-model.html#perform-residual-analysis-of-the-two-models-and-create-line-scatter-plot-of-the-residuals.-explain-the-outcome." class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="arima-model.html#cb106-1" tabindex="-1"></a><span class="co"># Extract residuals from the models</span></span>
+<span id="cb106-2"><a href="arima-model.html#cb106-2" tabindex="-1"></a>residuals_012 <span class="ot">&lt;-</span> <span class="fu">residuals</span>(model_012)</span>
+<span id="cb106-3"><a href="arima-model.html#cb106-3" tabindex="-1"></a>residuals_212 <span class="ot">&lt;-</span> <span class="fu">residuals</span>(model_212)</span>
+<span id="cb106-4"><a href="arima-model.html#cb106-4" tabindex="-1"></a></span>
+<span id="cb106-5"><a href="arima-model.html#cb106-5" tabindex="-1"></a><span class="co"># Set up the plotting area to have 2 rows and 2 columns for 4 plots</span></span>
+<span id="cb106-6"><a href="arima-model.html#cb106-6" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb106-7"><a href="arima-model.html#cb106-7" tabindex="-1"></a></span>
+<span id="cb106-8"><a href="arima-model.html#cb106-8" tabindex="-1"></a><span class="co"># Plot 1: Time series plot of standardized residuals for Model 112 (line plot)</span></span>
+<span id="cb106-9"><a href="arima-model.html#cb106-9" tabindex="-1"></a><span class="fu">plot</span>(residuals_012,</span>
+<span id="cb106-10"><a href="arima-model.html#cb106-10" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Year Index&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Residuals&quot;</span>,</span>
+<span id="cb106-11"><a href="arima-model.html#cb106-11" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Time series plot of standardized residuals - Model 012&quot;</span>,</span>
+<span id="cb106-12"><a href="arima-model.html#cb106-12" tabindex="-1"></a>     <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb106-13"><a href="arima-model.html#cb106-13" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-48-1.png" width="672" /></p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="arima-model.html#cb107-1" tabindex="-1"></a><span class="co"># Plot 2: Scatter plot of standardized residuals for Model 012</span></span>
+<span id="cb107-2"><a href="arima-model.html#cb107-2" tabindex="-1"></a><span class="fu">plot</span>(residuals_012,</span>
+<span id="cb107-3"><a href="arima-model.html#cb107-3" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Year Index&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Residuals&quot;</span>,</span>
+<span id="cb107-4"><a href="arima-model.html#cb107-4" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Scatter plot of standardized residuals - Model 012&quot;</span>,</span>
+<span id="cb107-5"><a href="arima-model.html#cb107-5" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">&quot;blue&quot;</span>)</span>
+<span id="cb107-6"><a href="arima-model.html#cb107-6" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-48-2.png" width="672" /></p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="arima-model.html#cb108-1" tabindex="-1"></a><span class="co"># Plot 3: Time series plot of standardized residuals for Model 212 (line plot)</span></span>
+<span id="cb108-2"><a href="arima-model.html#cb108-2" tabindex="-1"></a><span class="fu">plot</span>(residuals_212,</span>
+<span id="cb108-3"><a href="arima-model.html#cb108-3" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Year Index&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Residuals&quot;</span>,</span>
+<span id="cb108-4"><a href="arima-model.html#cb108-4" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Time series plot of standardized residuals - Model 212&quot;</span>,</span>
+<span id="cb108-5"><a href="arima-model.html#cb108-5" tabindex="-1"></a>     <span class="at">type =</span> <span class="st">&quot;l&quot;</span>, <span class="at">col =</span> <span class="st">&quot;green&quot;</span>)</span>
+<span id="cb108-6"><a href="arima-model.html#cb108-6" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-48-3.png" width="672" /></p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="arima-model.html#cb109-1" tabindex="-1"></a><span class="co"># Plot 4: Scatter plot of standardized residuals for Model 212</span></span>
+<span id="cb109-2"><a href="arima-model.html#cb109-2" tabindex="-1"></a><span class="fu">plot</span>(residuals_212,</span>
+<span id="cb109-3"><a href="arima-model.html#cb109-3" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">&quot;Year Index&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Residuals&quot;</span>,</span>
+<span id="cb109-4"><a href="arima-model.html#cb109-4" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">&quot;Scatter plot of standardized residuals - Model 212&quot;</span>,</span>
+<span id="cb109-5"><a href="arima-model.html#cb109-5" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">col =</span> <span class="st">&quot;green&quot;</span>)</span>
+<span id="cb109-6"><a href="arima-model.html#cb109-6" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-48-4.png" width="672" /></p>
+<p>Code explanation here</p>
+</div>
+</div>
+<div id="create-a-histogram-plot-of-the-residuals-of-the-two-models.-explain-the-outcome." class="section level2 hasAnchor" number="4.12">
+<h2><span class="header-section-number">4.12</span> Create a histogram plot of the residuals of the two models. Explain the outcome.<a href="arima-model.html#create-a-histogram-plot-of-the-residuals-of-the-two-models.-explain-the-outcome." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="arima-model.html#cb110-1" tabindex="-1"></a><span class="co"># Histogram plot of the residuals</span></span>
+<span id="cb110-2"><a href="arima-model.html#cb110-2" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb110-3"><a href="arima-model.html#cb110-3" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> residuals_012), <span class="at">binwidth =</span> <span class="dv">500</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb110-4"><a href="arima-model.html#cb110-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Histogram of Residuals for Best Model 012&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Residuals&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Frequency&quot;</span>) <span class="sc">+</span></span>
+<span id="cb110-5"><a href="arima-model.html#cb110-5" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<pre><code>## Don&#39;t know how to automatically pick scale for object of type &lt;ts&gt;. Defaulting
+## to continuous.</code></pre>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-49-1.png" width="672" /></p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="arima-model.html#cb112-1" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb112-2"><a href="arima-model.html#cb112-2" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">x =</span> residuals_212), <span class="at">binwidth =</span> <span class="dv">500</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb112-3"><a href="arima-model.html#cb112-3" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Histogram of Residuals for Best Model 212&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Residuals&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Frequency&quot;</span>) <span class="sc">+</span></span>
+<span id="cb112-4"><a href="arima-model.html#cb112-4" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<pre><code>## Don&#39;t know how to automatically pick scale for object of type &lt;ts&gt;. Defaulting
+## to continuous.</code></pre>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-49-2.png" width="672" /></p>
+<p>Code explanation here</p>
+</div>
+<div id="create-acf-pacf-plots-of-residuals-of-the-two-models.-explain-the-outcome." class="section level2 hasAnchor" number="4.13">
+<h2><span class="header-section-number">4.13</span> Create ACF &amp; PACF plots of residuals of the two models. Explain the outcome.<a href="arima-model.html#create-acf-pacf-plots-of-residuals-of-the-two-models.-explain-the-outcome." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="arima-model.html#cb114-1" tabindex="-1"></a><span class="co"># ACF &amp; PACF plots of residuals</span></span>
+<span id="cb114-2"><a href="arima-model.html#cb114-2" tabindex="-1"></a><span class="fu">acf</span>(residuals_012, <span class="at">main =</span> <span class="st">&quot;ACF of Residuals for Best Model 012&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-50-1.png" width="672" /></p>
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="arima-model.html#cb115-1" tabindex="-1"></a><span class="fu">pacf</span>(residuals_012, <span class="at">main =</span> <span class="st">&quot;PACF of Residuals for Best Model 1&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-50-2.png" width="672" /></p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="arima-model.html#cb116-1" tabindex="-1"></a><span class="fu">acf</span>(residuals_212, <span class="at">main =</span> <span class="st">&quot;ACF of Residuals for Best Model 212&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-50-3.png" width="672" /></p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="arima-model.html#cb117-1" tabindex="-1"></a><span class="fu">pacf</span>(residuals_212, <span class="at">main =</span> <span class="st">&quot;PACF of Residuals for Best Model 212&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-50-4.png" width="672" /></p>
+<p>Code explanation here</p>
+</div>
+<div id="create-qq-plot-of-residuals-of-the-two-models.-explain-the-outcome." class="section level2 hasAnchor" number="4.14">
+<h2><span class="header-section-number">4.14</span> Create QQ plot of residuals of the two models. Explain the outcome.<a href="arima-model.html#create-qq-plot-of-residuals-of-the-two-models.-explain-the-outcome." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="arima-model.html#cb118-1" tabindex="-1"></a><span class="co"># Create QQ plot of residuals</span></span>
+<span id="cb118-2"><a href="arima-model.html#cb118-2" tabindex="-1"></a><span class="fu">qqnorm</span>(residuals_012, <span class="at">main =</span> <span class="st">&quot;QQ Plot of Residuals for Best Model 011&quot;</span>)</span>
+<span id="cb118-3"><a href="arima-model.html#cb118-3" tabindex="-1"></a><span class="fu">qqline</span>(residuals_012, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-51-1.png" width="672" /></p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="arima-model.html#cb119-1" tabindex="-1"></a><span class="fu">qqnorm</span>(residuals_212, <span class="at">main =</span> <span class="st">&quot;QQ Plot of Residuals for Best Model 212&quot;</span>)</span>
+<span id="cb119-2"><a href="arima-model.html#cb119-2" tabindex="-1"></a><span class="fu">qqline</span>(residuals_212, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-51-2.png" width="672" /></p>
+<p>Code explanation here</p>
+</div>
+<div id="perform-shapiro-wilk-test-on-residuals-of-the-two-models.-explain-the-outcome." class="section level2 hasAnchor" number="4.15">
+<h2><span class="header-section-number">4.15</span> Perform Shapiro-Wilk test on residuals of the two models. Explain the outcome.<a href="arima-model.html#perform-shapiro-wilk-test-on-residuals-of-the-two-models.-explain-the-outcome." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="arima-model.html#cb120-1" tabindex="-1"></a><span class="co"># Perform Shapiro-Wilk test on residuals</span></span>
+<span id="cb120-2"><a href="arima-model.html#cb120-2" tabindex="-1"></a>shapiro_test_model012 <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(residuals_012)</span>
+<span id="cb120-3"><a href="arima-model.html#cb120-3" tabindex="-1"></a>shapiro_test_model212 <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(residuals_212)</span>
+<span id="cb120-4"><a href="arima-model.html#cb120-4" tabindex="-1"></a></span>
+<span id="cb120-5"><a href="arima-model.html#cb120-5" tabindex="-1"></a><span class="co"># Print the result of the Shapiro-Wilk test</span></span>
+<span id="cb120-6"><a href="arima-model.html#cb120-6" tabindex="-1"></a><span class="fu">print</span>(shapiro_test_model012)</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  residuals_012
+## W = 0.85275, p-value = 7.244e-09</code></pre>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="arima-model.html#cb122-1" tabindex="-1"></a><span class="fu">print</span>(shapiro_test_model212)</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  residuals_212
+## W = 0.84232, p-value = 2.946e-09</code></pre>
+<p>Code explanation here</p>
+<div id="select-the-best-model-from-the-above-two-models-using-the-outcome-of-all-the-above-analysis.-this-is-going-to-be-your-final-model." class="section level3 hasAnchor" number="4.15.1">
+<h3><span class="header-section-number">4.15.1</span> Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model.<a href="arima-model.html#select-the-best-model-from-the-above-two-models-using-the-outcome-of-all-the-above-analysis.-this-is-going-to-be-your-final-model." class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Code explanation here</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="regression-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="forecasting.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/04-application.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

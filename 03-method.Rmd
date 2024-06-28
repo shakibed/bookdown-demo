@@ -238,16 +238,13 @@ _**code explanation here**_
 This graph shows a histogram of prediction errors (residuals) for Bitcoin prices with a normal distribution curve overlaid in red. The bars represent the frequency of errors in different price ranges. Ideally, the bars would closely match the smooth red curve, indicating the errors follow a normal distribution. By comparing their shapes, we can assess how close the actual errors are to being normally distributed.
 
 
-#### Create ACF & PACF plots of residuals. Explain the outcome. 
+#### Create ACF & PACF plots of residuals.Explain the outcome. 
 
 
-```{r, figures-side, fig.show="hold", out.width="50%"}
-#Create ACF & PACF plots of residuals. Explain the outcome.  
-  # Plot the ACF of residuals
+```{r}
+
 acf(BitCoin_df$Residuals, main = "ACF of Residuals")
 
-# Plot the PACF of residuals
-pacf(BitCoin_df$Residuals, main = "PACF of Residuals")  
 
 
 ```
@@ -255,10 +252,14 @@ pacf(BitCoin_df$Residuals, main = "PACF of Residuals")
 _**Code explanation here**_
 
 ACF measures the correlation between residuals at different lags. Most bars falling within significance bounds (dashed lines) indicate no significant autocorrelation, suggesting the model captures data patterns adequately.
+
+```{r}
+pacf(BitCoin_df$Residuals, main = "PACF of Residuals")  
+
+```
+
 PACF measures the correlation between residuals and lagged values, accounting for shorter lags. Bars within significance bounds indicate no significant partial autocorrelation, meaning past values don't provide additional predictive information. 
 Both plots help determine if residuals are random (white noise), validating the model. Most lags within bounds suggest errors are random and uncorrelated, indicating a good model fit.
-
-
 
 
 #### Create QQ plot of residuals. Explain the outcome. 

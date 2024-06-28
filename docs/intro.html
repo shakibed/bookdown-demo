@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 1 Data Preprocessing/Cleaning | Final Project-Group 04</title>
+  <meta name="description" content="Regression &amp; Time Series analysis and forecasting techniques on Bitcoin historical price." />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 1 Data Preprocessing/Cleaning | Final Project-Group 04" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Regression &amp; Time Series analysis and forecasting techniques on Bitcoin historical price." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 1 Data Preprocessing/Cleaning | Final Project-Group 04" />
+  
+  <meta name="twitter:description" content="Regression &amp; Time Series analysis and forecasting techniques on Bitcoin historical price." />
+  
+
+<meta name="author" content="Shakib-241001661,Shudeshna-241000261,Mithun-241002261,Pradipto-241002161,Mufrad-241001461,Shahriar Islam-241000461" />
+
+
+<meta name="date" content="2024-06-29" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="descriptive-analytics.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Objective of the Project</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#applied-model"><i class="fa fa-check"></i>Applied Model</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Data Preprocessing/Cleaning</a>
+<ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#loading-the-dataset"><i class="fa fa-check"></i>Loading the Dataset</a>
+<ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#load-the-dataset-from-csv-into-a-data-frame-named-bitcoin."><i class="fa fa-check"></i>Load the dataset from csv into a data frame named BitCoin.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#check-the-data-types-of-the-features."><i class="fa fa-check"></i>Check the data types of the features.</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#assign-appropriate-data-type-to-features."><i class="fa fa-check"></i>Assign appropriate data type to features.</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#check-the-structure-of-the-data-frame."><i class="fa fa-check"></i>Check the structure of the data frame.</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#check-if-theres-any-missing-value.-if-yes-treat-missing-values-through-appropriate-methodology."><i class="fa fa-check"></i>Check if there’s any missing value. If yes, treat missing values through appropriate methodology.</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html"><i class="fa fa-check"></i><b>2</b> Descriptive Analytics</a>
+<ul>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#create-a-monthly-boxplot-of-prices."><i class="fa fa-check"></i>Create a monthly boxplot of prices.</a></li>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#create-a-yearly-boxplot-of-prices."><i class="fa fa-check"></i>Create a yearly boxplot of prices.</a></li>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#create-year-wise-trend-lines-of-prices."><i class="fa fa-check"></i>Create year wise trend lines of prices.</a>
+<ul>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#convert-the-bitcoin-data-frame-to-a-time-series-object-with-frequency-1"><i class="fa fa-check"></i>Convert the BitCoin data frame to a time series object with frequency 1</a></li>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#plot-the-time-series-of-monthly-prices-on-years.-use-blue-color-dots-to-plot-the-data-points.-connect-the-points-with-a-line."><i class="fa fa-check"></i>Plot the time series of monthly prices on years. Use blue color dots to plot the data points. Connect the points with a line.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#find-the-relationship-between-consecutive-months.-show-the-correlation-through-a-scatter-plot."><i class="fa fa-check"></i>Find the relationship between consecutive months. Show the correlation through a scatter plot.</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="regression-analysis.html"><a href="regression-analysis.html"><i class="fa fa-check"></i><b>3</b> Regression Analysis</a>
+<ul>
+<li class="chapter" data-level="3.0.1" data-path="regression-analysis.html"><a href="regression-analysis.html#linear-regression"><i class="fa fa-check"></i><b>3.0.1</b> Linear Regression</a></li>
+<li class="chapter" data-level="3.0.2" data-path="regression-analysis.html"><a href="regression-analysis.html#quadratic-regression"><i class="fa fa-check"></i><b>3.0.2</b> Quadratic Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="arima-model.html"><a href="arima-model.html"><i class="fa fa-check"></i><b>4</b> ARIMA Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="arima-model.html"><a href="arima-model.html#create-acf-pacf-plots-of-the-time-series-data-set-with-maximum-lag-of-24.-explain-the-outcome-and-comment-on-the-datasets-nature."><i class="fa fa-check"></i><b>4.1</b> Create ACF &amp; PACF plots of the time series data set with maximum lag of 24. Explain the outcome and comment on the dataset’s nature.</a></li>
+<li class="chapter" data-level="4.2" data-path="arima-model.html"><a href="arima-model.html#perform-adf-test.-explain-the-outcome."><i class="fa fa-check"></i><b>4.2</b> Perform ADF test. Explain the outcome.</a></li>
+<li class="chapter" data-level="4.3" data-path="arima-model.html"><a href="arima-model.html#explain-if-the-dataset-is-stationary-or-not."><i class="fa fa-check"></i><b>4.3</b> Explain if the dataset is stationary or not.</a></li>
+<li class="chapter" data-level="4.4" data-path="arima-model.html"><a href="arima-model.html#create-qq-plot-perform-shapiro-wilk-test."><i class="fa fa-check"></i><b>4.4</b> Create QQ plot &amp; perform Shapiro-Wilk test.</a></li>
+<li class="chapter" data-level="4.5" data-path="arima-model.html"><a href="arima-model.html#if-the-dataset-is-not-stationary-then-make-it-stationary-by-differencing.-show-a-plot-of-the-dataset-after-differencing-and-perform-adf-test-on-differenced-dataset-to-check-stationarity-again."><i class="fa fa-check"></i><b>4.5</b> If the dataset is not stationary, then make it stationary by differencing. Show a plot of the dataset after differencing and perform ADF test on differenced dataset to check stationarity again.</a></li>
+<li class="chapter" data-level="4.6" data-path="arima-model.html"><a href="arima-model.html#perform-acf-pacf-test-to-find-the-probable-model-candidates.-explain-the-outcome-of-the-plots."><i class="fa fa-check"></i><b>4.6</b> Perform ACF &amp; PACF test to find the probable model candidates. Explain the outcome of the plots.</a></li>
+<li class="chapter" data-level="4.7" data-path="arima-model.html"><a href="arima-model.html#perform-eacf-test-to-comprehensively-test-the-possible-candidate-models.-mention-the-models-that-you-have-selected-for-modeling-select-at-least-3-models."><i class="fa fa-check"></i><b>4.7</b> Perform EACF test to comprehensively test the possible candidate models. Mention the models that you have selected for modeling (select at least 3 models).</a></li>
+<li class="chapter" data-level="4.8" data-path="arima-model.html"><a href="arima-model.html#estimate-the-arima-parameters-by-creating-the-above-selected-models.-perform-coeftest-on-each-model.-explain-the-outcome-from-the-level-of-significance."><i class="fa fa-check"></i><b>4.8</b> Estimate the ARIMA parameters by creating the above selected models. Perform coeftest on each model. Explain the outcome from the level of significance.</a></li>
+<li class="chapter" data-level="4.9" data-path="arima-model.html"><a href="arima-model.html#evaluate-the-models-through-aic-bic-tests."><i class="fa fa-check"></i><b>4.9</b> Evaluate the models through AIC &amp; BIC tests.</a></li>
+<li class="chapter" data-level="4.10" data-path="arima-model.html"><a href="arima-model.html#from-outcome-of-above-two-steps-select-best-two-models.-explain-why-you-have-chosen-those-two-models."><i class="fa fa-check"></i><b>4.10</b> From outcome of above two steps select best two models. Explain why you have chosen those two models.</a></li>
+<li class="chapter" data-level="4.11" data-path="arima-model.html"><a href="arima-model.html#assess-the-chosen-two-models-through-accuracy-test."><i class="fa fa-check"></i><b>4.11</b> Assess the chosen two models through accuracy test.</a>
+<ul>
+<li class="chapter" data-level="4.11.1" data-path="arima-model.html"><a href="arima-model.html#perform-residual-analysis-of-the-two-models-and-create-line-scatter-plot-of-the-residuals.-explain-the-outcome."><i class="fa fa-check"></i><b>4.11.1</b> Perform residual analysis of the two models and create line &amp; scatter plot of the residuals. Explain the outcome.</a></li>
+</ul></li>
+<li class="chapter" data-level="4.12" data-path="arima-model.html"><a href="arima-model.html#create-a-histogram-plot-of-the-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.12</b> Create a histogram plot of the residuals of the two models. Explain the outcome.</a></li>
+<li class="chapter" data-level="4.13" data-path="arima-model.html"><a href="arima-model.html#create-acf-pacf-plots-of-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.13</b> Create ACF &amp; PACF plots of residuals of the two models. Explain the outcome.</a></li>
+<li class="chapter" data-level="4.14" data-path="arima-model.html"><a href="arima-model.html#create-qq-plot-of-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.14</b> Create QQ plot of residuals of the two models. Explain the outcome.</a></li>
+<li class="chapter" data-level="4.15" data-path="arima-model.html"><a href="arima-model.html#perform-shapiro-wilk-test-on-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.15</b> Perform Shapiro-Wilk test on residuals of the two models. Explain the outcome.</a>
+<ul>
+<li class="chapter" data-level="4.15.1" data-path="arima-model.html"><a href="arima-model.html#select-the-best-model-from-the-above-two-models-using-the-outcome-of-all-the-above-analysis.-this-is-going-to-be-your-final-model."><i class="fa fa-check"></i><b>4.15.1</b> Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model.</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>5</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="5.0.1" data-path="forecasting.html"><a href="forecasting.html#explanation-of-the-forecast-table"><i class="fa fa-check"></i><b>5.0.1</b> Explanation of the Forecast Table</a></li>
+<li class="chapter" data-level="5.1" data-path="forecasting.html"><a href="forecasting.html#key-insights"><i class="fa fa-check"></i><b>5.1</b> Key Insights</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="forecasting.html"><a href="forecasting.html#create-a-plot-of-the-forecasted-data-points"><i class="fa fa-check"></i><b>5.1.1</b> Create a plot of the forecasted data points</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Final Project-Group 04</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="intro" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">Chapter 1</span> Data Preprocessing/Cleaning<a href="intro.html#intro" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="loading-the-dataset" class="section level2 unnumbered hasAnchor">
+<h2>Loading the Dataset<a href="intro.html#loading-the-dataset" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<ul>
+<li>Load the dataset from csv into a data frame named BitCoin.</li>
+<li>Check the data types of the features.</li>
+<li>Assign appropriate data type to features.</li>
+<li>Check the structure of the data frame.</li>
+<li>Check if there’s any missing value. If yes, treat missing values through appropriate methodology.</li>
+</ul>
+<div id="load-the-dataset-from-csv-into-a-data-frame-named-bitcoin." class="section level3 unnumbered hasAnchor">
+<h3>Load the dataset from csv into a data frame named BitCoin.<a href="intro.html#load-the-dataset-from-csv-into-a-data-frame-named-bitcoin." class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="intro.html#cb2-1" tabindex="-1"></a><span class="co">#(&quot;tidyverse&quot;)</span></span>
+<span id="cb2-2"><a href="intro.html#cb2-2" tabindex="-1"></a><span class="co">#Load the dataset from csv into a data frame named BitCoin.</span></span>
+<span id="cb2-3"><a href="intro.html#cb2-3" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+## ✔ forcats   1.0.0     ✔ stringr   1.5.1
+## ✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+## ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+## ✔ purrr     1.0.2     
+## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="intro.html#cb4-1" tabindex="-1"></a><span class="co">#load csv from github(uploaded for Assignment_02_Group_04)</span></span>
+<span id="cb4-2"><a href="intro.html#cb4-2" tabindex="-1"></a>bitcoin <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/shakibed/Final_Project_Group_04/main/BTC-Monthly.csv&quot;</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-3"><a href="intro.html#cb4-3" tabindex="-1"></a><span class="fu">view</span>(bitcoin)</span></code></pre></div>
+</div>
+</div>
+<div id="check-the-data-types-of-the-features." class="section level2 unnumbered hasAnchor">
+<h2>Check the data types of the features.<a href="intro.html#check-the-data-types-of-the-features." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="intro.html#cb5-1" tabindex="-1"></a><span class="co">#Check the data types of the features.</span></span>
+<span id="cb5-2"><a href="intro.html#cb5-2" tabindex="-1"></a><span class="fu">glimpse</span>(bitcoin)</span></code></pre></div>
+<pre><code>## Rows: 107
+## Columns: 2
+## $ Date  &lt;chr&gt; &quot;2015-01-01&quot;, &quot;2015-02-01&quot;, &quot;2015-03-01&quot;, &quot;2015-04-01&quot;, &quot;2015-05…
+## $ Close &lt;dbl&gt; 217.464, 254.263, 244.224, 236.145, 230.190, 263.072, 284.650, 2…</code></pre>
+<p><em><strong>Code explanation here</strong></em></p>
+<p>We checked the data types using glimpse(bitcoin) and found we have two columns in data set.
+We need to convert the Date column from chr (character) type to Date type because our target is to work with a time series object or perform linear regression analysis.</p>
+</div>
+<div id="assign-appropriate-data-type-to-features." class="section level2 unnumbered hasAnchor">
+<h2>Assign appropriate data type to features.<a href="intro.html#assign-appropriate-data-type-to-features." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="intro.html#cb7-1" tabindex="-1"></a>bitcoin<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(bitcoin<span class="sc">$</span>Date)</span>
+<span id="cb7-2"><a href="intro.html#cb7-2" tabindex="-1"></a><span class="fu">glimpse</span>(bitcoin)</span></code></pre></div>
+<pre><code>## Rows: 107
+## Columns: 2
+## $ Date  &lt;date&gt; 2015-01-01, 2015-02-01, 2015-03-01, 2015-04-01, 2015-05-01, 201…
+## $ Close &lt;dbl&gt; 217.464, 254.263, 244.224, 236.145, 230.190, 263.072, 284.650, 2…</code></pre>
+<p><em><strong>Code explanation here</strong></em></p>
+<ul>
+<li>This will allow us to properly utilize the Date column in time series analysis or linear regression models.</li>
+</ul>
+</div>
+<div id="check-the-structure-of-the-data-frame." class="section level2 unnumbered hasAnchor">
+<h2>Check the structure of the data frame.<a href="intro.html#check-the-structure-of-the-data-frame." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="intro.html#cb9-1" tabindex="-1"></a><span class="co">#Check the data types of the features.</span></span>
+<span id="cb9-2"><a href="intro.html#cb9-2" tabindex="-1"></a><span class="fu">str</span>(bitcoin)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    107 obs. of  2 variables:
+##  $ Date : Date, format: &quot;2015-01-01&quot; &quot;2015-02-01&quot; ...
+##  $ Close: num  217 254 244 236 230 ...</code></pre>
+<p><em><strong>Code explanation here</strong></em></p>
+<ul>
+<li>We checked the structure of the data frame using str(bitcoin) and found the following:</li>
+<li>The Date column is already in the Date format, and the Close column is of type num (numeric).</li>
+<li>Since the Date column is correctly formatted as a date, it is ready for time series analysis or linear regression models without any further modification.</li>
+</ul>
+</div>
+<div id="check-if-theres-any-missing-value.-if-yes-treat-missing-values-through-appropriate-methodology." class="section level2 unnumbered hasAnchor">
+<h2>Check if there’s any missing value. If yes, treat missing values through appropriate methodology.<a href="intro.html#check-if-theres-any-missing-value.-if-yes-treat-missing-values-through-appropriate-methodology." class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="intro.html#cb11-1" tabindex="-1"></a><span class="co">#Check if there’s any missing value. If yes, treat missing values through appropriate methodology</span></span>
+<span id="cb11-2"><a href="intro.html#cb11-2" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(bitcoin))</span></code></pre></div>
+<pre><code>##  Date Close 
+##     0     0</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="intro.html#cb13-1" tabindex="-1"></a><span class="co">#it shows no missing value found</span></span></code></pre></div>
+<p><em><strong>Code explanation here</strong></em></p>
+<ul>
+<li>We checked for missing values in the bitcoin data frame using colSums(is.na(bitcoin)) and found the following:</li>
+<li>This indicates that there are no missing values in either the Date or Close columns. Since there are no missing values, no further action is needed to treat missing values.</li>
+</ul>
+<p>You can label chapter and section titles using <code>{#label}</code> after them, e.g., we can reference Chapter <a href="intro.html#intro">1</a>. If you do not manually label them, there will be automatic labels anyway, e.g., Chapter <a href="#methods"><strong>??</strong></a>.</p>
+<p>Figures and tables with captions will be placed in <code>figure</code> and <code>table</code> environments, respectively.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="intro.html#cb14-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, .<span class="dv">1</span>, .<span class="dv">1</span>))</span>
+<span id="cb14-2"><a href="intro.html#cb14-2" tabindex="-1"></a><span class="fu">plot</span>(pressure, <span class="at">type =</span> <span class="st">&#39;b&#39;</span>, <span class="at">pch =</span> <span class="dv">19</span>)  </span></code></pre></div>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:nice-fig"></span>
+<img src="bookdown-demo_files/figure-html/nice-fig-1.png" alt="Here is a nice figure!" width="80%" />
+<p class="caption">
+Figure 1.1: Here is a nice figure!
+</p>
+</div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="intro.html#cb15-1" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb15-2"><a href="intro.html#cb15-2" tabindex="-1"></a>  <span class="fu">head</span>(iris, <span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&#39;Here is a nice table!&#39;</span>,</span>
+<span id="cb15-3"><a href="intro.html#cb15-3" tabindex="-1"></a>  <span class="at">booktabs =</span> <span class="cn">TRUE</span></span>
+<span id="cb15-4"><a href="intro.html#cb15-4" tabindex="-1"></a>)</span></code></pre></div>
+<table>
+<caption><span id="tab:nice-tab">Table 1.1: </span>Here is a nice table!</caption>
+<thead>
+<tr class="header">
+<th align="right">Sepal.Length</th>
+<th align="right">Sepal.Width</th>
+<th align="right">Petal.Length</th>
+<th align="right">Petal.Width</th>
+<th align="left">Species</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">5.1</td>
+<td align="right">3.5</td>
+<td align="right">1.4</td>
+<td align="right">0.2</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="even">
+<td align="right">4.9</td>
+<td align="right">3.0</td>
+<td align="right">1.4</td>
+<td align="right">0.2</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="odd">
+<td align="right">4.7</td>
+<td align="right">3.2</td>
+<td align="right">1.3</td>
+<td align="right">0.2</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="even">
+<td align="right">4.6</td>
+<td align="right">3.1</td>
+<td align="right">1.5</td>
+<td align="right">0.2</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="odd">
+<td align="right">5.0</td>
+<td align="right">3.6</td>
+<td align="right">1.4</td>
+<td align="right">0.2</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="even">
+<td align="right">5.4</td>
+<td align="right">3.9</td>
+<td align="right">1.7</td>
+<td align="right">0.4</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="odd">
+<td align="right">4.6</td>
+<td align="right">3.4</td>
+<td align="right">1.4</td>
+<td align="right">0.3</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="even">
+<td align="right">5.0</td>
+<td align="right">3.4</td>
+<td align="right">1.5</td>
+<td align="right">0.2</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="odd">
+<td align="right">4.4</td>
+<td align="right">2.9</td>
+<td align="right">1.4</td>
+<td align="right">0.2</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="even">
+<td align="right">4.9</td>
+<td align="right">3.1</td>
+<td align="right">1.5</td>
+<td align="right">0.1</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="odd">
+<td align="right">5.4</td>
+<td align="right">3.7</td>
+<td align="right">1.5</td>
+<td align="right">0.2</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="even">
+<td align="right">4.8</td>
+<td align="right">3.4</td>
+<td align="right">1.6</td>
+<td align="right">0.2</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="odd">
+<td align="right">4.8</td>
+<td align="right">3.0</td>
+<td align="right">1.4</td>
+<td align="right">0.1</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="even">
+<td align="right">4.3</td>
+<td align="right">3.0</td>
+<td align="right">1.1</td>
+<td align="right">0.1</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="odd">
+<td align="right">5.8</td>
+<td align="right">4.0</td>
+<td align="right">1.2</td>
+<td align="right">0.2</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="even">
+<td align="right">5.7</td>
+<td align="right">4.4</td>
+<td align="right">1.5</td>
+<td align="right">0.4</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="odd">
+<td align="right">5.4</td>
+<td align="right">3.9</td>
+<td align="right">1.3</td>
+<td align="right">0.4</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="even">
+<td align="right">5.1</td>
+<td align="right">3.5</td>
+<td align="right">1.4</td>
+<td align="right">0.3</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="odd">
+<td align="right">5.7</td>
+<td align="right">3.8</td>
+<td align="right">1.7</td>
+<td align="right">0.3</td>
+<td align="left">setosa</td>
+</tr>
+<tr class="even">
+<td align="right">5.1</td>
+<td align="right">3.8</td>
+<td align="right">1.5</td>
+<td align="right">0.3</td>
+<td align="left">setosa</td>
+</tr>
+</tbody>
+</table>
+<p>You can write citations, too. For example, we are using the <strong>bookdown</strong> package <span class="citation">(<a href="#ref-R-bookdown">Xie 2024</a>)</span> in this sample book, which was built on top of R Markdown and <strong>knitr</strong> <span class="citation">(<a href="#ref-xie2015">Xie 2015</a>)</span>.</p>
+
+</div>
+</div>
+<h3> Conclusion<a href="conclusion.html#conclusion" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-xie2015" class="csl-entry">
+Xie, Yihui. 2015. <em>Dynamic Documents with <span>R</span> and Knitr</em>. 2nd ed. Boca Raton, Florida: Chapman; Hall/CRC. <a href="http://yihui.name/knitr/">http://yihui.name/knitr/</a>.
+</div>
+<div id="ref-R-bookdown" class="csl-entry">
+———. 2024. <em>Bookdown: Authoring Books and Technical Documents with r Markdown</em>. <a href="https://github.com/rstudio/bookdown">https://github.com/rstudio/bookdown</a>.
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="descriptive-analytics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/01-intro.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

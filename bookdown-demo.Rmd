@@ -1,0 +1,1364 @@
+--- 
+title: "Final Project-Group 04"
+author: "Shakib-241001661,Shudeshna-241000261,Mithun-241002261,Pradipto-241002161,Mufrad-241001461,Shahriar Islam-241000461"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+github-repo: rstudio/bookdown-demo
+description: "Regression & Time Series analysis and forecasting techniques on Bitcoin historical price."
+---
+
+# Objective of the Project{-}
+
+perform **Regression** & **Time Series analysis** and **forecasting techniques** on _Bitcoin_ historical price. The experience can be replicated to forecast Stock price & Currency price as well. 
+
+ 
+```{r eval=FALSE}
+install.packages("bookdown")
+# or the development version
+# devtools::install_github("rstudio/bookdown")
+```
+ 
+## Dataset{-}
+
+A dataset of **Bitcoin** (BTC) historical price against USD. This is a monthly average price dataset having prices from 01 January 2015 to 30 November 2023. 
+
+## Applied Model{-}
+  1.	Linear regression model
+  2.	Quadratic regression model
+  3.	ARMIA model
+ 
+ 
+
+```{r include=FALSE}
+# automatically create a bib database for R packages
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+```
+
+<!--chapter:end:index.Rmd-->
+
+# Data Preprocessing/Cleaning {#intro}
+ 
+## Loading the Dataset{-}
+  
+  - Load the dataset from csv into a data frame named BitCoin.
+  - Check the data types of the features.
+  - Assign appropriate data type to features.
+  - Check the structure of the data frame.
+  - Check if there’s any missing value. If yes, treat missing values through         appropriate methodology.
+
+
+### Load the dataset from csv into a data frame named BitCoin.{-}
+```{r}
+
+#("tidyverse")
+#Load the dataset from csv into a data frame named BitCoin.
+library(tidyverse)
+#load csv from github(uploaded for Assignment_02_Group_04)
+bitcoin <- read.csv("https://raw.githubusercontent.com/shakibed/Final_Project_Group_04/main/BTC-Monthly.csv", stringsAsFactors = FALSE)
+view(bitcoin)
+```
+
+## Check the data types of the features.{-}
+
+
+```{r}
+#Check the data types of the features.
+glimpse(bitcoin)
+
+
+```
+
+_**Code explanation here**_
+
+We checked the data types using glimpse(bitcoin) and found we have two columns in data set.
+We need to convert the Date column from chr (character) type to Date type because our target is to work with a time series object or perform linear regression analysis.
+
+
+
+## Assign appropriate data type to features.{-}
+
+
+```{r}
+bitcoin$Date <- as.Date(bitcoin$Date)
+glimpse(bitcoin)
+
+
+```
+
+
+_**Code explanation here**_
+
+* This will allow us to properly utilize the Date column in time series analysis or linear regression models.
+
+## Check the structure of the data frame.{-}
+
+
+```{r}
+#Check the data types of the features.
+str(bitcoin)
+
+
+```
+
+_**Code explanation here**_
+
+* We checked the structure of the data frame using str(bitcoin) and found the following:
+* The Date column is already in the Date format, and the Close column is of type num (numeric). 
+* Since the Date column is correctly formatted as a date, it is ready for time series analysis or linear regression models without any further modification.
+
+
+## Check if there’s any missing value. If yes, treat missing values through  appropriate methodology.{-}
+
+
+```{r}
+#Check if there’s any missing value. If yes, treat missing values through appropriate methodology
+colSums(is.na(bitcoin))
+#it shows no missing value found
+
+
+```
+
+_**Code explanation here**_
+
+
+* We checked for missing values in the bitcoin data frame using colSums(is.na(bitcoin)) and found the following:
+* This indicates that there are no missing values in either the Date or Close columns. Since there are no missing values, no further action is needed to treat missing values.
+
+
+
+
+
+You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
+
+Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
+
+```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center'}
+par(mar = c(4, 4, .1, .1))
+plot(pressure, type = 'b', pch = 19)  
+  
+  
+  
+  
+
+```{r nice-tab, tidy=FALSE}
+knitr::kable(
+  head(iris, 20), caption = 'Here is a nice table!',
+  booktabs = TRUE
+)
+```
+
+You can write citations, too. For example, we are using the **bookdown** package [@R-bookdown] in this sample book, which was built on top of R Markdown and **knitr** [@xie2015].
+
+<!--chapter:end:01-intro.Rmd-->
+
+# Descriptive Analytics
+
+Copy the BitCoin data frame to a new data frame named BitCoin_df. In the new data frame create two more columns ‘month’ & ‘year’ by populating with the months & years values from the ‘Date’ column. 
+```{r, echo=FALSE}
+
+
+#("tidyverse")
+#Load the dataset from csv into a data frame named BitCoin.
+library(tidyverse)
+
+#load csv from github(uploaded for Assignment_02_Group_04)
+BitCoin <- read.csv("https://raw.githubusercontent.com/shakibed/Final_Project_Group_04/main/BTC-Monthly.csv", stringsAsFactors = FALSE)
+
+#convert to date
+BitCoin$Date <- as.Date(BitCoin$Date)
+
+#it shows no missing value found
+# Copy the bitcoin data frame to a new data frame named BitCoin_df
+BitCoin_df<- BitCoin
+
+
+# Create 'month' and 'year' columns in the BitCoin_df data frame
+BitCoin_df <- BitCoin_df %>%
+  mutate(
+    month = format(Date, "%m"),
+    year = format(Date, "%Y")
+  )
+
+```
+ 
+  - Create a monthly boxplot of prices.
+  - Create a yearly boxplot of prices.
+  - Create year wise trend lines of prices.
+  -- Convert the BitCoin data frame to a time series object with frequency 1.
+  - Plot the time series of monthly prices on years. Use blue color dots to plot the data points. Connect the points with a line.
+  - Find the relationship between consecutive days. Show the correlation through a scatter plot.
+  
+ 
+## Create a monthly boxplot of prices.{-}
+
+
+```{r}
+# 1. Create a monthly boxplot of prices
+
+ggplot(BitCoin_df, aes(x = factor(month), y = Close, fill = factor(month))) +
+  geom_boxplot(outlier.colour = "red") +
+  labs(title = "Monthly Boxplot of Bitcoin Prices", x = "Month", y = "Close Price") +
+  scale_fill_viridis_d(name = "Month", labels = month.abb)
+
+
+```
+
+_**Code explanation here**_
+
+* The boxplot shows that Bitcoin prices exhibit some level of seasonal variation. 
+* Prices tend to be higher during certain months (March, April, May) compared to others ( June, July). 
+* This could indicate seasonal trends or cycles in the market.
+* The presence of outliers (red dots) in some months, especially in May and September, indicates that there were extreme price changes during these periods.
+
+
+## Create a yearly boxplot of prices.{-}
+
+
+```{r}
+library(RColorBrewer)
+
+# 2. Create a yearly boxplot of prices
+color_palette <- brewer.pal(9, "Set3")  # 9 colors for 9 years
+
+#the boxplot with a legend for the years
+ggplot(BitCoin_df, aes(x = factor(year), y = Close, fill = factor(year))) +
+  geom_boxplot(outlier.colour = "red") +
+  labs(title = "Yearly Boxplot of Bitcoin Prices", x = "Year", y = "Close Price") +
+  scale_fill_manual(name = "Year", values = setNames(color_palette, as.character(2015:2023))) +
+  theme(legend.position = "right")
+
+
+```
+
+
+_**Code explanation here**_
+
+
+## Create year wise trend lines of prices.{-}
+
+* A boxplot showing the distribution of Bitcoin closing prices over different years. 
+* Each box represents the interquartile range (IQR) of the closing prices for a particular year, with the horizontal line inside the box indicating the median price. T
+* he whiskers extend to the minimum and maximum values within 1.5 times the IQR from the first and third quartiles, respectively. 
+* Outliers beyond this range are shown as individual points.
+
+
+
+```{r}
+# 3. Create year-wise trend lines of prices
+ggplot(BitCoin_df, aes(x = Date, y = Close, color = year)) +
+  geom_line() +
+  labs(title = "Year-Wise Trend Lines of Bitcoin Prices", x = "Date", y = "Close Price") +
+  theme(legend.position = "bottom")
+
+
+```
+
+_**Explanation of Plot**_
+
+* A trend line showing the price of Bitcoin changes over different years. 
+* 2015,2016: Bitcoin prices were relatively low and stable, with prices mostly below $1,000.
+* 2017: Significant growth was observed, with prices starting below $1,000 and rising to nearly $20,000 by the end of the year.
+* 2018,2019: After the peak in 2017, prices dropped significantly, fluctuating between $3,000 and $10,000.Prices started to recover, stabilizing between $3,000 and $12,000.
+* 2020: There was a steady increase, with prices rising from around $5,000 to over $30,000 by the end of the year.
+* 2021: Marked a dramatic rise, with Bitcoin prices reaching new all-time highs, peaking around $60,000.
+* 2022: Prices were highly volatile, with significant drops and recoveries, ranging from $30,000 to $50,000.
+* 2023: Prices appeared to stabilize somewhat, fluctuating between $20,000 and $40,000.
+
+
+
+### Convert the BitCoin data frame to a time series object with frequency 1{-}
+```{r}
+
+# Convert the BitCoin data frame to a time series object with frequency 1
+bitcoin_ts <- ts(BitCoin_df$Close, start = c(as.numeric(format(min(BitCoin_df$Date), "%Y")), 1), frequency = 1)
+
+# Print the time series object
+print(bitcoin_ts)
+```
+
+
+### Plot the time series of monthly prices on years. Use blue color dots to plot the data points. Connect the points with a line.{-}
+
+
+```{r}
+# Plot the time series of monthly prices on years
+ggplot(BitCoin_df, aes(x = Date, y = Close)) +
+  geom_point(color = "blue") + # Blue color dots for data points
+  geom_line(color = "blue") +  # Connect the points with a line
+  labs(title = "Time Series of Monthly Bitcoin Prices",
+       x = "Year",
+       y = "Close Price") +
+  theme_minimal()
+
+
+```
+
+_**Explanation of Plot**_
+
+Explanation of the Plot:
+- Horizontal Axis (Year): Represents the timeline from 2016 to 2024.
+- Vertical Axis (Close Price): Represents the closing price of Bitcoin at the end of each month.
+- Blue Dots: Each dot represents the closing price of Bitcoin for a particular month.
+- Blue Line: Connects the dots to show the trend and continuity of Bitcoin prices over time.
+- The plot provides a visual representation of Bitcoin's price volatility and trends, making it easier to analyze patterns and potential factors affecting its value over the given period.
+
+_**Result**_
+
+The plot reveals significant fluctuations in Bitcoin prices, including notable peaks around 2021 and subsequent declines. The most recent data indicates a rising trend in prices again.
+
+
+## Find the relationship between consecutive months. Show the correlation through a scatter plot.{-}
+
+
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+
+# Aggregate the data by month
+BitCoin_df_monthly <- BitCoin_df %>%
+  mutate(YearMonth = floor_date(Date, "month")) %>%
+  group_by(YearMonth) %>%
+  summarise(Monthly_Close = last(Close)) %>%
+  arrange(YearMonth)
+
+# Create a new column for the previous month's closing price
+BitCoin_df_monthly <- BitCoin_df_monthly %>%
+  mutate(Prev_Month_Close = lag(Monthly_Close, 1))
+
+# Remove the first row with NA value in Prev_Month_Close
+BitCoin_df_monthly <- BitCoin_df_monthly %>%
+  filter(!is.na(Prev_Month_Close))
+
+# Calculate the correlation
+monthly_correlation <- cor(BitCoin_df_monthly$Monthly_Close, BitCoin_df_monthly$Prev_Month_Close)
+print(paste("Correlation between consecutive months: ", monthly_correlation))
+
+# Create a scatter plot
+ggplot(BitCoin_df_monthly, aes(x = Prev_Month_Close, y = Monthly_Close)) +
+  geom_point(color = "blue") +
+  labs(title = "Scatter Plot of Consecutive Month Prices",
+       subtitle = paste("Correlation: ", round(monthly_correlation, 2)),
+       x = "Previous Month Close Price",
+       y = "Current Month Close Price") +
+  theme_minimal()
+```
+
+_**Code explanation here**_
+
+The scatter plot provides a clear visual representation of the relationship between Bitcoin prices in consecutive months, highlighting the strong correlation 0.96 and linear trend, which are valuable for analyses and decision-making processes.
+
+- Horizontal Axis (Previous Month Close Price): Represents the closing price of Bitcoin for the previous month.
+- Vertical Axis (Current Month Close Price): Represents the closing price of Bitcoin for the current month.
+- Blue Dots: Each dot represents the closing price of Bitcoin for a specific month plotted against the closing price of the previous month.
+- Correlation Value: Displayed at the top of the chart, it quantifies the strength of the relationship between - consecutive month's prices.
+
+
+<!--chapter:end:02-literature.Rmd-->
+
+# Regression Analysis
+
+
+### Linear Regression 
+  
+
+```{r, echo=FALSE}
+
+#("tidyverse")
+#4.1 Loading the Dataset
+#Load the dataset from csv into a data frame named BitCoin.
+library(tidyverse)
+#load csv from github(uploaded for Assignment_02_Group_04)
+BitCoin <- read.csv("https://raw.githubusercontent.com/shakibed/Final_Project_Group_04/main/BTC-Monthly.csv", stringsAsFactors = FALSE)
+
+BitCoin$Date <- as.Date(BitCoin$Date)
+
+#it shows no missing value found
+# Copy the bitcoin data frame to a new data frame named BitCoin_df
+BitCoin_df<- BitCoin
+
+
+# Create 'month' and 'year' columns in the BitCoin_df data frame
+BitCoin_df <- BitCoin_df %>%
+  mutate(
+    month = format(Date, "%m"),
+    year = format(Date, "%Y")
+  )
+
+
+```
+ 
+  - Create a linear model of the time series dataset.
+  - Show the summary of the model and explain the outcome.
+  - Create a plot of the linear model on top of the time series dataset line plot with scatter data points.
+  - Perform residual analysis and create a line & scatter plot of the residuals. Explain the outcome.
+  - Create a histogram plot of the residuals. Explain the outcome.
+  - Create ACF & PACF plots of residuals. Explain the outcome.
+  - Create QQ plot of residuals. Explain the outcome.
+  - Perform Shapiro-Wilk test on residuals. Explain the outcome.
+  - Explain if linear model is appropriate or not.
+
+  
+ 
+#### Create a linear model of the time series dataset.
+
+
+```{r}
+# Convert Date to numeric format for linear modeling
+BitCoin_df <- BitCoin_df %>%
+mutate(Date_numeric = as.numeric(Date))
+
+# Fit the linear model
+linear_model <- lm(Close ~ Date_numeric, data = BitCoin_df)
+#y=mx+c
+#close price = m*numeric date + c
+
+```
+
+_**Code explanation here**_
+The linear model predicts Bitcoin's closing price based on the date. The slope shows the price change rate over time, and the intercept represents the initial price at the start date.
+
+
+#### Show the summary of the model and explain the outcome. 
+
+
+```{r}
+summary(linear_model)
+
+# Create a new column with fitted values
+BitCoin_df <- BitCoin_df %>%
+mutate(Fitted_Close = predict(linear_model))
+
+# Plot the original data and the linear model
+
+ggplot(BitCoin_df, aes(x = Date)) +
+geom_point(aes(y = Close, color = "Original Data")) +  # Original data points
+geom_line(aes(y = Fitted_Close, color = "Fitted Line")) +  # Fitted line
+labs(title = "Linear Model of Bitcoin Prices Over Time",
+     x = "Date",
+     y = "Close Price",
+     color = "Legend") +  # Add a label to the legend
+theme_minimal() +
+scale_color_manual(values = c("Original Data" = "blue", "Fitted Line" = "red"))  # Specify colors
+
+
+
+```
+
+_**Code explanation here**_
+
+The provided graph and summary show a linear regression model of Bitcoin prices over time. The blue points represent the original data, while the red line represents the fitted linear model. The coefficients table and statistical measures indicate a significant relationship between time and Bitcoin prices, with an R-squared value of 0.586, suggesting that approximately 58.6% of the variance in Bitcoin prices can be explained by the model. The residuals indicate some variability around the fitted line.
+
+#### Create a plot of the linear model on top of the time series dataset line plot with scatter data points. 
+
+
+```{r}
+#Create a plot of the linear model on top of the time series dataset line plot with scatter data points.
+  
+#Plot the original data, the time series line, and the linear model
+ggplot(BitCoin_df, aes(x = Date)) +
+geom_point(aes(y = Close), color = "blue") +  # Original data points
+geom_line(aes(y = Close), color = "blue", linetype = "dashed") +  # Time series line
+geom_line(aes(y = Fitted_Close), color = "red") +  # Fitted linear model line
+labs(title = "Time Series of Bitcoin Prices with Linear Model",
+     x = "Date",
+     y = "Close Price") +
+theme_minimal() 
+
+```
+
+
+_**Code explanation here**_
+The graph shows Bitcoin prices over time with blue dots representing the original data points and a blue dashed line representing the time series trend. The red line indicates the fitted linear model. The linear model captures the general upward trend but misses some of the more volatile fluctuations in Bitcoin prices.
+
+
+
+#### Perform residual analysis 
+```{r}
+# Convert Date to numeric format for linear modeling
+BitCoin_df <- BitCoin_df %>%
+mutate(Date_numeric = as.numeric(Date))
+
+
+
+# Fit the linear model
+linear_model <- lm(Close ~ Date_numeric, data = BitCoin_df)
+#y=mx+c
+#close price = m*numeric date + c
+summary(linear_model)
+#Calculate residuals
+BitCoin_df <- BitCoin_df %>%
+mutate(Residuals = Close - Fitted_Close)
+
+#residual calcultion in different way
+#res_dual_values <- residuals(linear_model)
+#summary(res_dual_values)
+
+
+
+# Print the first few rows to verify
+head(BitCoin_df)
+```
+
+_**Code explanation here**_
+
+The code snippet converts dates in the Bitcoin dataset to numeric format for linear modeling. A linear model is then fitted to predict the closing price based on the numeric date. The model's summary shows a significant positive relationship between date and closing price, with an R-squared value of 0.586, indicating moderate explanatory power. Residuals are calculated to assess model fit. The dataset includes date, closing price, month, year, numeric date, fitted close values, and residuals for verification.
+
+
+#### Perform residual analysis and create a line & scatter plot of the 
+
+
+```{r}
+
+
+# Plot the residuals: Line plot
+ggplot(BitCoin_df, aes(x = Date, y = Residuals)) +
+  geom_line(color = "blue") +
+  labs(title = "Line Plot of Residuals over Time",
+       x = "Date",
+       y = "Residuals") +
+  theme_minimal()
+
+
+
+```
+
+_**Code explanation here**_
+The graph shows a blue line plotting the difference between actual values and predicted values for a Bitcoin data set, over time. Basically, it shows how much the actual Bitcoin values differed from what a model predicted on certain dates.
+
+
+#### Residual analysis  scatter plot 
+
+```{r}
+# Plot the residuals: Scatter plot
+ggplot(BitCoin_df, aes(x = Fitted_Close, y = Residuals)) +
+  geom_point(color = "blue") +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  labs(title = "Scatter Plot of Residuals",
+       x = "Fitted Close Price",
+       y = "Residuals") +
+  theme_minimal()
+
+
+```
+
+_**Code explanation here**_
+
+This graph shows blue dots representing the difference between actual Bitcoin closing prices and what a model predicted. The horizontal red line represents perfect predictions (no difference). Scattered points around the line indicate the model's accuracy - ideally, the dots would be random with no clear pattern.
+
+#### Summary of Residual analysis 
+```{r}
+# Summary statistics of the residuals
+summary(BitCoin_df$Residuals)  
+```
+
+_**Code explanation here**_
+
+The summary statistics of the residuals provide insight into the accuracy of the linear model's predictions for Bitcoin closing prices. The residuals range from -15,114 to 35,626, indicating the model sometimes significantly underestimates or overestimates the actual prices. The median residual of -2,255 suggests that half of the predictions are off by less than this amount. The mean residual is 0, indicating that, on average, the model's predictions are unbiased. The first and third quartiles (-7,997 and 3,065) show that 50% of the residuals fall within this range, highlighting the variability in prediction accuracy.
+
+
+#### Create a histogram plot of the residuals. Explain the outcome. 
+
+
+```{r}
+#Create a histogram plot of the residuals. Explain the outcome.
+  # Plot the histogram of residuals
+  ggplot(BitCoin_df, aes(x = Residuals)) +
+  geom_histogram(binwidth = 500, color = "black", fill = "blue", alpha = 0.7) +
+  labs(title = "Histogram of Residuals",
+       x = "Residuals",
+       y = "Frequency") +
+  theme_minimal()
+
+
+
+```
+
+_**Code explanation here**_
+
+The graph shows a bar chart of prediction errors (residuals) for Bitcoin prices. Each bar represents how many errors fell within a specific price range. The center area, with more bars, suggests most predictions were close. Ideally, the bars would be symmetrical around zero (no errors), but some errors exist on both positive and negative sides.
+
+#### Create a histogram plot of the residuals with 
+
+```{r}
+# Overlay a normal distribution curve on the histogram
+ggplot(BitCoin_df, aes(x = Residuals)) +
+  geom_histogram(aes(y = ..density..), binwidth = 500, color = "black", fill = "blue", alpha = 0.7) +
+  stat_function(fun = dnorm, args = list(mean = mean(BitCoin_df$Residuals), sd = sd(BitCoin_df$Residuals)), color = "red", size = 1) +
+  labs(title = "Histogram of Residuals with Normal Curve",
+       x = "Residuals",
+       y = "Density") +
+  theme_minimal()
+```
+
+_**code explanation here**_
+
+This graph shows a histogram of prediction errors (residuals) for Bitcoin prices with a normal distribution curve overlaid in red. The bars represent the frequency of errors in different price ranges. Ideally, the bars would closely match the smooth red curve, indicating the errors follow a normal distribution. By comparing their shapes, we can assess how close the actual errors are to being normally distributed.
+
+
+#### Create ACF & PACF plots of residuals.Explain the outcome. 
+
+
+```{r}
+
+acf(BitCoin_df$Residuals, main = "ACF of Residuals")
+
+
+
+```
+
+_**Code explanation here**_
+
+ACF measures the correlation between residuals at different lags. Most bars falling within significance bounds (dashed lines) indicate no significant autocorrelation, suggesting the model captures data patterns adequately.
+
+```{r}
+pacf(BitCoin_df$Residuals, main = "PACF of Residuals")  
+
+```
+
+PACF measures the correlation between residuals and lagged values, accounting for shorter lags. Bars within significance bounds indicate no significant partial autocorrelation, meaning past values don't provide additional predictive information. 
+Both plots help determine if residuals are random (white noise), validating the model. Most lags within bounds suggest errors are random and uncorrelated, indicating a good model fit.
+
+
+#### Create QQ plot of residuals. Explain the outcome. 
+
+
+```{r}
+  # S
+
+```
+
+_**Code explanation here**_
+
+The graph shows a QQ plot of prediction errors (residuals). It compares these errors to a perfect normal distribution (red line). Ideally, the points would fall on the red line, indicating normally distributed errors. In this plot, the points veer away from the line, especially at the edges. This suggests the errors may not be normally distributed.
+
+
+#### Perform Shapiro-Wilk test on residuals. Explain the outcome. 
+
+
+```{r}
+#Perform Shapiro-Wilk test on residuals. Explain the outcome.  
+
+# Perform Shapiro-Wilk test on residuals
+shapiro_test <- shapiro.test(BitCoin_df$Residuals)
+
+# Print the result of the Shapiro-Wilk test
+print(shapiro_test)
+
+
+
+```
+
+_**Code explanation here**_
+
+The Shapiro-Wilk test assesses the normality of residuals. The test statistic 
+𝑊
+W is 0.85983, and the p-value is 1.215e-08, which is much less than 0.05. This indicates that the residuals are not normally distributed,
+
+
+#### Explain if linear model is appropriate or not. 
+
+
+```{r}
+
+
+
+```
+
+_**Code explanation here**_
+
+The linear model may not be appropriate because the Shapiro-Wilk test reveals non-normal residuals (p-value = 1.215e-08). Non-normality violates a key assumption of linear regression, potentially leading to unreliable estimates and inferences. This indicates that the model may not capture the data's underlying patterns accurately.
+
+### Quadratic Regression
+
+  - Create a quadratic model of the time series dataset.
+  - Show the summary of the model and explain the outcome.
+  - Explain if quadratic model is appropriate or not.
+
+
+ 
+#### Create a quadratic model of the time series dataset 
+
+
+```{r}
+# Create the quadratic term for the date
+BitCoin_df <- BitCoin_df %>%
+  mutate(Date_numeric = as.numeric(Date),
+         Date_numeric2 = Date_numeric^2)
+view(BitCoin_df)
+# Fit the quadratic model
+quadratic_model <- lm(Close ~ Date_numeric + Date_numeric2, data = BitCoin_df)
+
+
+```
+
+_**Code explanation here**_
+
+The dataset is enhanced by adding a squared numeric date column to capture non-linear trends. A quadratic regression model is then fitted with closing price as the dependent variable and both the numeric date and its square as independent variables. This model aims to better capture the relationship between time and Bitcoin closing prices by accounting for potential quadratic effects.
+
+
+ 
+#### Show the summary of the model and explain the outcome. 
+
+
+```{r}
+summary(quadratic_model)
+
+
+```
+
+_**Code explanation here**_
+
+The summary of the quadratic regression model shows that the relationship between Bitcoin's closing price and the date (both linear and squared) is analyzed. The residuals indicate the spread of prediction errors. The coefficients for the intercept, Date_numeric, and Date_numeric2 are not statistically significant (p-values > 0.05), means weak relationships. Despite this, the model explains about 58.85% of the variance in closing prices (R-squared = 0.5885). The F-statistic (74.36) and its p-value (< 2.2e-16) indicate the overall model is significant.
+
+ 
+#### Explain if quadratic model is appropriate or not. 
+
+
+```{r}
+
+# Create a new column with the fitted values from the quadratic model
+BitCoin_df <- BitCoin_df %>%
+  mutate(Fitted_Close_Quadratic = predict(quadratic_model))
+
+# Plot the original data, the linear model, and the quadratic model
+ggplot(BitCoin_df, aes(x = Date)) +
+  geom_point(aes(y = Close), color = "blue") +  # Original data points
+  geom_line(aes(y = Fitted_Close), color = "red", linetype = "dashed") +  # Fitted linear model line
+  geom_line(aes(y = Fitted_Close_Quadratic), color = "green") +  # Fitted quadratic model line
+  labs(title = "Time Series of Bitcoin Prices with Linear and Quadratic Models",
+       x = "Date",
+       y = "Close Price") +
+  theme_minimal()
+summary(BitCoin_df$Fitted_Close_Quadratic)
+
+```
+
+_**Code explanation here**_
+
+The code creates a new column for predicted closing prices based on a quadratic model in the BitCoin_df data frame. The plotted lines show the original data (blue dots), the fitted linear model (red dashed), and the quadratic model (green). The quadratic curve better reflects the data's trend, suggesting an accelerating increase in closing prices over time.
+
+
+<!--chapter:end:03-method.Rmd-->
+
+# ARIMA Model
+
+```{r}
+library(kableExtra)
+library(tidyverse)
+library(forecast)
+library(tseries)
+library(lmtest)
+
+ 
+
+#load csv from github(uploaded for Assignment_02_Group_04)
+BitCoin <- read.csv("https://raw.githubusercontent.com/shakibed/Final_Project_Group_04/main/BTC-Monthly.csv", stringsAsFactors = FALSE)
+
+#convert it to date
+BitCoin$Date <- as.Date(BitCoin$Date)
+
+#it shows no missing value found
+# Copy the bitcoin data frame to a new data frame named BitCoin_df
+BitCoin_df<- BitCoin
+
+
+# Create 'month' and 'year' columns in the BitCoin_df data frame
+BitCoin_df <- BitCoin_df %>%
+  mutate(
+    month = format(Date, "%m"),
+    year = format(Date, "%Y")
+  ) 
+```
+
+
+
+```{r}
+# Convert to time series object
+bitcoin_ts <- ts(BitCoin_df$Close, start = c(as.numeric(format(min(BitCoin_df$Date), "%Y")), as.numeric(format(min(BitCoin_df$Date), "%m"))), frequency = 12)
+```
+ 
+ 
+ 
+  - Create ACF & PACF plots of the time series data set with maximum lag of 24. Explain the outcome and comment on the dataset’s nature.
+  - Perform ADF test. Explain the outcome.
+  - Explain if the dataset is stationary or not.
+  - Create QQ plot & perform Shapiro-Wilk test.
+  - If the dataset is not stationary, then make it stationary by differencing. Show a plot of the dataset after differencing and perform ADF test on differenced dataset to check stationarity again.
+  - Perform ACF & PACF test to find the probable model candidates. Explain the outcome of the plots.
+  - Perform EACF test to comprehensively test the possible candidate models. Mention the models that you have selected for modeling (select at least 3 models).
+  - Estimate the ARIMA parameters by creating the above selected models. Perform coeftest on each model. Explain the outcome from the level of significance.
+  - Evaluate the models through AIC & BIC tests.
+  - From outcome of above two steps select best two models. Explain why you have chosen those two models.
+  - Assess the chosen two models through accuracy test.
+  - Perform residual analysis of the two models and create line & scatter plot of the residuals. Explain the outcome.
+  - Create a histogram plot of the residuals of the two models. Explain the outcome.
+  - Create ACF & PACF plots of residuals of the two models. Explain the outcome.
+  - Create QQ plot of residuals of the two models. Explain the outcome.
+  - Perform Shapiro-Wilk test on residuals of the two models. Explain the outcome.
+  - Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model. 
+ 
+## Create ACF & PACF plots of the time series data set with maximum lag of 24. Explain the outcome and comment on the dataset’s nature.
+
+
+```{r, figures-side, fig.show="hold", out.width="50%"}
+
+# ACF & PACF plots with maximum lag of 24
+acf(bitcoin_ts, lag.max = 24, main = "ACF of Bitcoin Prices")
+pacf(bitcoin_ts, lag.max = 24, main = "PACF of Bitcoin Prices")
+
+
+```
+
+_**Explanation of ACF Plot**_
+
+- The ACF (Autocorrelation Function) plot provided shows the autocorrelation of Bitcoin prices over different lags up to 24 days.
+- The first few lags show very high autocorrelation, close to 1.0. This indicates that Bitcoin prices are strongly correlated with their recent past values.
+
+- The autocorrelation values gradually decline as the lag increases. This tells us that the data has a pattern that lasts a while and what happened in the past continues to influence what happens in the future for a longer period.
+
+_**Nature of the Dataset:**_
+
+- Non-Stationarity: The high initial autocorrelation and gradual decline suggest that the Bitcoin price series is likely non-stationary. Non-stationary time series often exhibit trends, seasonal patterns, or other forms of long-term dependencies.
+- Trend: The high autocorrelation at lag 1 and significant autocorrelation at subsequent lags imply that the series likely has a trend component. 
+- Seasonality: The plot does not clearly indicate strong seasonality, but further investigation might be needed to confirm this.
+
+_**In summary,**_ 
+- We identified data is likely non-stationary with a trend. 
+- Differencing and possibly transformation (e.g., logarithms) might be necessary to stabilize the mean and variance before applying forecasting models.
+
+
+_**Explanation of PACF Plot**_
+
+The PACF (Partial Autocorrelation Function) plot of Bitcoin prices provides insights into the time series data's nature, after removing the effects of intervening values.
+- The PACF at lag 1 is significantly high, close to 0.8. This indicates a strong direct relationship between the current value and its immediate past value.
+- After lag 1, the partial autocorrelations drop significantly and most of them are within the 95% confidence interval .This implies that differencing the series (likely once, i.e., d=1d=1) may help in achieving stationarity.
+
+- The PACF does not show significant spikes at higher lags, which suggests that the direct influence of past values decreases quickly after the first lag.
+
+_**Nature of the Dataset:**_
+
+- Non-Stationarity:Similar to the ACF plot, the high initial value in the PACF suggests that the series is non-stationary and likely has a trend component.
+
+- Seasonality: The absence of significant spikes at higher lags suggests that there is no strong seasonality in the dataset.
+
+_**In summary,**_ 
+
+- The PACF plot supports the earlier observation that the Bitcoin price series is non-stationary with a trend and follows an autoregressive process, primarily influenced by its immediate past value. 
+- Using differencing to make the series stationary, followed by fitting an ARIMA model, should yield a good forecasting model. 
+- The high initial PACF value suggests that an AR(1) term will be significant in the model.
+
+## Perform ADF test. Explain the outcome. 
+
+
+
+```{r}
+# Perform ADF test
+adf_test <- adf.test(bitcoin_ts)
+print(adf_test)
+
+```
+
+_**In summary,Augmented Dickey-Fuller Test**_ 
+
+- The Augmented Dickey-Fuller (ADF) test is used to check if a time series is stationary. 
+
+- The time series data is likely not stationary. 
+- Since the p-value is greater than 0.05 we fail to reject the null hypothesis. Means time series is non-stationary.
+- differencing might be needed to make it stationary before further analysis.
+
+Outcome:
+- This means that we do not have enough evidence to say that the Bitcoin time series is stationary.
+
+
+
+## Explain if the dataset is stationary or not. 
+
+Based on the results from the ACF, PACF, and Augmented Dickey-Fuller (ADF) tests, we can conclude the following:
+
+ACF and PACF Results:
+
+ACF: The high autocorrelation at the initial lags and gradual decline suggest a persistent pattern and trend in the data, indicating non-stationarity.
+PACF: The significant spike at lag 1 and quick drop-off thereafter further support the presence of a trend and non-stationarity.
+ADF Test Result:
+
+p-value = 0.3385: This high p-value indicates that we fail to reject the null hypothesis of the ADF test, suggesting that the Bitcoin price series is non-stationary.
+Conclusion:
+
+Non-Stationary Data: The combined evidence from the ACF, PACF, and ADF tests strongly indicates that the Bitcoin price series is non-stationary and exhibits a trend component. Differencing the series is likely required to achieve stationarity for further analysis and modeling.
+ 
+
+
+## Create QQ plot & perform Shapiro-Wilk test. 
+
+
+```{r}
+# Perform QQ plot and Shapiro-Wilk test
+qqnorm(bitcoin_ts, main = "QQ Plot of Bitcoin Prices")
+qqline(bitcoin_ts, col = "red")
+
+shapiro_test <- shapiro.test(bitcoin_ts)
+print(shapiro_test)
+
+```
+
+_**Code explanation here**_
+
+- The Bitcoin prices do not follow a normal distribution. 
+- The points on the left side of the plot (lower quantiles) and right side (higher quantiles) deviate significantly from the red line,and the clustering indicate that the data is skewed and has heavier tails than a normal distribution. 
+- The points in the middle are somewhat closer to the red line but still show noticeable deviation. This suggests that the central part of the distribution does not perfectly follow a normal distribution.
+ 
+
+## If the dataset is not stationary, then make it stationary by differencing. Show a plot of the dataset after differencing and perform ADF test on differenced dataset to check stationarity again.
+
+
+```{r}
+# If the dataset is not stationary, then make it stationary by differencing
+bitcoin_diff <- diff(bitcoin_ts, differences = 1)
+
+# Plot the differenced data
+plot(bitcoin_diff, main = "Differenced Bitcoin Prices", ylab = "Differenced Prices", xlab = "Time")
+
+# Perform ADF test on differenced data
+adf_test_diff <- adf.test(bitcoin_diff)
+print(adf_test_diff)
+
+```
+
+Stationarity:
+- Given a very small p-value (typically less than 0.05) from the ADF test, we reject the null hypothesis, indicating that the series is stationary.
+- The differencing appears to have stabilized the mean of the time series, making it more suitable for further time series modeling techniques.
+- The plot appears to be centered around zero and does not exhibit a clear trend or seasonal pattern. 
+- Stationarity means the statistical properties of the series (like mean and variance) are constant over time.
+
+
+## Perform ACF & PACF test to find the probable model candidates. Explain the outcome of the plots.
+
+
+```{r}
+
+# ACF & PACF plots of differenced data to find the probable model candidates
+acf(bitcoin_diff, lag.max = 24, main = "ACF of Differenced Bitcoin Prices")
+pacf(bitcoin_diff, lag.max = 24, main = "PACF of Differenced Bitcoin Prices")
+
+
+```
+
+Code explanation here
+
+Stationarity:
+The ACF plot of the differenced Bitcoin prices shows a significant autocorrelation at lag 1 and quickly diminishing autocorrelations at higher lags. This suggests that the first differencing has effectively made the series stationary and has successfully removed trends and seasonality
+ 
+
+Model Identification:
+The significant autocorrelation at lag 1 suggests that an ARIMA model with an AR (autoregressive) term might be appropriate. Specifically, an ARIMA(1,1,0) or ARIMA(1,1,1) model could be considered, 
+where:
+- The first "1" indicates one AR term.
+- The "1" indicates first differencing.
+- The last "0" or "1" indicates the number of MA (moving average) terms.
+ 
+- he differenced Bitcoin prices seem to have eliminated much of the non-stationarity, but there is still some autocorrelation present, as indicated by the significant spikes at certain lags.
+- This suggests that while differencing has helped stabilize the series, it may not have completely removed all dependencies between observations.
+- An ARIMA model could be appropriate for further analysis, with the AR component determined by the significant lags observed in the PACF plot.
+
+
+## Perform EACF test to comprehensively test the possible candidate models. Mention the models that you have selected for modeling (select at least 3 models).
+
+
+```{r}
+# Perform EACF test (Enhanced ACF test)
+# Install and load eacf package if necessary
+# install.packages("TSA")
+library(TSA)
+eacf(bitcoin_diff,ar.max = 3,ma.max = 3)
+
+
+
+```
+ARIMA(0, d, 0)
+
+ARIMA(0, d, 3)
+
+ARIMA(1, d, 3)
+ARIMA(2, d, 0)
+
+ARIMA(2, d, 3)
+ARIMA(3, d, 1)
+ARIMA(3, d, 3)
+
+-ARIMA(0, d, 1)
+-ARIMA(0, d, 2)
+-ARIMA(1, d, 2)
+-ARIMA(2, d, 2)
+
+Code explanation here
+The EACF (Extended Autocorrelation Function) table is used in the identification of ARMA (AutoRegressive Moving Average) models. In the table, 'o' indicates non-significant (near zero) values, and 'x' indicates significant values.
+In this case, the smallest rectangle of 'o's is found for AR = 0 and MA = 2:
+
+Thus, an ARMA(0, 2) model might be a good starting point.
+
+This is just one method for model identification. 
+we will use other diagnostics and criteria, such as AIC (Akaike Information Criterion) or BIC (Bayesian Information Criterion), to confirm the best model fit.
+
+
+## Estimate the ARIMA parameters by creating the above selected models. Perform coeftest on each model. Explain the outcome from the level of significance.
+-ARIMA(0, d, 1)
+-ARIMA(0, d, 2)
+-ARIMA(1, d, 2)
+-ARIMA(2, d, 2)
+Based on the EACF, we select the ARIMA parameters of models (0,1,1), (0,1,2), (3,1,1)
+
+
+```{r}
+#ARIMA(0, 1, 1)
+model_011 <- Arima(bitcoin_diff, order = c(0, 1, 1))
+coeftest(model_011)
+
+```
+
+```{r}
+#ARIMA(0, 1, 2)
+model_012 <- Arima(bitcoin_diff, order = c(0, 1, 2))
+coeftest(model_012)
+
+```
+
+```{r}
+#ARIMA(1, 1, 2)
+model_112 <- Arima(bitcoin_diff, order = c(1, 1, 2))
+coeftest(model_112)
+
+```
+
+
+```{r}
+#ARIMA(2, 1, 2)
+model_212 <- Arima(bitcoin_diff, order = c(2, 1, 2))
+coeftest(model_212)
+
+```
+
+
+```{r}
+#-ARIMA(0, d, 1)
+#-ARIMA(0, d, 2)
+#-ARIMA(1, d, 2)
+#-ARIMA(2, d, 2)
+# Selecting at least 3 models based on the tests
+
+
+# Estimate the ARIMA parameters by creating the models and perform coeftest on each model
+
+```
+
+-ARIMA(1, d, 2)
+-ARIMA(0, d, 1)
+-ARIMA(0, d, 2)
+-ARIMA(2, d, 2)
+
+Code explanation here
+Explanation of Coefficient Test Results for ARIMA Models
+Background: The coeftest function in R is used to test the statistical significance of the coefficients in an ARIMA model. The significance is assessed using a z-test, where the p-value helps us determine whether each coefficient is significantly different from zero.
+
+Model 1: ARIMA(1, 1, 1)
+Outcome Explanation:
+
+- ar1 (Autoregressive term): The p-value is 0.60682, which is greater than 0.05. This means the ar1 term is not statistically significant, indicating it may not be necessary for the model.
+- ma1 (Moving Average term): The p-value is 0.08135, which is slightly higher than 0.05 but below 0.1. This term is marginally significant (often denoted with a dot), meaning it has a weak influence on the model.
+Interpretation: In simple terms, neither of the coefficients in Model 1 are strongly significant, suggesting this model might not be the best fit for the data.
+
+Model 2: ARIMA(2, 1, 2)
+Outcome Explanation:
+
+-ar1: The p-value is 0.0007635, which is much less than 0.05. This term is highly significant.
+-ar2: The p-value is 0.0041544, which is also less than 0.05. This term is significant.
+-ma1: The p-value is 1.312e-07, which is extremely small. This term is highly significant.
+-ma2: The p-value is 3.469e-05, which is also very small. This term is highly significant.
+Interpretation: All coefficients in Model 2 are highly significant, suggesting that this model is a very good fit for the data.
+
+Model 3: ARIMA(0, 1, 1)
+Outcome Explanation:
+
+ma1: The p-value is 0.006454, which is less than 0.05. This term is significant.
+Interpretation: The coefficient in Model 3 is significant, indicating that this model also fits the data reasonably well.
+
+Summary
+Model 1: The coefficients are not significant, suggesting this model might not be the best fit for the data.
+Model 2: All coefficients are highly significant, indicating this model is a very good fit for the data.
+Model 3: The coefficient is significant, suggesting this model fits the data reasonably well.
+
+In simple terms, Model 2 (ARIMA(2, 1, 2)) appears to be the best model among the three tested, as all its coefficients are highly significant. This suggests that the features it includes are very important for accurately modeling the Bitcoin time series data.
+
+
+
+
+
+## Evaluate the models through AIC & BIC tests.
+```{r}
+# Extract AIC and BIC values
+model_011
+model_012
+model_112
+model_212
+
+aic_values <- c(AIC(model_011), AIC(model_012), AIC(model_112),AIC(model_212))
+bic_values <- c(BIC(model_011), BIC(model_012), BIC(model_112), BIC(model_212))
+
+# Create a data frame
+print_all_model_AIC_BIC <- data.frame(
+  Model = c("model_011", "model_012", "model_112", "model_212"),
+  AIC = aic_values,
+  BIC = bic_values
+)
+
+print(print_all_model_AIC_BIC)
+
+```
+
+
+
+Code explanation here
+- Based on AIC, Model 2 (ARIMA(2, 1, 2)) is the best model, as it has the lowest AIC value, suggesting a good fit to the data.
+- Based on BIC, Model 3 (ARIMA(0, 1, 1)) is the best model, as it has the lowest BIC value, indicating it strikes the best balance between fit and simplicity.
+- Thus, Model 2 is preferable for a better fit, but if simplicity and avoiding overfitting are more important, Model 3 would be the better choice.
+
+## From outcome of above two steps select best two models. Explain why you have chosen those two models.
+
+
+```{r}
+# Select best two models based on AIC and BIC
+#best_model1 <- model2
+#best_model2 <- model3
+
+```
+
+Code explanation here
+
+
+## Assess the chosen two models through accuracy test.
+
+
+```{r}
+# Assess the chosen two models through accuracy test
+
+model_012 = Arima(bitcoin_diff, order = c(0, 1, 2))
+model_212 = Arima(bitcoin_diff, order = c(2, 1, 2))
+
+accuracy_012 <- accuracy(model_012)
+accuracy_212 <- accuracy(model_212)
+
+
+
+df_models <- data.frame(
+rbind(accuracy_012, accuracy_212)
+)
+colnames(df_models) <- c("ME", "RMSE", "MAE", "MPE", "MAPE", "MASE", "ACF1")
+rownames(df_models) <- c("ARIMA(0,1,2)",  "ARIMA(2,1,2)")
+
+kable(df_models, digits = 2, formats="html", row.names = TRUE) %>%
+  kable_styling(full_width = F, font_size = 12, position = "center")
+```
+
+Code explanation here
+
+
+### Perform residual analysis of the two models and create line & scatter plot of the residuals. Explain the outcome.
+
+
+```{r}
+# Extract residuals from the models
+residuals_012 <- residuals(model_012)
+residuals_212 <- residuals(model_212)
+
+# Set up the plotting area to have 2 rows and 2 columns for 4 plots
+par(mfrow = c(1, 1))
+
+# Plot 1: Time series plot of standardized residuals for Model 112 (line plot)
+plot(residuals_012,
+     xlab = "Year Index", ylab = "Residuals",
+     main = "Time series plot of standardized residuals - Model 012",
+     type = "l", col = "blue")
+abline(h = 0, col = "red", lty = 2)
+
+# Plot 2: Scatter plot of standardized residuals for Model 012
+plot(residuals_012,
+     xlab = "Year Index", ylab = "Residuals",
+     main = "Scatter plot of standardized residuals - Model 012",
+     pch = 16, col = "blue")
+abline(h = 0, col = "red", lty = 2)
+
+# Plot 3: Time series plot of standardized residuals for Model 212 (line plot)
+plot(residuals_212,
+     xlab = "Year Index", ylab = "Residuals",
+     main = "Time series plot of standardized residuals - Model 212",
+     type = "l", col = "green")
+abline(h = 0, col = "red", lty = 2)
+
+# Plot 4: Scatter plot of standardized residuals for Model 212
+plot(residuals_212,
+     xlab = "Year Index", ylab = "Residuals",
+     main = "Scatter plot of standardized residuals - Model 212",
+     pch = 16, col = "green")
+abline(h = 0, col = "red", lty = 2)
+
+ 
+
+```
+
+Code explanation here
+
+
+
+## Create a histogram plot of the residuals of the two models. Explain the outcome.
+
+
+```{r}
+# Histogram plot of the residuals
+ggplot() +
+  geom_histogram(aes(x = residuals_012), binwidth = 500, color = "black", fill = "blue", alpha = 0.7) +
+  labs(title = "Histogram of Residuals for Best Model 012", x = "Residuals", y = "Frequency") +
+  theme_minimal()
+
+ggplot() +
+  geom_histogram(aes(x = residuals_212), binwidth = 500, color = "black", fill = "blue", alpha = 0.7) +
+  labs(title = "Histogram of Residuals for Best Model 212", x = "Residuals", y = "Frequency") +
+  theme_minimal()
+```
+
+Code explanation here
+
+## Create ACF & PACF plots of residuals of the two models. Explain the outcome.
+
+
+```{r}
+# ACF & PACF plots of residuals
+acf(residuals_012, main = "ACF of Residuals for Best Model 012")
+pacf(residuals_012, main = "PACF of Residuals for Best Model 1")
+
+acf(residuals_212, main = "ACF of Residuals for Best Model 212")
+pacf(residuals_212, main = "PACF of Residuals for Best Model 212")
+
+
+```
+
+Code explanation here
+
+
+
+
+
+
+## Create QQ plot of residuals of the two models. Explain the outcome.
+
+
+```{r}
+# Create QQ plot of residuals
+qqnorm(residuals_012, main = "QQ Plot of Residuals for Best Model 011")
+qqline(residuals_012, col = "red")
+
+qqnorm(residuals_212, main = "QQ Plot of Residuals for Best Model 212")
+qqline(residuals_212, col = "red")
+
+```
+
+Code explanation here
+
+
+## Perform Shapiro-Wilk test on residuals of the two models. Explain the outcome.
+
+
+```{r}
+# Perform Shapiro-Wilk test on residuals
+shapiro_test_model012 <- shapiro.test(residuals_012)
+shapiro_test_model212 <- shapiro.test(residuals_212)
+
+# Print the result of the Shapiro-Wilk test
+print(shapiro_test_model012)
+print(shapiro_test_model212)
+
+```
+
+Code explanation here
+
+
+### Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model.
+
+
+```{r}
+ 
+
+```
+
+Code explanation here
+
+<!--chapter:end:04-application.Rmd-->
+
+# Forecasting
+
+
+```{r}
+# Load necessary libraries
+library(forecast)
+library(tidyverse)
+library(kableExtra)
+# Load the data
+BitCoin <- read.csv("https://raw.githubusercontent.com/shakibed/Final_Project_Group_04/main/BTC-Monthly.csv", stringsAsFactors = FALSE)
+
+# Convert date
+BitCoin$Date <- as.Date(BitCoin$Date)
+
+# Convert to time series object
+bitcoin_ts <- ts(BitCoin$Close, start = c(as.numeric(format(min(BitCoin$Date), "%Y")), as.numeric(format(min(BitCoin$Date), "%m"))), frequency = 12)
+
+
+```
+
+
+
+### Explanation of the Forecast Table  
+
+```{r}
+bitcoin_forecast_fit_model <- Arima(bitcoin_ts,c(2,1,2))
+forecast_next_12 <- forecast(bitcoin_forecast_fit_model,h=12)
+kable(forecast_next_12, digits = 2, formats="html", row.names = TRUE) %>%
+  kable_styling(full_width = F, font_size = 12, position = "center")
+```
+
+
+The forecast table provides the projected Bitcoin prices for the next 12 months along with their confidence intervals. Here's what each column represents:
+
+
+  -Point Forecast: This is the predicted value of the Bitcoin price for each month. It's the best estimate based on the ARIMA(2,1,2) model.
+  - Lo 80 and Hi 80: These columns represent the lower and upper bounds of the 80% confidence interval. There's an 80% chance that the actual Bitcoin price will fall within this range.
+  - Lo 95 and Hi 95: These columns represent the lower and upper bounds of the 95% confidence interval. There's a 95% chance that the actual Bitcoin price will fall within this range.
+
+## Key Insights
+  - Predicted Growth: The point forecasts show a general upward trend in Bitcoin prices over the next 12 months, with the price starting at approximately $36,802.62 in December 2023 and gradually increasing to approximately $37,310.22 by November 2024.
+  - Confidence Intervals: The confidence intervals (both 80% and 95%) widen over time. This indicates increasing uncertainty in the forecast as we move further into the future. For example, the 80% confidence interval for December 2023 is $31,342.01 to $42,263.23, while for November 2024, it is $14,844.41 to $59,776.03.
+  - Risk and Uncertainty: The widening confidence intervals highlight the volatility and uncertainty inherent in forecasting Bitcoin prices. This is important for decision-making and risk management.
+
+### Create a plot of the forecasted data points 
+
+```{r}
+plot(forecast_next_12, main = "ARIMA(2,1,2) Model Forecast")
+```
+
+```
+ 
+
+
+<!--chapter:end:05-summary.Rmd-->
+
+# Conclusion  
+ 
+
+<!--chapter:end:06-references.Rmd-->
+

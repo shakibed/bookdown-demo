@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Regression Analysis | Final Project-Group 04</title>
+  <meta name="description" content="Regression &amp; Time Series analysis and forecasting techniques on Bitcoin historical price." />
+  <meta name="generator" content="bookdown 0.39 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Regression Analysis | Final Project-Group 04" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Regression &amp; Time Series analysis and forecasting techniques on Bitcoin historical price." />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Regression Analysis | Final Project-Group 04" />
+  
+  <meta name="twitter:description" content="Regression &amp; Time Series analysis and forecasting techniques on Bitcoin historical price." />
+  
+
+<meta name="author" content="Shakib-241001661,Shudeshna-241000261,Mithun-241002261,Pradipto-241002161,Mufrad-241001461,Shahriar Islam-241000461" />
+
+
+<meta name="date" content="2024-06-29" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="descriptive-analytics.html"/>
+<link rel="next" href="arima-model.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">A Minimal Book Example</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Objective of the Project</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#dataset"><i class="fa fa-check"></i>Dataset</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#applied-model"><i class="fa fa-check"></i>Applied Model</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Data Preprocessing/Cleaning</a>
+<ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#loading-the-dataset"><i class="fa fa-check"></i>Loading the Dataset</a>
+<ul>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#load-the-dataset-from-csv-into-a-data-frame-named-bitcoin."><i class="fa fa-check"></i>Load the dataset from csv into a data frame named BitCoin.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#check-the-data-types-of-the-features."><i class="fa fa-check"></i>Check the data types of the features.</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#assign-appropriate-data-type-to-features."><i class="fa fa-check"></i>Assign appropriate data type to features.</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#check-the-structure-of-the-data-frame."><i class="fa fa-check"></i>Check the structure of the data frame.</a></li>
+<li class="chapter" data-level="" data-path="intro.html"><a href="intro.html#check-if-theres-any-missing-value.-if-yes-treat-missing-values-through-appropriate-methodology."><i class="fa fa-check"></i>Check if there’s any missing value. If yes, treat missing values through appropriate methodology.</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html"><i class="fa fa-check"></i><b>2</b> Descriptive Analytics</a>
+<ul>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#create-a-monthly-boxplot-of-prices."><i class="fa fa-check"></i>Create a monthly boxplot of prices.</a></li>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#create-a-yearly-boxplot-of-prices."><i class="fa fa-check"></i>Create a yearly boxplot of prices.</a></li>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#create-year-wise-trend-lines-of-prices."><i class="fa fa-check"></i>Create year wise trend lines of prices.</a>
+<ul>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#convert-the-bitcoin-data-frame-to-a-time-series-object-with-frequency-1"><i class="fa fa-check"></i>Convert the BitCoin data frame to a time series object with frequency 1</a></li>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#plot-the-time-series-of-monthly-prices-on-years.-use-blue-color-dots-to-plot-the-data-points.-connect-the-points-with-a-line."><i class="fa fa-check"></i>Plot the time series of monthly prices on years. Use blue color dots to plot the data points. Connect the points with a line.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="descriptive-analytics.html"><a href="descriptive-analytics.html#find-the-relationship-between-consecutive-months.-show-the-correlation-through-a-scatter-plot."><i class="fa fa-check"></i>Find the relationship between consecutive months. Show the correlation through a scatter plot.</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="regression-analysis.html"><a href="regression-analysis.html"><i class="fa fa-check"></i><b>3</b> Regression Analysis</a>
+<ul>
+<li class="chapter" data-level="3.0.1" data-path="regression-analysis.html"><a href="regression-analysis.html#linear-regression"><i class="fa fa-check"></i><b>3.0.1</b> Linear Regression</a></li>
+<li class="chapter" data-level="3.0.2" data-path="regression-analysis.html"><a href="regression-analysis.html#quadratic-regression"><i class="fa fa-check"></i><b>3.0.2</b> Quadratic Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="arima-model.html"><a href="arima-model.html"><i class="fa fa-check"></i><b>4</b> ARIMA Model</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="arima-model.html"><a href="arima-model.html#create-acf-pacf-plots-of-the-time-series-data-set-with-maximum-lag-of-24.-explain-the-outcome-and-comment-on-the-datasets-nature."><i class="fa fa-check"></i><b>4.1</b> Create ACF &amp; PACF plots of the time series data set with maximum lag of 24. Explain the outcome and comment on the dataset’s nature.</a></li>
+<li class="chapter" data-level="4.2" data-path="arima-model.html"><a href="arima-model.html#perform-adf-test.-explain-the-outcome."><i class="fa fa-check"></i><b>4.2</b> Perform ADF test. Explain the outcome.</a></li>
+<li class="chapter" data-level="4.3" data-path="arima-model.html"><a href="arima-model.html#explain-if-the-dataset-is-stationary-or-not."><i class="fa fa-check"></i><b>4.3</b> Explain if the dataset is stationary or not.</a></li>
+<li class="chapter" data-level="4.4" data-path="arima-model.html"><a href="arima-model.html#create-qq-plot-perform-shapiro-wilk-test."><i class="fa fa-check"></i><b>4.4</b> Create QQ plot &amp; perform Shapiro-Wilk test.</a></li>
+<li class="chapter" data-level="4.5" data-path="arima-model.html"><a href="arima-model.html#if-the-dataset-is-not-stationary-then-make-it-stationary-by-differencing.-show-a-plot-of-the-dataset-after-differencing-and-perform-adf-test-on-differenced-dataset-to-check-stationarity-again."><i class="fa fa-check"></i><b>4.5</b> If the dataset is not stationary, then make it stationary by differencing. Show a plot of the dataset after differencing and perform ADF test on differenced dataset to check stationarity again.</a></li>
+<li class="chapter" data-level="4.6" data-path="arima-model.html"><a href="arima-model.html#perform-acf-pacf-test-to-find-the-probable-model-candidates.-explain-the-outcome-of-the-plots."><i class="fa fa-check"></i><b>4.6</b> Perform ACF &amp; PACF test to find the probable model candidates. Explain the outcome of the plots.</a></li>
+<li class="chapter" data-level="4.7" data-path="arima-model.html"><a href="arima-model.html#perform-eacf-test-to-comprehensively-test-the-possible-candidate-models.-mention-the-models-that-you-have-selected-for-modeling-select-at-least-3-models."><i class="fa fa-check"></i><b>4.7</b> Perform EACF test to comprehensively test the possible candidate models. Mention the models that you have selected for modeling (select at least 3 models).</a></li>
+<li class="chapter" data-level="4.8" data-path="arima-model.html"><a href="arima-model.html#estimate-the-arima-parameters-by-creating-the-above-selected-models.-perform-coeftest-on-each-model.-explain-the-outcome-from-the-level-of-significance."><i class="fa fa-check"></i><b>4.8</b> Estimate the ARIMA parameters by creating the above selected models. Perform coeftest on each model. Explain the outcome from the level of significance.</a></li>
+<li class="chapter" data-level="4.9" data-path="arima-model.html"><a href="arima-model.html#evaluate-the-models-through-aic-bic-tests."><i class="fa fa-check"></i><b>4.9</b> Evaluate the models through AIC &amp; BIC tests.</a></li>
+<li class="chapter" data-level="4.10" data-path="arima-model.html"><a href="arima-model.html#from-outcome-of-above-two-steps-select-best-two-models.-explain-why-you-have-chosen-those-two-models."><i class="fa fa-check"></i><b>4.10</b> From outcome of above two steps select best two models. Explain why you have chosen those two models.</a></li>
+<li class="chapter" data-level="4.11" data-path="arima-model.html"><a href="arima-model.html#assess-the-chosen-two-models-through-accuracy-test."><i class="fa fa-check"></i><b>4.11</b> Assess the chosen two models through accuracy test.</a>
+<ul>
+<li class="chapter" data-level="4.11.1" data-path="arima-model.html"><a href="arima-model.html#perform-residual-analysis-of-the-two-models-and-create-line-scatter-plot-of-the-residuals.-explain-the-outcome."><i class="fa fa-check"></i><b>4.11.1</b> Perform residual analysis of the two models and create line &amp; scatter plot of the residuals. Explain the outcome.</a></li>
+</ul></li>
+<li class="chapter" data-level="4.12" data-path="arima-model.html"><a href="arima-model.html#create-a-histogram-plot-of-the-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.12</b> Create a histogram plot of the residuals of the two models. Explain the outcome.</a></li>
+<li class="chapter" data-level="4.13" data-path="arima-model.html"><a href="arima-model.html#create-acf-pacf-plots-of-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.13</b> Create ACF &amp; PACF plots of residuals of the two models. Explain the outcome.</a></li>
+<li class="chapter" data-level="4.14" data-path="arima-model.html"><a href="arima-model.html#create-qq-plot-of-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.14</b> Create QQ plot of residuals of the two models. Explain the outcome.</a></li>
+<li class="chapter" data-level="4.15" data-path="arima-model.html"><a href="arima-model.html#perform-shapiro-wilk-test-on-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.15</b> Perform Shapiro-Wilk test on residuals of the two models. Explain the outcome.</a>
+<ul>
+<li class="chapter" data-level="4.15.1" data-path="arima-model.html"><a href="arima-model.html#select-the-best-model-from-the-above-two-models-using-the-outcome-of-all-the-above-analysis.-this-is-going-to-be-your-final-model."><i class="fa fa-check"></i><b>4.15.1</b> Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model.</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>5</b> Forecasting</a>
+<ul>
+<li class="chapter" data-level="5.0.1" data-path="forecasting.html"><a href="forecasting.html#explanation-of-the-forecast-table"><i class="fa fa-check"></i><b>5.0.1</b> Explanation of the Forecast Table</a></li>
+<li class="chapter" data-level="5.1" data-path="forecasting.html"><a href="forecasting.html#key-insights"><i class="fa fa-check"></i><b>5.1</b> Key Insights</a>
+<ul>
+<li class="chapter" data-level="5.1.1" data-path="forecasting.html"><a href="forecasting.html#create-a-plot-of-the-forecasted-data-points"><i class="fa fa-check"></i><b>5.1.1</b> Create a plot of the forecasted data points</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Final Project-Group 04</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="regression-analysis" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Regression Analysis<a href="regression-analysis.html#regression-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="linear-regression" class="section level3 hasAnchor" number="3.0.1">
+<h3><span class="header-section-number">3.0.1</span> Linear Regression<a href="regression-analysis.html#linear-regression" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Create a linear model of the time series dataset.</li>
+<li>Show the summary of the model and explain the outcome.</li>
+<li>Create a plot of the linear model on top of the time series dataset line plot with scatter data points.</li>
+<li>Perform residual analysis and create a line &amp; scatter plot of the residuals. Explain the outcome.</li>
+<li>Create a histogram plot of the residuals. Explain the outcome.</li>
+<li>Create ACF &amp; PACF plots of residuals. Explain the outcome.</li>
+<li>Create QQ plot of residuals. Explain the outcome.</li>
+<li>Perform Shapiro-Wilk test on residuals. Explain the outcome.</li>
+<li>Explain if linear model is appropriate or not.</li>
+</ul>
+<div id="create-a-linear-model-of-the-time-series-dataset." class="section level4 hasAnchor" number="3.0.1.1">
+<h4><span class="header-section-number">3.0.1.1</span> Create a linear model of the time series dataset.<a href="regression-analysis.html#create-a-linear-model-of-the-time-series-dataset." class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="regression-analysis.html#cb25-1" tabindex="-1"></a><span class="co"># Convert Date to numeric format for linear modeling</span></span>
+<span id="cb25-2"><a href="regression-analysis.html#cb25-2" tabindex="-1"></a>BitCoin_df <span class="ot">&lt;-</span> BitCoin_df <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="regression-analysis.html#cb25-3" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">Date_numeric =</span> <span class="fu">as.numeric</span>(Date))</span>
+<span id="cb25-4"><a href="regression-analysis.html#cb25-4" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="regression-analysis.html#cb25-5" tabindex="-1"></a><span class="co"># Fit the linear model</span></span>
+<span id="cb25-6"><a href="regression-analysis.html#cb25-6" tabindex="-1"></a>linear_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Close <span class="sc">~</span> Date_numeric, <span class="at">data =</span> BitCoin_df)</span>
+<span id="cb25-7"><a href="regression-analysis.html#cb25-7" tabindex="-1"></a><span class="co">#y=mx+c</span></span>
+<span id="cb25-8"><a href="regression-analysis.html#cb25-8" tabindex="-1"></a><span class="co">#close price = m*numeric date + c</span></span></code></pre></div>
+<p><em><strong>Code explanation here</strong></em>
+The linear model predicts Bitcoin’s closing price based on the date. The slope shows the price change rate over time, and the intercept represents the initial price at the start date.</p>
+</div>
+<div id="show-the-summary-of-the-model-and-explain-the-outcome." class="section level4 hasAnchor" number="3.0.1.2">
+<h4><span class="header-section-number">3.0.1.2</span> Show the summary of the model and explain the outcome.<a href="regression-analysis.html#show-the-summary-of-the-model-and-explain-the-outcome." class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="regression-analysis.html#cb26-1" tabindex="-1"></a><span class="fu">summary</span>(linear_model)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Close ~ Date_numeric, data = BitCoin_df)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -15114  -7997  -2255   3065  35626 
+## 
+## Coefficients:
+##                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -2.211e+05  1.939e+04  -11.40   &lt;2e-16 ***
+## Date_numeric  1.308e+01  1.073e+00   12.19   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 10430 on 105 degrees of freedom
+## Multiple R-squared:  0.586,  Adjusted R-squared:  0.5821 
+## F-statistic: 148.6 on 1 and 105 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="regression-analysis.html#cb28-1" tabindex="-1"></a><span class="co"># Create a new column with fitted values</span></span>
+<span id="cb28-2"><a href="regression-analysis.html#cb28-2" tabindex="-1"></a>BitCoin_df <span class="ot">&lt;-</span> BitCoin_df <span class="sc">%&gt;%</span></span>
+<span id="cb28-3"><a href="regression-analysis.html#cb28-3" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">Fitted_Close =</span> <span class="fu">predict</span>(linear_model))</span>
+<span id="cb28-4"><a href="regression-analysis.html#cb28-4" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="regression-analysis.html#cb28-5" tabindex="-1"></a><span class="co"># Plot the original data and the linear model</span></span>
+<span id="cb28-6"><a href="regression-analysis.html#cb28-6" tabindex="-1"></a></span>
+<span id="cb28-7"><a href="regression-analysis.html#cb28-7" tabindex="-1"></a><span class="fu">ggplot</span>(BitCoin_df, <span class="fu">aes</span>(<span class="at">x =</span> Date)) <span class="sc">+</span></span>
+<span id="cb28-8"><a href="regression-analysis.html#cb28-8" tabindex="-1"></a><span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> Close, <span class="at">color =</span> <span class="st">&quot;Original Data&quot;</span>)) <span class="sc">+</span>  <span class="co"># Original data points</span></span>
+<span id="cb28-9"><a href="regression-analysis.html#cb28-9" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Fitted_Close, <span class="at">color =</span> <span class="st">&quot;Fitted Line&quot;</span>)) <span class="sc">+</span>  <span class="co"># Fitted line</span></span>
+<span id="cb28-10"><a href="regression-analysis.html#cb28-10" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Linear Model of Bitcoin Prices Over Time&quot;</span>,</span>
+<span id="cb28-11"><a href="regression-analysis.html#cb28-11" tabindex="-1"></a>     <span class="at">x =</span> <span class="st">&quot;Date&quot;</span>,</span>
+<span id="cb28-12"><a href="regression-analysis.html#cb28-12" tabindex="-1"></a>     <span class="at">y =</span> <span class="st">&quot;Close Price&quot;</span>,</span>
+<span id="cb28-13"><a href="regression-analysis.html#cb28-13" tabindex="-1"></a>     <span class="at">color =</span> <span class="st">&quot;Legend&quot;</span>) <span class="sc">+</span>  <span class="co"># Add a label to the legend</span></span>
+<span id="cb28-14"><a href="regression-analysis.html#cb28-14" tabindex="-1"></a><span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb28-15"><a href="regression-analysis.html#cb28-15" tabindex="-1"></a><span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;Original Data&quot;</span> <span class="ot">=</span> <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;Fitted Line&quot;</span> <span class="ot">=</span> <span class="st">&quot;red&quot;</span>))  <span class="co"># Specify colors</span></span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><em><strong>Code explanation here</strong></em></p>
+<p>The provided graph and summary show a linear regression model of Bitcoin prices over time. The blue points represent the original data, while the red line represents the fitted linear model. The coefficients table and statistical measures indicate a significant relationship between time and Bitcoin prices, with an R-squared value of 0.586, suggesting that approximately 58.6% of the variance in Bitcoin prices can be explained by the model. The residuals indicate some variability around the fitted line.</p>
+</div>
+<div id="create-a-plot-of-the-linear-model-on-top-of-the-time-series-dataset-line-plot-with-scatter-data-points." class="section level4 hasAnchor" number="3.0.1.3">
+<h4><span class="header-section-number">3.0.1.3</span> Create a plot of the linear model on top of the time series dataset line plot with scatter data points.<a href="regression-analysis.html#create-a-plot-of-the-linear-model-on-top-of-the-time-series-dataset-line-plot-with-scatter-data-points." class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="regression-analysis.html#cb29-1" tabindex="-1"></a><span class="co">#Create a plot of the linear model on top of the time series dataset line plot with scatter data points.</span></span>
+<span id="cb29-2"><a href="regression-analysis.html#cb29-2" tabindex="-1"></a>  </span>
+<span id="cb29-3"><a href="regression-analysis.html#cb29-3" tabindex="-1"></a><span class="co">#Plot the original data, the time series line, and the linear model</span></span>
+<span id="cb29-4"><a href="regression-analysis.html#cb29-4" tabindex="-1"></a><span class="fu">ggplot</span>(BitCoin_df, <span class="fu">aes</span>(<span class="at">x =</span> Date)) <span class="sc">+</span></span>
+<span id="cb29-5"><a href="regression-analysis.html#cb29-5" tabindex="-1"></a><span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> Close), <span class="at">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span>  <span class="co"># Original data points</span></span>
+<span id="cb29-6"><a href="regression-analysis.html#cb29-6" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Close), <span class="at">color =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span>  <span class="co"># Time series line</span></span>
+<span id="cb29-7"><a href="regression-analysis.html#cb29-7" tabindex="-1"></a><span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Fitted_Close), <span class="at">color =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span>  <span class="co"># Fitted linear model line</span></span>
+<span id="cb29-8"><a href="regression-analysis.html#cb29-8" tabindex="-1"></a><span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Time Series of Bitcoin Prices with Linear Model&quot;</span>,</span>
+<span id="cb29-9"><a href="regression-analysis.html#cb29-9" tabindex="-1"></a>     <span class="at">x =</span> <span class="st">&quot;Date&quot;</span>,</span>
+<span id="cb29-10"><a href="regression-analysis.html#cb29-10" tabindex="-1"></a>     <span class="at">y =</span> <span class="st">&quot;Close Price&quot;</span>) <span class="sc">+</span></span>
+<span id="cb29-11"><a href="regression-analysis.html#cb29-11" tabindex="-1"></a><span class="fu">theme_minimal</span>() </span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><em><strong>Code explanation here</strong></em>
+The graph shows Bitcoin prices over time with blue dots representing the original data points and a blue dashed line representing the time series trend. The red line indicates the fitted linear model. The linear model captures the general upward trend but misses some of the more volatile fluctuations in Bitcoin prices.</p>
+</div>
+<div id="perform-residual-analysis" class="section level4 hasAnchor" number="3.0.1.4">
+<h4><span class="header-section-number">3.0.1.4</span> Perform residual analysis<a href="regression-analysis.html#perform-residual-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="regression-analysis.html#cb30-1" tabindex="-1"></a><span class="co"># Convert Date to numeric format for linear modeling</span></span>
+<span id="cb30-2"><a href="regression-analysis.html#cb30-2" tabindex="-1"></a>BitCoin_df <span class="ot">&lt;-</span> BitCoin_df <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="regression-analysis.html#cb30-3" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">Date_numeric =</span> <span class="fu">as.numeric</span>(Date))</span>
+<span id="cb30-4"><a href="regression-analysis.html#cb30-4" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="regression-analysis.html#cb30-5" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="regression-analysis.html#cb30-6" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="regression-analysis.html#cb30-7" tabindex="-1"></a><span class="co"># Fit the linear model</span></span>
+<span id="cb30-8"><a href="regression-analysis.html#cb30-8" tabindex="-1"></a>linear_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Close <span class="sc">~</span> Date_numeric, <span class="at">data =</span> BitCoin_df)</span>
+<span id="cb30-9"><a href="regression-analysis.html#cb30-9" tabindex="-1"></a><span class="co">#y=mx+c</span></span>
+<span id="cb30-10"><a href="regression-analysis.html#cb30-10" tabindex="-1"></a><span class="co">#close price = m*numeric date + c</span></span>
+<span id="cb30-11"><a href="regression-analysis.html#cb30-11" tabindex="-1"></a><span class="fu">summary</span>(linear_model)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Close ~ Date_numeric, data = BitCoin_df)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -15114  -7997  -2255   3065  35626 
+## 
+## Coefficients:
+##                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  -2.211e+05  1.939e+04  -11.40   &lt;2e-16 ***
+## Date_numeric  1.308e+01  1.073e+00   12.19   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 10430 on 105 degrees of freedom
+## Multiple R-squared:  0.586,  Adjusted R-squared:  0.5821 
+## F-statistic: 148.6 on 1 and 105 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="regression-analysis.html#cb32-1" tabindex="-1"></a><span class="co">#Calculate residuals</span></span>
+<span id="cb32-2"><a href="regression-analysis.html#cb32-2" tabindex="-1"></a>BitCoin_df <span class="ot">&lt;-</span> BitCoin_df <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="regression-analysis.html#cb32-3" tabindex="-1"></a><span class="fu">mutate</span>(<span class="at">Residuals =</span> Close <span class="sc">-</span> Fitted_Close)</span>
+<span id="cb32-4"><a href="regression-analysis.html#cb32-4" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="regression-analysis.html#cb32-5" tabindex="-1"></a><span class="co">#residual calcultion in different way</span></span>
+<span id="cb32-6"><a href="regression-analysis.html#cb32-6" tabindex="-1"></a><span class="co">#res_dual_values &lt;- residuals(linear_model)</span></span>
+<span id="cb32-7"><a href="regression-analysis.html#cb32-7" tabindex="-1"></a><span class="co">#summary(res_dual_values)</span></span>
+<span id="cb32-8"><a href="regression-analysis.html#cb32-8" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="regression-analysis.html#cb32-9" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="regression-analysis.html#cb32-10" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="regression-analysis.html#cb32-11" tabindex="-1"></a><span class="co"># Print the first few rows to verify</span></span>
+<span id="cb32-12"><a href="regression-analysis.html#cb32-12" tabindex="-1"></a><span class="fu">head</span>(BitCoin_df)</span></code></pre></div>
+<pre><code>##         Date   Close month year Date_numeric Fitted_Close Residuals
+## 1 2015-01-01 217.464    01 2015        16436    -6142.536  6360.000
+## 2 2015-02-01 254.263    02 2015        16467    -5737.165  5991.428
+## 3 2015-03-01 244.224    03 2015        16495    -5371.023  5615.247
+## 4 2015-04-01 236.145    04 2015        16526    -4965.652  5201.797
+## 5 2015-05-01 230.190    05 2015        16556    -4573.357  4803.547
+## 6 2015-06-01 263.072    06 2015        16587    -4167.986  4431.058</code></pre>
+<p><em><strong>Code explanation here</strong></em></p>
+<p>The code snippet converts dates in the Bitcoin dataset to numeric format for linear modeling. A linear model is then fitted to predict the closing price based on the numeric date. The model’s summary shows a significant positive relationship between date and closing price, with an R-squared value of 0.586, indicating moderate explanatory power. Residuals are calculated to assess model fit. The dataset includes date, closing price, month, year, numeric date, fitted close values, and residuals for verification.</p>
+</div>
+<div id="perform-residual-analysis-and-create-a-line-scatter-plot-of-the" class="section level4 hasAnchor" number="3.0.1.5">
+<h4><span class="header-section-number">3.0.1.5</span> Perform residual analysis and create a line &amp; scatter plot of the<a href="regression-analysis.html#perform-residual-analysis-and-create-a-line-scatter-plot-of-the" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="regression-analysis.html#cb34-1" tabindex="-1"></a><span class="co"># Plot the residuals: Line plot</span></span>
+<span id="cb34-2"><a href="regression-analysis.html#cb34-2" tabindex="-1"></a><span class="fu">ggplot</span>(BitCoin_df, <span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Residuals)) <span class="sc">+</span></span>
+<span id="cb34-3"><a href="regression-analysis.html#cb34-3" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb34-4"><a href="regression-analysis.html#cb34-4" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Line Plot of Residuals over Time&quot;</span>,</span>
+<span id="cb34-5"><a href="regression-analysis.html#cb34-5" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Date&quot;</span>,</span>
+<span id="cb34-6"><a href="regression-analysis.html#cb34-6" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Residuals&quot;</span>) <span class="sc">+</span></span>
+<span id="cb34-7"><a href="regression-analysis.html#cb34-7" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><em><strong>Code explanation here</strong></em>
+The graph shows a blue line plotting the difference between actual values and predicted values for a Bitcoin data set, over time. Basically, it shows how much the actual Bitcoin values differed from what a model predicted on certain dates.</p>
+</div>
+<div id="residual-analysis-scatter-plot" class="section level4 hasAnchor" number="3.0.1.6">
+<h4><span class="header-section-number">3.0.1.6</span> Residual analysis scatter plot<a href="regression-analysis.html#residual-analysis-scatter-plot" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="regression-analysis.html#cb35-1" tabindex="-1"></a><span class="co"># Plot the residuals: Scatter plot</span></span>
+<span id="cb35-2"><a href="regression-analysis.html#cb35-2" tabindex="-1"></a><span class="fu">ggplot</span>(BitCoin_df, <span class="fu">aes</span>(<span class="at">x =</span> Fitted_Close, <span class="at">y =</span> Residuals)) <span class="sc">+</span></span>
+<span id="cb35-3"><a href="regression-analysis.html#cb35-3" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb35-4"><a href="regression-analysis.html#cb35-4" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>, <span class="at">color =</span> <span class="st">&quot;red&quot;</span>) <span class="sc">+</span></span>
+<span id="cb35-5"><a href="regression-analysis.html#cb35-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Scatter Plot of Residuals&quot;</span>,</span>
+<span id="cb35-6"><a href="regression-analysis.html#cb35-6" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Fitted Close Price&quot;</span>,</span>
+<span id="cb35-7"><a href="regression-analysis.html#cb35-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Residuals&quot;</span>) <span class="sc">+</span></span>
+<span id="cb35-8"><a href="regression-analysis.html#cb35-8" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><em><strong>Code explanation here</strong></em></p>
+<p>This graph shows blue dots representing the difference between actual Bitcoin closing prices and what a model predicted. The horizontal red line represents perfect predictions (no difference). Scattered points around the line indicate the model’s accuracy - ideally, the dots would be random with no clear pattern.</p>
+</div>
+<div id="summary-of-residual-analysis" class="section level4 hasAnchor" number="3.0.1.7">
+<h4><span class="header-section-number">3.0.1.7</span> Summary of Residual analysis<a href="regression-analysis.html#summary-of-residual-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="regression-analysis.html#cb36-1" tabindex="-1"></a><span class="co"># Summary statistics of the residuals</span></span>
+<span id="cb36-2"><a href="regression-analysis.html#cb36-2" tabindex="-1"></a><span class="fu">summary</span>(BitCoin_df<span class="sc">$</span>Residuals)  </span></code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  -15114   -7997   -2255       0    3065   35626</code></pre>
+<p><em><strong>Code explanation here</strong></em></p>
+<p>The summary statistics of the residuals provide insight into the accuracy of the linear model’s predictions for Bitcoin closing prices. The residuals range from -15,114 to 35,626, indicating the model sometimes significantly underestimates or overestimates the actual prices. The median residual of -2,255 suggests that half of the predictions are off by less than this amount. The mean residual is 0, indicating that, on average, the model’s predictions are unbiased. The first and third quartiles (-7,997 and 3,065) show that 50% of the residuals fall within this range, highlighting the variability in prediction accuracy.</p>
+</div>
+<div id="create-a-histogram-plot-of-the-residuals.-explain-the-outcome." class="section level4 hasAnchor" number="3.0.1.8">
+<h4><span class="header-section-number">3.0.1.8</span> Create a histogram plot of the residuals. Explain the outcome.<a href="regression-analysis.html#create-a-histogram-plot-of-the-residuals.-explain-the-outcome." class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="regression-analysis.html#cb38-1" tabindex="-1"></a><span class="co">#Create a histogram plot of the residuals. Explain the outcome.</span></span>
+<span id="cb38-2"><a href="regression-analysis.html#cb38-2" tabindex="-1"></a>  <span class="co"># Plot the histogram of residuals</span></span>
+<span id="cb38-3"><a href="regression-analysis.html#cb38-3" tabindex="-1"></a>  <span class="fu">ggplot</span>(BitCoin_df, <span class="fu">aes</span>(<span class="at">x =</span> Residuals)) <span class="sc">+</span></span>
+<span id="cb38-4"><a href="regression-analysis.html#cb38-4" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">500</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb38-5"><a href="regression-analysis.html#cb38-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Histogram of Residuals&quot;</span>,</span>
+<span id="cb38-6"><a href="regression-analysis.html#cb38-6" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Residuals&quot;</span>,</span>
+<span id="cb38-7"><a href="regression-analysis.html#cb38-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Frequency&quot;</span>) <span class="sc">+</span></span>
+<span id="cb38-8"><a href="regression-analysis.html#cb38-8" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><em><strong>Code explanation here</strong></em></p>
+<p>The graph shows a bar chart of prediction errors (residuals) for Bitcoin prices. Each bar represents how many errors fell within a specific price range. The center area, with more bars, suggests most predictions were close. Ideally, the bars would be symmetrical around zero (no errors), but some errors exist on both positive and negative sides.</p>
+</div>
+<div id="create-a-histogram-plot-of-the-residuals-with" class="section level4 hasAnchor" number="3.0.1.9">
+<h4><span class="header-section-number">3.0.1.9</span> Create a histogram plot of the residuals with<a href="regression-analysis.html#create-a-histogram-plot-of-the-residuals-with" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="regression-analysis.html#cb39-1" tabindex="-1"></a><span class="co"># Overlay a normal distribution curve on the histogram</span></span>
+<span id="cb39-2"><a href="regression-analysis.html#cb39-2" tabindex="-1"></a><span class="fu">ggplot</span>(BitCoin_df, <span class="fu">aes</span>(<span class="at">x =</span> Residuals)) <span class="sc">+</span></span>
+<span id="cb39-3"><a href="regression-analysis.html#cb39-3" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> ..density..), <span class="at">binwidth =</span> <span class="dv">500</span>, <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;blue&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb39-4"><a href="regression-analysis.html#cb39-4" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> dnorm, <span class="at">args =</span> <span class="fu">list</span>(<span class="at">mean =</span> <span class="fu">mean</span>(BitCoin_df<span class="sc">$</span>Residuals), <span class="at">sd =</span> <span class="fu">sd</span>(BitCoin_df<span class="sc">$</span>Residuals)), <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb39-5"><a href="regression-analysis.html#cb39-5" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Histogram of Residuals with Normal Curve&quot;</span>,</span>
+<span id="cb39-6"><a href="regression-analysis.html#cb39-6" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Residuals&quot;</span>,</span>
+<span id="cb39-7"><a href="regression-analysis.html#cb39-7" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Density&quot;</span>) <span class="sc">+</span></span>
+<span id="cb39-8"><a href="regression-analysis.html#cb39-8" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<pre><code>## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre><code>## Warning: The dot-dot notation (`..density..`) was deprecated in ggplot2 3.4.0.
+## ℹ Please use `after_stat(density)` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><em><strong>code explanation here</strong></em></p>
+<p>This graph shows a histogram of prediction errors (residuals) for Bitcoin prices with a normal distribution curve overlaid in red. The bars represent the frequency of errors in different price ranges. Ideally, the bars would closely match the smooth red curve, indicating the errors follow a normal distribution. By comparing their shapes, we can assess how close the actual errors are to being normally distributed.</p>
+</div>
+<div id="create-acf-pacf-plots-of-residuals.explain-the-outcome." class="section level4 hasAnchor" number="3.0.1.10">
+<h4><span class="header-section-number">3.0.1.10</span> Create ACF &amp; PACF plots of residuals.Explain the outcome.<a href="regression-analysis.html#create-acf-pacf-plots-of-residuals.explain-the-outcome." class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="regression-analysis.html#cb42-1" tabindex="-1"></a><span class="fu">acf</span>(BitCoin_df<span class="sc">$</span>Residuals, <span class="at">main =</span> <span class="st">&quot;ACF of Residuals&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-25-1.png" width="672" /></p>
+<p><em><strong>Code explanation here</strong></em></p>
+<p>ACF measures the correlation between residuals at different lags. Most bars falling within significance bounds (dashed lines) indicate no significant autocorrelation, suggesting the model captures data patterns adequately.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="regression-analysis.html#cb43-1" tabindex="-1"></a><span class="fu">pacf</span>(BitCoin_df<span class="sc">$</span>Residuals, <span class="at">main =</span> <span class="st">&quot;PACF of Residuals&quot;</span>)  </span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p>PACF measures the correlation between residuals and lagged values, accounting for shorter lags. Bars within significance bounds indicate no significant partial autocorrelation, meaning past values don’t provide additional predictive information.
+Both plots help determine if residuals are random (white noise), validating the model. Most lags within bounds suggest errors are random and uncorrelated, indicating a good model fit.</p>
+</div>
+<div id="create-qq-plot-of-residuals.-explain-the-outcome." class="section level4 hasAnchor" number="3.0.1.11">
+<h4><span class="header-section-number">3.0.1.11</span> Create QQ plot of residuals. Explain the outcome.<a href="regression-analysis.html#create-qq-plot-of-residuals.-explain-the-outcome." class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="regression-analysis.html#cb44-1" tabindex="-1"></a>  <span class="co"># S</span></span></code></pre></div>
+<p><em><strong>Code explanation here</strong></em></p>
+<p>The graph shows a QQ plot of prediction errors (residuals). It compares these errors to a perfect normal distribution (red line). Ideally, the points would fall on the red line, indicating normally distributed errors. In this plot, the points veer away from the line, especially at the edges. This suggests the errors may not be normally distributed.</p>
+</div>
+<div id="perform-shapiro-wilk-test-on-residuals.-explain-the-outcome." class="section level4 hasAnchor" number="3.0.1.12">
+<h4><span class="header-section-number">3.0.1.12</span> Perform Shapiro-Wilk test on residuals. Explain the outcome.<a href="regression-analysis.html#perform-shapiro-wilk-test-on-residuals.-explain-the-outcome." class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="regression-analysis.html#cb45-1" tabindex="-1"></a><span class="co">#Perform Shapiro-Wilk test on residuals. Explain the outcome.  </span></span>
+<span id="cb45-2"><a href="regression-analysis.html#cb45-2" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="regression-analysis.html#cb45-3" tabindex="-1"></a><span class="co"># Perform Shapiro-Wilk test on residuals</span></span>
+<span id="cb45-4"><a href="regression-analysis.html#cb45-4" tabindex="-1"></a>shapiro_test <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(BitCoin_df<span class="sc">$</span>Residuals)</span>
+<span id="cb45-5"><a href="regression-analysis.html#cb45-5" tabindex="-1"></a></span>
+<span id="cb45-6"><a href="regression-analysis.html#cb45-6" tabindex="-1"></a><span class="co"># Print the result of the Shapiro-Wilk test</span></span>
+<span id="cb45-7"><a href="regression-analysis.html#cb45-7" tabindex="-1"></a><span class="fu">print</span>(shapiro_test)</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  BitCoin_df$Residuals
+## W = 0.85983, p-value = 1.215e-08</code></pre>
+<p><em><strong>Code explanation here</strong></em></p>
+<p>The Shapiro-Wilk test assesses the normality of residuals. The test statistic
+𝑊
+W is 0.85983, and the p-value is 1.215e-08, which is much less than 0.05. This indicates that the residuals are not normally distributed,</p>
+</div>
+<div id="explain-if-linear-model-is-appropriate-or-not." class="section level4 hasAnchor" number="3.0.1.13">
+<h4><span class="header-section-number">3.0.1.13</span> Explain if linear model is appropriate or not.<a href="regression-analysis.html#explain-if-linear-model-is-appropriate-or-not." class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p><em><strong>Code explanation here</strong></em></p>
+<p>The linear model may not be appropriate because the Shapiro-Wilk test reveals non-normal residuals (p-value = 1.215e-08). Non-normality violates a key assumption of linear regression, potentially leading to unreliable estimates and inferences. This indicates that the model may not capture the data’s underlying patterns accurately.</p>
+</div>
+</div>
+<div id="quadratic-regression" class="section level3 hasAnchor" number="3.0.2">
+<h3><span class="header-section-number">3.0.2</span> Quadratic Regression<a href="regression-analysis.html#quadratic-regression" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Create a quadratic model of the time series dataset.</li>
+<li>Show the summary of the model and explain the outcome.</li>
+<li>Explain if quadratic model is appropriate or not.</li>
+</ul>
+<div id="create-a-quadratic-model-of-the-time-series-dataset" class="section level4 hasAnchor" number="3.0.2.1">
+<h4><span class="header-section-number">3.0.2.1</span> Create a quadratic model of the time series dataset<a href="regression-analysis.html#create-a-quadratic-model-of-the-time-series-dataset" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="regression-analysis.html#cb47-1" tabindex="-1"></a><span class="co"># Create the quadratic term for the date</span></span>
+<span id="cb47-2"><a href="regression-analysis.html#cb47-2" tabindex="-1"></a>BitCoin_df <span class="ot">&lt;-</span> BitCoin_df <span class="sc">%&gt;%</span></span>
+<span id="cb47-3"><a href="regression-analysis.html#cb47-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Date_numeric =</span> <span class="fu">as.numeric</span>(Date),</span>
+<span id="cb47-4"><a href="regression-analysis.html#cb47-4" tabindex="-1"></a>         <span class="at">Date_numeric2 =</span> Date_numeric<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb47-5"><a href="regression-analysis.html#cb47-5" tabindex="-1"></a><span class="fu">view</span>(BitCoin_df)</span>
+<span id="cb47-6"><a href="regression-analysis.html#cb47-6" tabindex="-1"></a><span class="co"># Fit the quadratic model</span></span>
+<span id="cb47-7"><a href="regression-analysis.html#cb47-7" tabindex="-1"></a>quadratic_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Close <span class="sc">~</span> Date_numeric <span class="sc">+</span> Date_numeric2, <span class="at">data =</span> BitCoin_df)</span></code></pre></div>
+<p><em><strong>Code explanation here</strong></em></p>
+<p>The dataset is enhanced by adding a squared numeric date column to capture non-linear trends. A quadratic regression model is then fitted with closing price as the dependent variable and both the numeric date and its square as independent variables. This model aims to better capture the relationship between time and Bitcoin closing prices by accounting for potential quadratic effects.</p>
+</div>
+<div id="show-the-summary-of-the-model-and-explain-the-outcome.-1" class="section level4 hasAnchor" number="3.0.2.2">
+<h4><span class="header-section-number">3.0.2.2</span> Show the summary of the model and explain the outcome.<a href="regression-analysis.html#show-the-summary-of-the-model-and-explain-the-outcome.-1" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="regression-analysis.html#cb48-1" tabindex="-1"></a><span class="fu">summary</span>(quadratic_model)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = Close ~ Date_numeric + Date_numeric2, data = BitCoin_df)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -15872  -7420  -1996   2666  36106 
+## 
+## Coefficients:
+##                 Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)    1.066e+05  4.157e+05   0.256    0.798
+## Date_numeric  -2.333e+01  4.615e+01  -0.506    0.614
+## Date_numeric2  1.009e-03  1.278e-03   0.789    0.432
+## 
+## Residual standard error: 10450 on 104 degrees of freedom
+## Multiple R-squared:  0.5885, Adjusted R-squared:  0.5806 
+## F-statistic: 74.36 on 2 and 104 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p><em><strong>Code explanation here</strong></em></p>
+<p>The summary of the quadratic regression model shows that the relationship between Bitcoin’s closing price and the date (both linear and squared) is analyzed. The residuals indicate the spread of prediction errors. The coefficients for the intercept, Date_numeric, and Date_numeric2 are not statistically significant (p-values &gt; 0.05), means weak relationships. Despite this, the model explains about 58.85% of the variance in closing prices (R-squared = 0.5885). The F-statistic (74.36) and its p-value (&lt; 2.2e-16) indicate the overall model is significant.</p>
+</div>
+<div id="explain-if-quadratic-model-is-appropriate-or-not." class="section level4 hasAnchor" number="3.0.2.3">
+<h4><span class="header-section-number">3.0.2.3</span> Explain if quadratic model is appropriate or not.<a href="regression-analysis.html#explain-if-quadratic-model-is-appropriate-or-not." class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="regression-analysis.html#cb50-1" tabindex="-1"></a><span class="co"># Create a new column with the fitted values from the quadratic model</span></span>
+<span id="cb50-2"><a href="regression-analysis.html#cb50-2" tabindex="-1"></a>BitCoin_df <span class="ot">&lt;-</span> BitCoin_df <span class="sc">%&gt;%</span></span>
+<span id="cb50-3"><a href="regression-analysis.html#cb50-3" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Fitted_Close_Quadratic =</span> <span class="fu">predict</span>(quadratic_model))</span>
+<span id="cb50-4"><a href="regression-analysis.html#cb50-4" tabindex="-1"></a></span>
+<span id="cb50-5"><a href="regression-analysis.html#cb50-5" tabindex="-1"></a><span class="co"># Plot the original data, the linear model, and the quadratic model</span></span>
+<span id="cb50-6"><a href="regression-analysis.html#cb50-6" tabindex="-1"></a><span class="fu">ggplot</span>(BitCoin_df, <span class="fu">aes</span>(<span class="at">x =</span> Date)) <span class="sc">+</span></span>
+<span id="cb50-7"><a href="regression-analysis.html#cb50-7" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> Close), <span class="at">color =</span> <span class="st">&quot;blue&quot;</span>) <span class="sc">+</span>  <span class="co"># Original data points</span></span>
+<span id="cb50-8"><a href="regression-analysis.html#cb50-8" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Fitted_Close), <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span>  <span class="co"># Fitted linear model line</span></span>
+<span id="cb50-9"><a href="regression-analysis.html#cb50-9" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> Fitted_Close_Quadratic), <span class="at">color =</span> <span class="st">&quot;green&quot;</span>) <span class="sc">+</span>  <span class="co"># Fitted quadratic model line</span></span>
+<span id="cb50-10"><a href="regression-analysis.html#cb50-10" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Time Series of Bitcoin Prices with Linear and Quadratic Models&quot;</span>,</span>
+<span id="cb50-11"><a href="regression-analysis.html#cb50-11" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">&quot;Date&quot;</span>,</span>
+<span id="cb50-12"><a href="regression-analysis.html#cb50-12" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Close Price&quot;</span>) <span class="sc">+</span></span>
+<span id="cb50-13"><a href="regression-analysis.html#cb50-13" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="regression-analysis.html#cb51-1" tabindex="-1"></a><span class="fu">summary</span>(BitCoin_df<span class="sc">$</span>Fitted_Close_Quadratic)</span></code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   -4411    4156   14045   14944   25262   37777</code></pre>
+<p><em><strong>Code explanation here</strong></em></p>
+<p>The code creates a new column for predicted closing prices based on a quadratic model in the BitCoin_df data frame. The plotted lines show the original data (blue dots), the fitted linear model (red dashed), and the quadratic model (green). The quadratic curve better reflects the data’s trend, suggesting an accelerating increase in closing prices over time.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="descriptive-analytics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="arima-model.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/03-method.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["bookdown-demo.pdf", "bookdown-demo.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
