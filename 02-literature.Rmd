@@ -33,7 +33,7 @@ BitCoin_df <- BitCoin_df %>%
   - Create year wise trend lines of prices.
   -- Convert the BitCoin data frame to a time series object with frequency 1.
   - Plot the time series of monthly prices on years. Use blue color dots to plot the data points. Connect the points with a line.
-  - Find the relationship between consecutive days. Show the correlation through a scatter plot.
+  - Find the relationship between consecutive Months. Show the correlation through a scatter plot.
   
  
 ## Create a monthly boxplot of prices.{-}
@@ -81,13 +81,13 @@ ggplot(BitCoin_df, aes(x = factor(year), y = Close, fill = factor(year))) +
 _**Code explanation here**_
 
 
-## Create year wise trend lines of prices.{-}
-
 * A boxplot showing the distribution of Bitcoin closing prices over different years. 
 * Each box represents the interquartile range (IQR) of the closing prices for a particular year, with the horizontal line inside the box indicating the median price. T
 * he whiskers extend to the minimum and maximum values within 1.5 times the IQR from the first and third quartiles, respectively. 
 * Outliers beyond this range are shown as individual points.
 
+
+## Create year wise trend lines of prices.{-}
 
 
 ```{r}
@@ -143,11 +143,12 @@ ggplot(BitCoin_df, aes(x = Date, y = Close)) +
 _**Explanation of Plot**_
 
 Explanation of the Plot:
-- Horizontal Axis (Year): Represents the timeline from 2016 to 2024.
-- Vertical Axis (Close Price): Represents the closing price of Bitcoin at the end of each month.
-- Blue Dots: Each dot represents the closing price of Bitcoin for a particular month.
-- Blue Line: Connects the dots to show the trend and continuity of Bitcoin prices over time.
-- The plot provides a visual representation of Bitcoin's price volatility and trends, making it easier to analyze patterns and potential factors affecting its value over the given period.
+
+  - Horizontal Axis (Year): Represents the timeline from 2016 to 2024.
+  - Vertical Axis (Close Price): Represents the closing price of Bitcoin at the end of each month.
+  - Blue Dots: Each dot represents the closing price of Bitcoin for a particular month.
+  - Blue Line: Connects the dots to show the trend and continuity of Bitcoin prices over time.
+  - The plot provides a visual representation of Bitcoin's price volatility and trends, making it easier to analyze patterns and potential factors affecting its value over the given period.
 
 _**Result**_
 

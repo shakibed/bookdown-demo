@@ -127,29 +127,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 </style>
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -218,20 +195,23 @@ div.csl-indent {
 <li class="chapter" data-level="4.12" data-path="arima-model.html"><a href="arima-model.html#create-a-histogram-plot-of-the-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.12</b> Create a histogram plot of the residuals of the two models. Explain the outcome.</a></li>
 <li class="chapter" data-level="4.13" data-path="arima-model.html"><a href="arima-model.html#create-acf-pacf-plots-of-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.13</b> Create ACF &amp; PACF plots of residuals of the two models. Explain the outcome.</a></li>
 <li class="chapter" data-level="4.14" data-path="arima-model.html"><a href="arima-model.html#create-qq-plot-of-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.14</b> Create QQ plot of residuals of the two models. Explain the outcome.</a></li>
-<li class="chapter" data-level="4.15" data-path="arima-model.html"><a href="arima-model.html#perform-shapiro-wilk-test-on-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.15</b> Perform Shapiro-Wilk test on residuals of the two models. Explain the outcome.</a>
-<ul>
-<li class="chapter" data-level="4.15.1" data-path="arima-model.html"><a href="arima-model.html#select-the-best-model-from-the-above-two-models-using-the-outcome-of-all-the-above-analysis.-this-is-going-to-be-your-final-model."><i class="fa fa-check"></i><b>4.15.1</b> Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model.</a></li>
-</ul></li>
+<li class="chapter" data-level="4.15" data-path="arima-model.html"><a href="arima-model.html#perform-shapiro-wilk-test-on-residuals-of-the-two-models.-explain-the-outcome."><i class="fa fa-check"></i><b>4.15</b> Perform Shapiro-Wilk test on residuals of the two models. Explain the outcome.</a></li>
+<li class="chapter" data-level="4.16" data-path="arima-model.html"><a href="arima-model.html#select-the-best-model-from-the-above-two-models-using-the-outcome-of-all-the-above-analysis.-this-is-going-to-be-your-final-model."><i class="fa fa-check"></i><b>4.16</b> Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model.</a></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="forecasting.html"><a href="forecasting.html"><i class="fa fa-check"></i><b>5</b> Forecasting</a>
 <ul>
 <li class="chapter" data-level="5.0.1" data-path="forecasting.html"><a href="forecasting.html#explanation-of-the-forecast-table"><i class="fa fa-check"></i><b>5.0.1</b> Explanation of the Forecast Table</a></li>
 <li class="chapter" data-level="5.1" data-path="forecasting.html"><a href="forecasting.html#key-insights"><i class="fa fa-check"></i><b>5.1</b> Key Insights</a>
 <ul>
-<li class="chapter" data-level="5.1.1" data-path="forecasting.html"><a href="forecasting.html#create-a-plot-of-the-forecasted-data-points"><i class="fa fa-check"></i><b>5.1.1</b> Create a plot of the forecasted data points</a></li>
+<li class="chapter" data-level="5.1.1" data-path="forecasting.html"><a href="forecasting.html#a-plot-of-the-forecasted-data-points-of-next-12-months"><i class="fa fa-check"></i><b>5.1.1</b> a plot of the forecasted data points of next 12 months</a></li>
 </ul></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
+<li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="conclusion.html"><a href="conclusion.html#linear-regression-1"><i class="fa fa-check"></i><b>6.1</b> Linear Regression:</a></li>
+<li class="chapter" data-level="6.2" data-path="conclusion.html"><a href="conclusion.html#quadratic-regression-1"><i class="fa fa-check"></i><b>6.2</b> Quadratic Regression:</a></li>
+<li class="chapter" data-level="6.3" data-path="conclusion.html"><a href="conclusion.html#arima"><i class="fa fa-check"></i><b>6.3</b> ARIMA:</a></li>
+</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -254,24 +234,24 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="forecasting" class="section level1 hasAnchor" number="5">
 <h1><span class="header-section-number">Chapter 5</span> Forecasting<a href="forecasting.html#forecasting" class="anchor-section" aria-label="Anchor link to header"></a></h1>
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="forecasting.html#cb124-1" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
-<span id="cb124-2"><a href="forecasting.html#cb124-2" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
-<span id="cb124-3"><a href="forecasting.html#cb124-3" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb124-4"><a href="forecasting.html#cb124-4" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
-<span id="cb124-5"><a href="forecasting.html#cb124-5" tabindex="-1"></a><span class="co"># Load the data</span></span>
-<span id="cb124-6"><a href="forecasting.html#cb124-6" tabindex="-1"></a>BitCoin <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/shakibed/Final_Project_Group_04/main/BTC-Monthly.csv&quot;</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb124-7"><a href="forecasting.html#cb124-7" tabindex="-1"></a></span>
-<span id="cb124-8"><a href="forecasting.html#cb124-8" tabindex="-1"></a><span class="co"># Convert date</span></span>
-<span id="cb124-9"><a href="forecasting.html#cb124-9" tabindex="-1"></a>BitCoin<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(BitCoin<span class="sc">$</span>Date)</span>
-<span id="cb124-10"><a href="forecasting.html#cb124-10" tabindex="-1"></a></span>
-<span id="cb124-11"><a href="forecasting.html#cb124-11" tabindex="-1"></a><span class="co"># Convert to time series object</span></span>
-<span id="cb124-12"><a href="forecasting.html#cb124-12" tabindex="-1"></a>bitcoin_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(BitCoin<span class="sc">$</span>Close, <span class="at">start =</span> <span class="fu">c</span>(<span class="fu">as.numeric</span>(<span class="fu">format</span>(<span class="fu">min</span>(BitCoin<span class="sc">$</span>Date), <span class="st">&quot;%Y&quot;</span>)), <span class="fu">as.numeric</span>(<span class="fu">format</span>(<span class="fu">min</span>(BitCoin<span class="sc">$</span>Date), <span class="st">&quot;%m&quot;</span>))), <span class="at">frequency =</span> <span class="dv">12</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="forecasting.html#cb111-1" tabindex="-1"></a><span class="co"># Load necessary libraries</span></span>
+<span id="cb111-2"><a href="forecasting.html#cb111-2" tabindex="-1"></a><span class="fu">library</span>(forecast)</span>
+<span id="cb111-3"><a href="forecasting.html#cb111-3" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb111-4"><a href="forecasting.html#cb111-4" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb111-5"><a href="forecasting.html#cb111-5" tabindex="-1"></a><span class="co"># Load the data</span></span>
+<span id="cb111-6"><a href="forecasting.html#cb111-6" tabindex="-1"></a>BitCoin <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/shakibed/Final_Project_Group_04/main/BTC-Monthly.csv&quot;</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb111-7"><a href="forecasting.html#cb111-7" tabindex="-1"></a></span>
+<span id="cb111-8"><a href="forecasting.html#cb111-8" tabindex="-1"></a><span class="co"># Convert date</span></span>
+<span id="cb111-9"><a href="forecasting.html#cb111-9" tabindex="-1"></a>BitCoin<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(BitCoin<span class="sc">$</span>Date)</span>
+<span id="cb111-10"><a href="forecasting.html#cb111-10" tabindex="-1"></a></span>
+<span id="cb111-11"><a href="forecasting.html#cb111-11" tabindex="-1"></a><span class="co"># Convert to time series object</span></span>
+<span id="cb111-12"><a href="forecasting.html#cb111-12" tabindex="-1"></a>bitcoin_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(BitCoin<span class="sc">$</span>Close, <span class="at">start =</span> <span class="fu">c</span>(<span class="fu">as.numeric</span>(<span class="fu">format</span>(<span class="fu">min</span>(BitCoin<span class="sc">$</span>Date), <span class="st">&quot;%Y&quot;</span>)), <span class="fu">as.numeric</span>(<span class="fu">format</span>(<span class="fu">min</span>(BitCoin<span class="sc">$</span>Date), <span class="st">&quot;%m&quot;</span>))), <span class="at">frequency =</span> <span class="dv">12</span>)</span></code></pre></div>
 <div id="explanation-of-the-forecast-table" class="section level3 hasAnchor" number="5.0.1">
 <h3><span class="header-section-number">5.0.1</span> Explanation of the Forecast Table<a href="forecasting.html#explanation-of-the-forecast-table" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="forecasting.html#cb125-1" tabindex="-1"></a>bitcoin_forecast_fit_model <span class="ot">&lt;-</span> <span class="fu">Arima</span>(bitcoin_ts,<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb125-2"><a href="forecasting.html#cb125-2" tabindex="-1"></a>forecast_next_12 <span class="ot">&lt;-</span> <span class="fu">forecast</span>(bitcoin_forecast_fit_model,<span class="at">h=</span><span class="dv">12</span>)</span>
-<span id="cb125-3"><a href="forecasting.html#cb125-3" tabindex="-1"></a><span class="fu">kable</span>(forecast_next_12, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">formats=</span><span class="st">&quot;html&quot;</span>, <span class="at">row.names =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb125-4"><a href="forecasting.html#cb125-4" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> F, <span class="at">font_size =</span> <span class="dv">12</span>, <span class="at">position =</span> <span class="st">&quot;center&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="forecasting.html#cb112-1" tabindex="-1"></a>bitcoin_forecast_fit_model <span class="ot">&lt;-</span> <span class="fu">Arima</span>(bitcoin_ts,<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb112-2"><a href="forecasting.html#cb112-2" tabindex="-1"></a>forecast_next_12 <span class="ot">&lt;-</span> <span class="fu">forecast</span>(bitcoin_forecast_fit_model,<span class="at">h=</span><span class="dv">12</span>)</span>
+<span id="cb112-3"><a href="forecasting.html#cb112-3" tabindex="-1"></a><span class="fu">kable</span>(forecast_next_12, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">formats=</span><span class="st">&quot;html&quot;</span>, <span class="at">row.names =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-4"><a href="forecasting.html#cb112-4" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">full_width =</span> F, <span class="at">font_size =</span> <span class="dv">12</span>, <span class="at">position =</span> <span class="st">&quot;center&quot;</span>)</span></code></pre></div>
 <table class="table" style="font-size: 12px; width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -300,19 +280,19 @@ Hi 95
 Dec 2023
 </td>
 <td style="text-align:right;">
-36802.62
+37492.11
 </td>
 <td style="text-align:right;">
-31342.01
+31918.44
 </td>
 <td style="text-align:right;">
-42263.23
+43065.77
 </td>
 <td style="text-align:right;">
-28451.34
+28967.92
 </td>
 <td style="text-align:right;">
-45153.90
+46016.29
 </td>
 </tr>
 <tr>
@@ -320,19 +300,19 @@ Dec 2023
 Jan 2024
 </td>
 <td style="text-align:right;">
-37471.90
+37363.86
 </td>
 <td style="text-align:right;">
-28547.43
+28605.25
 </td>
 <td style="text-align:right;">
-46396.37
+46122.46
 </td>
 <td style="text-align:right;">
-23823.10
+23968.73
 </td>
 <td style="text-align:right;">
-51120.69
+50758.98
 </td>
 </tr>
 <tr>
@@ -340,19 +320,19 @@ Jan 2024
 Feb 2024
 </td>
 <td style="text-align:right;">
-37456.46
+37363.86
 </td>
 <td style="text-align:right;">
-26299.03
+26564.53
 </td>
 <td style="text-align:right;">
-48613.89
+48163.18
 </td>
 <td style="text-align:right;">
-20392.64
+20847.71
 </td>
 <td style="text-align:right;">
-54520.28
+53880.00
 </td>
 </tr>
 <tr>
@@ -360,19 +340,19 @@ Feb 2024
 Mar 2024
 </td>
 <td style="text-align:right;">
-37087.66
+37363.86
 </td>
 <td style="text-align:right;">
-24383.40
+24852.35
 </td>
 <td style="text-align:right;">
-49791.91
+49875.36
 </td>
 <td style="text-align:right;">
-17658.18
+18229.16
 </td>
 <td style="text-align:right;">
-56517.13
+56498.55
 </td>
 </tr>
 <tr>
@@ -380,19 +360,19 @@ Mar 2024
 Apr 2024
 </td>
 <td style="text-align:right;">
-37390.54
+37363.86
 </td>
 <td style="text-align:right;">
-22991.72
+23347.79
 </td>
 <td style="text-align:right;">
-51789.36
+51379.92
 </td>
 <td style="text-align:right;">
-15369.45
+15928.14
 </td>
 <td style="text-align:right;">
-59411.63
+58799.57
 </td>
 </tr>
 <tr>
@@ -400,19 +380,19 @@ Apr 2024
 May 2024
 </td>
 <td style="text-align:right;">
-37359.02
+37363.86
 </td>
 <td style="text-align:right;">
-21531.64
+21989.78
 </td>
 <td style="text-align:right;">
-53186.40
+52737.93
 </td>
 <td style="text-align:right;">
-13153.13
+13851.23
 </td>
 <td style="text-align:right;">
-61564.91
+60876.48
 </td>
 </tr>
 <tr>
@@ -420,19 +400,19 @@ May 2024
 Jun 2024
 </td>
 <td style="text-align:right;">
-37211.68
+37363.86
 </td>
 <td style="text-align:right;">
-20163.29
+20742.35
 </td>
 <td style="text-align:right;">
-54260.07
+53985.36
 </td>
 <td style="text-align:right;">
-11138.42
+11943.45
 </td>
 <td style="text-align:right;">
-63284.95
+62784.26
 </td>
 </tr>
 <tr>
@@ -440,19 +420,19 @@ Jun 2024
 Jul 2024
 </td>
 <td style="text-align:right;">
-37347.12
+37363.86
 </td>
 <td style="text-align:right;">
-19051.05
+19582.21
 </td>
 <td style="text-align:right;">
-55643.20
+55145.50
 </td>
 <td style="text-align:right;">
-9365.69
+10169.18
 </td>
 <td style="text-align:right;">
-65328.56
+64558.53
 </td>
 </tr>
 <tr>
@@ -460,19 +440,19 @@ Jul 2024
 Aug 2024
 </td>
 <td style="text-align:right;">
-37323.02
+37363.86
 </td>
 <td style="text-align:right;">
-17896.03
+18493.27
 </td>
 <td style="text-align:right;">
-56750.01
+56234.44
 </td>
 <td style="text-align:right;">
-7612.01
+8503.78
 </td>
 <td style="text-align:right;">
-67034.03
+66223.93
 </td>
 </tr>
 <tr>
@@ -480,19 +460,19 @@ Aug 2024
 Sep 2024
 </td>
 <td style="text-align:right;">
-37265.12
+37363.86
 </td>
 <td style="text-align:right;">
-16796.97
+17463.82
 </td>
 <td style="text-align:right;">
-57733.26
+57263.89
 </td>
 <td style="text-align:right;">
-5961.78
+6929.38
 </td>
 <td style="text-align:right;">
-68568.45
+67798.33
 </td>
 </tr>
 <tr>
@@ -500,19 +480,19 @@ Sep 2024
 Oct 2024
 </td>
 <td style="text-align:right;">
-37325.02
+37363.86
 </td>
 <td style="text-align:right;">
-15826.39
+16485.07
 </td>
 <td style="text-align:right;">
-58823.64
+58242.64
 </td>
 <td style="text-align:right;">
-4445.70
+5432.51
 </td>
 <td style="text-align:right;">
-70204.33
+69295.20
 </td>
 </tr>
 <tr>
@@ -520,39 +500,39 @@ Oct 2024
 Nov 2024
 </td>
 <td style="text-align:right;">
-37310.22
+37363.86
 </td>
 <td style="text-align:right;">
-14844.41
+15550.19
 </td>
 <td style="text-align:right;">
-59776.03
+59177.52
 </td>
 <td style="text-align:right;">
-2951.73
+4002.74
 </td>
 <td style="text-align:right;">
-71668.71
+70724.97
 </td>
 </tr>
 </tbody>
 </table>
 <p>The forecast table provides the projected Bitcoin prices for the next 12 months along with their confidence intervals. Here’s what each column represents:</p>
-<p>-Point Forecast: This is the predicted value of the Bitcoin price for each month. It’s the best estimate based on the ARIMA(2,1,2) model.
+<p>-Point Forecast: This is the predicted value of the Bitcoin price for each month. It’s the best estimate based on the ARIMA(0,1,2) model.
 - Lo 80 and Hi 80: These columns represent the lower and upper bounds of the 80% confidence interval. There’s an 80% chance that the actual Bitcoin price will fall within this range.
 - Lo 95 and Hi 95: These columns represent the lower and upper bounds of the 95% confidence interval. There’s a 95% chance that the actual Bitcoin price will fall within this range.</p>
 </div>
 <div id="key-insights" class="section level2 hasAnchor" number="5.1">
 <h2><span class="header-section-number">5.1</span> Key Insights<a href="forecasting.html#key-insights" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <ul>
-<li>Predicted Growth: The point forecasts show a general upward trend in Bitcoin prices over the next 12 months, with the price starting at approximately $36,802.62 in December 2023 and gradually increasing to approximately $37,310.22 by November 2024.</li>
-<li>Confidence Intervals: The confidence intervals (both 80% and 95%) widen over time. This indicates increasing uncertainty in the forecast as we move further into the future. For example, the 80% confidence interval for December 2023 is $31,342.01 to $42,263.23, while for November 2024, it is $14,844.41 to $59,776.03.</li>
-<li>Risk and Uncertainty: The widening confidence intervals highlight the volatility and uncertainty inherent in forecasting Bitcoin prices. This is important for decision-making and risk management.</li>
+<li>Steady Price Increase: The point forecast predicts a steady increase in Bitcoin prices from approximately $36,803 in December 2023 to $37,310 in November 2024.</li>
+<li>Uncertainty Range: The prediction intervals widen over time, indicating increasing uncertainty, with 95% confidence intervals ranging from around $28,451 to $45,154 in December 2023 to $2,952 to $71,669 in November 2024.</li>
+<li>Moderate Fluctuations: The forecasts suggest moderate monthly fluctuations, with the highest forecasted point in April 2024 and the lowest in March 2024.</li>
 </ul>
-<div id="create-a-plot-of-the-forecasted-data-points" class="section level3 hasAnchor" number="5.1.1">
-<h3><span class="header-section-number">5.1.1</span> Create a plot of the forecasted data points<a href="forecasting.html#create-a-plot-of-the-forecasted-data-points" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="forecasting.html#cb126-1" tabindex="-1"></a><span class="fu">plot</span>(forecast_next_12, <span class="at">main =</span> <span class="st">&quot;ARIMA(2,1,2) Model Forecast&quot;</span>)</span></code></pre></div>
-<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-56-1.png" width="672" /></p>
+<div id="a-plot-of-the-forecasted-data-points-of-next-12-months" class="section level3 hasAnchor" number="5.1.1">
+<h3><span class="header-section-number">5.1.1</span> a plot of the forecasted data points of next 12 months<a href="forecasting.html#a-plot-of-the-forecasted-data-points-of-next-12-months" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="forecasting.html#cb113-1" tabindex="-1"></a><span class="fu">plot</span>(forecast_next_12, <span class="at">main =</span> <span class="st">&quot;ARIMA(0,1,2) Model Forecast&quot;</span>)</span></code></pre></div>
+<p><img src="bookdown-demo_files/figure-html/unnamed-chunk-55-1.png" width="672" /></p>
 <p>```</p>
 
 </div>

@@ -1,2 +1,17 @@
-# Conclusion  
- 
+# Conclusion
+
+
+## Linear Regression:
+
+Simple and easy to interpret but limited in capturing complex patterns and sensitive to outliers.
+
+## Quadratic Regression:
+
+Adds flexibility for slight non-linearity but may overfit and has issues with coefficient significance.
+
+
+## ARIMA:
+
+Best captures trends and seasonality in time series data, offering the most accurate forecasts, albeit with greater complexity.
+
+For a balanced trade-off between model simplicity and forecasting accuracy, the ARIMA(0,1,2) model emerges as a suitable choice. However, for slightly improved accuracy, the ARIMA(2,1,2) model can be considered, accepting the trade-off of increased complexity.

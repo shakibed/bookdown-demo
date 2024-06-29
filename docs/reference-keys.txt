@@ -1,4 +1,3 @@
-fig:nice-fig
 tab:nice-tab
 intro
 descriptive-analytics
@@ -42,5 +41,8 @@ select-the-best-model-from-the-above-two-models-using-the-outcome-of-all-the-abo
 forecasting
 explanation-of-the-forecast-table
 key-insights
-create-a-plot-of-the-forecasted-data-points
+a-plot-of-the-forecasted-data-points-of-next-12-months
 conclusion
+linear-regression-1
+quadratic-regression-1
+arima

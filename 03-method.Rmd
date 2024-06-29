@@ -6,9 +6,7 @@
 
 ```{r, echo=FALSE}
 
-#("tidyverse")
-#4.1 Loading the Dataset
-#Load the dataset from csv into a data frame named BitCoin.
+#Load library
 library(tidyverse)
 #load csv from github(uploaded for Assignment_02_Group_04)
 BitCoin <- read.csv("https://raw.githubusercontent.com/shakibed/Final_Project_Group_04/main/BTC-Monthly.csv", stringsAsFactors = FALSE)
@@ -62,10 +60,22 @@ The linear model predicts Bitcoin's closing price based on the date. The slope s
 
 
 #### Show the summary of the model and explain the outcome. 
+```{r}
+summary(linear_model)
+```
+_**In Summary**_
+
+- The model indicates a statistically significant relationship between the date and the closing price of Bitcoin, as shown by the very small p-value (< 2.2e-16).
+- The date explains about 58.6% of the variation in closing prices, as reflected by the Multiple R-squared and Adjusted R-squared values.
+- The average prediction error is approximately 10430, as indicated by the Residual Standard Error.
+- For each unit increase in the numeric date, the closing price of Bitcoin rises by about 13.08 units, which is determined by the slope of the regression line.
+
+
+
 
 
 ```{r}
-summary(linear_model)
+
 
 # Create a new column with fitted values
 BitCoin_df <- BitCoin_df %>%
@@ -89,7 +99,7 @@ scale_color_manual(values = c("Original Data" = "blue", "Fitted Line" = "red")) 
 
 _**Code explanation here**_
 
-The provided graph and summary show a linear regression model of Bitcoin prices over time. The blue points represent the original data, while the red line represents the fitted linear model. The coefficients table and statistical measures indicate a significant relationship between time and Bitcoin prices, with an R-squared value of 0.586, suggesting that approximately 58.6% of the variance in Bitcoin prices can be explained by the model. The residuals indicate some variability around the fitted line.
+The provided graph and summary show a linear regression model of Bitcoin prices over time. The blue points represent the original data, while the red line represents the fitted linear model. 
 
 #### Create a plot of the linear model on top of the time series dataset line plot with scatter data points. 
 
@@ -117,17 +127,8 @@ The graph shows Bitcoin prices over time with blue dots representing the origina
 
 #### Perform residual analysis 
 ```{r}
-# Convert Date to numeric format for linear modeling
-BitCoin_df <- BitCoin_df %>%
-mutate(Date_numeric = as.numeric(Date))
-
-
-
-# Fit the linear model
-linear_model <- lm(Close ~ Date_numeric, data = BitCoin_df)
-#y=mx+c
-#close price = m*numeric date + c
-summary(linear_model)
+ 
+ 
 #Calculate residuals
 BitCoin_df <- BitCoin_df %>%
 mutate(Residuals = Close - Fitted_Close)
@@ -136,15 +137,12 @@ mutate(Residuals = Close - Fitted_Close)
 #res_dual_values <- residuals(linear_model)
 #summary(res_dual_values)
 
-
-
-# Print the first few rows to verify
-head(BitCoin_df)
+ 
 ```
 
 _**Code explanation here**_
 
-The code snippet converts dates in the Bitcoin dataset to numeric format for linear modeling. A linear model is then fitted to predict the closing price based on the numeric date. The model's summary shows a significant positive relationship between date and closing price, with an R-squared value of 0.586, indicating moderate explanatory power. Residuals are calculated to assess model fit. The dataset includes date, closing price, month, year, numeric date, fitted close values, and residuals for verification.
+ Residuals are calculated to assess model fit. The dataset includes date, closing price, month, year, numeric date, fitted close values, and residuals for verification.
 
 
 #### Perform residual analysis and create a line & scatter plot of the 
@@ -218,7 +216,8 @@ The summary statistics of the residuals provide insight into the accuracy of the
 
 _**Code explanation here**_
 
-The graph shows a bar chart of prediction errors (residuals) for Bitcoin prices. Each bar represents how many errors fell within a specific price range. The center area, with more bars, suggests most predictions were close. Ideally, the bars would be symmetrical around zero (no errors), but some errors exist on both positive and negative sides.
+ Ideally, the residuals should be normally distributed (bell-shaped curve centered around zero). 
+ The histogram here shows some deviation from normality, indicating that the model may not perfectly capture the data distribution.
 
 #### Create a histogram plot of the residuals with 
 
@@ -249,30 +248,41 @@ acf(BitCoin_df$Residuals, main = "ACF of Residuals")
 
 ```
 
-_**Code explanation here**_
 
-ACF measures the correlation between residuals at different lags. Most bars falling within significance bounds (dashed lines) indicate no significant autocorrelation, suggesting the model captures data patterns adequately.
+_**Code explanation here**_
+In this plot, the residuals have significant autocorrelations up to around lag 5. This suggests that the residuals are not purely random and that there is some pattern left unexplained by the model.
+
 
 ```{r}
 pacf(BitCoin_df$Residuals, main = "PACF of Residuals")  
 
 ```
 
-PACF measures the correlation between residuals and lagged values, accounting for shorter lags. Bars within significance bounds indicate no significant partial autocorrelation, meaning past values don't provide additional predictive information. 
-Both plots help determine if residuals are random (white noise), validating the model. Most lags within bounds suggest errors are random and uncorrelated, indicating a good model fit.
+In a well-fitted model, the PACF should show no significant partial autocorrelation beyond the first few lags.
+This plot shows a significant partial autocorrelation at lag 1 and some minor significant lags afterward, suggesting that there might be some remaining structure in the residuals.
+
+These analyses suggest that the linear regression model may not be the best fit for this time series data, and a more complex model may be needed to better capture the underlying patterns and trends in Bitcoin prices.
+
+
+
+
+
 
 
 #### Create QQ plot of residuals. Explain the outcome. 
 
 
 ```{r}
-  # S
+# QQ plot of residuals
+qqnorm(BitCoin_df$Residuals)
+qqline(BitCoin_df$Residuals, col = "red")
 
 ```
 
 _**Code explanation here**_
 
-The graph shows a QQ plot of prediction errors (residuals). It compares these errors to a perfect normal distribution (red line). Ideally, the points would fall on the red line, indicating normally distributed errors. In this plot, the points veer away from the line, especially at the edges. This suggests the errors may not be normally distributed.
+- The residuals do not follow a normal distribution, as indicated by the significant deviations in the tails.
+- Since many statistical methods (like linear regression) assume normally distributed residuals, the non-normality observed here indicates that the model assumptions are violated.
 
 
 #### Perform Shapiro-Wilk test on residuals. Explain the outcome. 
@@ -308,8 +318,26 @@ W is 0.85983, and the p-value is 1.215e-08, which is much less than 0.05. This i
 ```
 
 _**Code explanation here**_
+The linear regression model is not a suitable choice for Bitcoin price forecasting. The model explains about 58.6% of the variation in closing Bitcoin prices, as indicated by the Multiple R-squared and Adjusted R-squared values of Linear Model.
 
-The linear model may not be appropriate because the Shapiro-Wilk test reveals non-normal residuals (p-value = 1.215e-08). Non-normality violates a key assumption of linear regression, potentially leading to unreliable estimates and inferences. This indicates that the model may not capture the data's underlying patterns accurately.
+With some Residual Analysis we also get same indication:
+
+- ACF test of Residuals:
+  - The ACF plot of residuals shows significant autocorrelations up to around lag 5.
+  This suggests that the residuals are not purely random and that some patterns remain unexplained by the model.
+
+- PACF test of Residuals:
+  - In a well-fitted model, the PACF should show no significant partial autocorrelation beyond the first few lags.
+  -The PACF plot shows a significant partial autocorrelation at lag 1 and some minor significant lags afterward, indicating remaining structure in the residuals.
+
+- QQ Plot:
+  -The QQ plot reveals that the residuals do not follow a normal distribution, as evidenced by significant deviations in the tails.
+
+- Shapiro-Wilk Test:
+  - The Shapiro-Wilk test yields a p-value of 1.215e-08, indicating that the residuals are not normally distributed.
+  
+The residuals exhibit significant autocorrelation and non-normality, confirming that the linear regression model is not capturing all the patterns in the data.
+
 
 ### Quadratic Regression
 
@@ -351,9 +379,14 @@ summary(quadratic_model)
 
 _**Code explanation here**_
 
-The summary of the quadratic regression model shows that the relationship between Bitcoin's closing price and the date (both linear and squared) is analyzed. The residuals indicate the spread of prediction errors. The coefficients for the intercept, Date_numeric, and Date_numeric2 are not statistically significant (p-values > 0.05), means weak relationships. Despite this, the model explains about 58.85% of the variance in closing prices (R-squared = 0.5885). The F-statistic (74.36) and its p-value (< 2.2e-16) indicate the overall model is significant.
+  - Coefficients:
+    - the coefficients for Date_numeric and Date_numeric^2 are not statistically significant (p-values > 0.05). This suggests that neither the linear nor the quadratic term significantly predicts the closing price of Bitcoin.
+Model Fit:
+  - The R-squared value of 0.5885 indicates that the model explains about 58.85% of the variance in Bitcoin's closing prices. This is a moderate level of explanation.
+The significant F-statistic indicates that the model as a whole is statistically significant, even though individual predictors are not.
 
- 
+In the context of financial markets and Bitcoin price forecasting, a model explaining 58% of the variance can be seen as relatively decent, given the high volatility and complexity of financial data.
+
 #### Explain if quadratic model is appropriate or not. 
 
 
@@ -378,5 +411,4 @@ summary(BitCoin_df$Fitted_Close_Quadratic)
 
 _**Code explanation here**_
 
-The code creates a new column for predicted closing prices based on a quadratic model in the BitCoin_df data frame. The plotted lines show the original data (blue dots), the fitted linear model (red dashed), and the quadratic model (green). The quadratic curve better reflects the data's trend, suggesting an accelerating increase in closing prices over time.
-
+The quadratic model shows some ability to explain the variance in Bitcoin's closing prices, but the lack of significance in the individual coefficients suggests that it might not be the best fit. Additional predictors or a different modeling approach (e.g., non-linear models, time series models) might be needed to better capture the underlying patterns in the data.

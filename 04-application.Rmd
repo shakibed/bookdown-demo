@@ -207,16 +207,6 @@ Stationarity:
 The ACF plot of the differenced Bitcoin prices shows a significant autocorrelation at lag 1 and quickly diminishing autocorrelations at higher lags. This suggests that the first differencing has effectively made the series stationary and has successfully removed trends and seasonality
  
 
-Model Identification:
-The significant autocorrelation at lag 1 suggests that an ARIMA model with an AR (autoregressive) term might be appropriate. Specifically, an ARIMA(1,1,0) or ARIMA(1,1,1) model could be considered, 
-where:
-- The first "1" indicates one AR term.
-- The "1" indicates first differencing.
-- The last "0" or "1" indicates the number of MA (moving average) terms.
- 
-- he differenced Bitcoin prices seem to have eliminated much of the non-stationarity, but there is still some autocorrelation present, as indicated by the significant spikes at certain lags.
-- This suggests that while differencing has helped stabilize the series, it may not have completely removed all dependencies between observations.
-- An ARIMA model could be appropriate for further analysis, with the AR component determined by the significant lags observed in the PACF plot.
 
 
 ## Perform EACF test to comprehensively test the possible candidate models. Mention the models that you have selected for modeling (select at least 3 models).
@@ -232,38 +222,19 @@ eacf(bitcoin_diff,ar.max = 3,ma.max = 3)
 
 
 ```
-ARIMA(0, d, 0)
 
-ARIMA(0, d, 3)
 
-ARIMA(1, d, 3)
-ARIMA(2, d, 0)
+_**Code explanation here**_
 
-ARIMA(2, d, 3)
-ARIMA(3, d, 1)
-ARIMA(3, d, 3)
-
--ARIMA(0, d, 1)
--ARIMA(0, d, 2)
--ARIMA(1, d, 2)
--ARIMA(2, d, 2)
-
-Code explanation here
-The EACF (Extended Autocorrelation Function) table is used in the identification of ARMA (AutoRegressive Moving Average) models. In the table, 'o' indicates non-significant (near zero) values, and 'x' indicates significant values.
-In this case, the smallest rectangle of 'o's is found for AR = 0 and MA = 2:
-
-Thus, an ARMA(0, 2) model might be a good starting point.
+The EACF (Extended Autocorrelation Function) table is used in the identification of ARMA (AutoRegressive Moving Average) models. 
+Based on the EACF, we select the ARIMA parameters of models (0,1,1), (0,1,2), (1,1,2), (2,1,2)
 
 This is just one method for model identification. 
 we will use other diagnostics and criteria, such as AIC (Akaike Information Criterion) or BIC (Bayesian Information Criterion), to confirm the best model fit.
 
 
 ## Estimate the ARIMA parameters by creating the above selected models. Perform coeftest on each model. Explain the outcome from the level of significance.
--ARIMA(0, d, 1)
--ARIMA(0, d, 2)
--ARIMA(1, d, 2)
--ARIMA(2, d, 2)
-Based on the EACF, we select the ARIMA parameters of models (0,1,1), (0,1,2), (3,1,1)
+
 
 
 ```{r}
@@ -296,55 +267,14 @@ coeftest(model_212)
 ```
 
 
-```{r}
-#-ARIMA(0, d, 1)
-#-ARIMA(0, d, 2)
-#-ARIMA(1, d, 2)
-#-ARIMA(2, d, 2)
-# Selecting at least 3 models based on the tests
 
 
-# Estimate the ARIMA parameters by creating the models and perform coeftest on each model
 
-```
-
--ARIMA(1, d, 2)
--ARIMA(0, d, 1)
--ARIMA(0, d, 2)
--ARIMA(2, d, 2)
-
-Code explanation here
-Explanation of Coefficient Test Results for ARIMA Models
-Background: The coeftest function in R is used to test the statistical significance of the coefficients in an ARIMA model. The significance is assessed using a z-test, where the p-value helps us determine whether each coefficient is significantly different from zero.
-
-Model 1: ARIMA(1, 1, 1)
-Outcome Explanation:
-
-- ar1 (Autoregressive term): The p-value is 0.60682, which is greater than 0.05. This means the ar1 term is not statistically significant, indicating it may not be necessary for the model.
-- ma1 (Moving Average term): The p-value is 0.08135, which is slightly higher than 0.05 but below 0.1. This term is marginally significant (often denoted with a dot), meaning it has a weak influence on the model.
-Interpretation: In simple terms, neither of the coefficients in Model 1 are strongly significant, suggesting this model might not be the best fit for the data.
-
-Model 2: ARIMA(2, 1, 2)
-Outcome Explanation:
-
--ar1: The p-value is 0.0007635, which is much less than 0.05. This term is highly significant.
--ar2: The p-value is 0.0041544, which is also less than 0.05. This term is significant.
--ma1: The p-value is 1.312e-07, which is extremely small. This term is highly significant.
--ma2: The p-value is 3.469e-05, which is also very small. This term is highly significant.
-Interpretation: All coefficients in Model 2 are highly significant, suggesting that this model is a very good fit for the data.
-
-Model 3: ARIMA(0, 1, 1)
-Outcome Explanation:
-
-ma1: The p-value is 0.006454, which is less than 0.05. This term is significant.
-Interpretation: The coefficient in Model 3 is significant, indicating that this model also fits the data reasonably well.
-
-Summary
-Model 1: The coefficients are not significant, suggesting this model might not be the best fit for the data.
-Model 2: All coefficients are highly significant, indicating this model is a very good fit for the data.
-Model 3: The coefficient is significant, suggesting this model fits the data reasonably well.
-
-In simple terms, Model 2 (ARIMA(2, 1, 2)) appears to be the best model among the three tested, as all its coefficients are highly significant. This suggests that the features it includes are very important for accurately modeling the Bitcoin time series data.
+ARIMA Model Significance Summary:
+  - ARIMA(0, 1, 1): The MA(1) term is highly significant (p-value < 2.2e-16), indicating a strong influence on the model.
+  - ARIMA(0, 1, 2): Both MA(1) and MA(2) terms are significant (p-values 1.148e-13 and 0.005686, respectively), suggesting the inclusion of both terms improves the model fit.
+  - ARIMA(1, 1, 2): The MA(1) term is significant (p-value = 0.002386), while AR(1) and MA(2) terms are not significant, implying a moderate model fit.
+  - ARIMA(2, 1, 2): The MA(1) term is significant (p-value = 0.005151), but AR(1), AR(2), and MA(2) terms are not, indicating a less reliable model.
 
 
 
@@ -353,10 +283,7 @@ In simple terms, Model 2 (ARIMA(2, 1, 2)) appears to be the best model among the
 ## Evaluate the models through AIC & BIC tests.
 ```{r}
 # Extract AIC and BIC values
-model_011
-model_012
-model_112
-model_212
+
 
 aic_values <- c(AIC(model_011), AIC(model_012), AIC(model_112),AIC(model_212))
 bic_values <- c(BIC(model_011), BIC(model_012), BIC(model_112), BIC(model_212))
@@ -430,7 +357,7 @@ residuals_212 <- residuals(model_212)
 # Set up the plotting area to have 2 rows and 2 columns for 4 plots
 par(mfrow = c(1, 1))
 
-# Plot 1: Time series plot of standardized residuals for Model 112 (line plot)
+# Plot 1: Time series plot of standardized residuals for Model 012 (line plot)
 plot(residuals_012,
      xlab = "Year Index", ylab = "Residuals",
      main = "Time series plot of standardized residuals - Model 012",
@@ -490,7 +417,7 @@ Code explanation here
 ```{r}
 # ACF & PACF plots of residuals
 acf(residuals_012, main = "ACF of Residuals for Best Model 012")
-pacf(residuals_012, main = "PACF of Residuals for Best Model 1")
+pacf(residuals_012, main = "PACF of Residuals for Best Model 012")
 
 acf(residuals_212, main = "ACF of Residuals for Best Model 212")
 pacf(residuals_212, main = "PACF of Residuals for Best Model 212")
@@ -538,12 +465,10 @@ print(shapiro_test_model212)
 Code explanation here
 
 
-### Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model.
+## Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model.
 
+Conclusion:
 
-```{r}
- 
+  - While model_012 (ARIMA(0,1,2)) has the lowest AIC and BIC values, indicating it is the preferred model based on information criteria, the ARIMA(2,1,2) model has slightly better accuracy metrics. Given the trade-off between simplicity and accuracy, if model parsimony (fewer parameters) and lower information criteria are prioritized, model_012 (ARIMA(0,1,2)) would be the best fit model. However, if slightly better accuracy is prioritized and the increase in complexity is acceptable, ARIMA(2,1,2) could be considered.
 
-```
-
-Code explanation here
+  - Overall, ARIMA(0,1,2) is a balanced choice, providing a good fit with lower AIC and BIC values.

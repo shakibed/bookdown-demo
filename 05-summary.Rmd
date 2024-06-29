@@ -23,7 +23,7 @@ bitcoin_ts <- ts(BitCoin$Close, start = c(as.numeric(format(min(BitCoin$Date), "
 ### Explanation of the Forecast Table  
 
 ```{r}
-bitcoin_forecast_fit_model <- Arima(bitcoin_ts,c(2,1,2))
+bitcoin_forecast_fit_model <- Arima(bitcoin_ts,c(0,1,2))
 forecast_next_12 <- forecast(bitcoin_forecast_fit_model,h=12)
 kable(forecast_next_12, digits = 2, formats="html", row.names = TRUE) %>%
   kable_styling(full_width = F, font_size = 12, position = "center")
@@ -33,19 +33,19 @@ kable(forecast_next_12, digits = 2, formats="html", row.names = TRUE) %>%
 The forecast table provides the projected Bitcoin prices for the next 12 months along with their confidence intervals. Here's what each column represents:
 
 
-  -Point Forecast: This is the predicted value of the Bitcoin price for each month. It's the best estimate based on the ARIMA(2,1,2) model.
+  -Point Forecast: This is the predicted value of the Bitcoin price for each month. It's the best estimate based on the ARIMA(0,1,2) model.
   - Lo 80 and Hi 80: These columns represent the lower and upper bounds of the 80% confidence interval. There's an 80% chance that the actual Bitcoin price will fall within this range.
   - Lo 95 and Hi 95: These columns represent the lower and upper bounds of the 95% confidence interval. There's a 95% chance that the actual Bitcoin price will fall within this range.
 
 ## Key Insights
-  - Predicted Growth: The point forecasts show a general upward trend in Bitcoin prices over the next 12 months, with the price starting at approximately $36,802.62 in December 2023 and gradually increasing to approximately $37,310.22 by November 2024.
-  - Confidence Intervals: The confidence intervals (both 80% and 95%) widen over time. This indicates increasing uncertainty in the forecast as we move further into the future. For example, the 80% confidence interval for December 2023 is $31,342.01 to $42,263.23, while for November 2024, it is $14,844.41 to $59,776.03.
-  - Risk and Uncertainty: The widening confidence intervals highlight the volatility and uncertainty inherent in forecasting Bitcoin prices. This is important for decision-making and risk management.
+  - Steady Price Increase: The point forecast predicts a steady increase in Bitcoin prices from approximately $36,803 in December 2023 to $37,310 in November 2024.
+  - Uncertainty Range: The prediction intervals widen over time, indicating increasing uncertainty, with 95% confidence intervals ranging from around $28,451 to $45,154 in December 2023 to $2,952 to $71,669 in November 2024.
+  - Moderate Fluctuations: The forecasts suggest moderate monthly fluctuations, with the highest forecasted point in April 2024 and the lowest in March 2024.
 
-### Create a plot of the forecasted data points 
+### a plot of the forecasted data points  of next 12 months
 
 ```{r}
-plot(forecast_next_12, main = "ARIMA(2,1,2) Model Forecast")
+plot(forecast_next_12, main = "ARIMA(0,1,2) Model Forecast")
 ```
 
 ```

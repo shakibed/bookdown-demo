@@ -339,26 +339,6 @@ We need to convert the Date column from chr (character) type to Date type becaus
   This indicates that there are no missing values in either the Date or Close columns. Since there are no missing values, no further action is needed to treat missing values.
 \end{itemize}
 
-You can label chapter and section titles using \texttt{\{\#label\}} after them, e.g., we can reference Chapter \ref{intro}. If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \ref{methods}.
-
-Figures and tables with captions will be placed in \texttt{figure} and \texttt{table} environments, respectively.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mar =} \FunctionTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{, .}\DecValTok{1}\NormalTok{, .}\DecValTok{1}\NormalTok{))}
-\FunctionTok{plot}\NormalTok{(pressure, }\AttributeTok{type =} \StringTok{\textquotesingle{}b\textquotesingle{}}\NormalTok{, }\AttributeTok{pch =} \DecValTok{19}\NormalTok{)  }
-\end{Highlighting}
-\end{Shaded}
-
-\begin{figure}
-
-{\centering \includegraphics[width=0.8\linewidth]{bookdown-demo_files/figure-latex/nice-fig-1} 
-
-}
-
-\caption{Here is a nice figure!}\label{fig:nice-fig}
-\end{figure}
-
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{knitr}\SpecialCharTok{::}\FunctionTok{kable}\NormalTok{(}
@@ -403,8 +383,6 @@ Sepal.Length & Sepal.Width & Petal.Length & Petal.Width & Species\\
 \end{tabular}
 \end{table}
 
-You can write citations, too. For example, we are using the \textbf{bookdown} package \citep{R-bookdown} in this sample book, which was built on top of R Markdown and \textbf{knitr} \citep{xie2015}.
-
 \chapter{Descriptive Analytics}\label{descriptive-analytics}
 
 Copy the BitCoin data frame to a new data frame named BitCoin\_df. In the new data frame create two more columns `month' \& `year' by populating with the months \& years values from the `Date' column.
@@ -421,7 +399,7 @@ Copy the BitCoin data frame to a new data frame named BitCoin\_df. In the new da
 \item
   Plot the time series of monthly prices on years. Use blue color dots to plot the data points. Connect the points with a line.
 \item
-  Find the relationship between consecutive days. Show the correlation through a scatter plot.
+  Find the relationship between consecutive Months. Show the correlation through a scatter plot.
 \end{itemize}
 
 \section*{Create a monthly boxplot of prices.}\label{create-a-monthly-boxplot-of-prices.}
@@ -477,9 +455,6 @@ Copy the BitCoin data frame to a new data frame named BitCoin\_df. In the new da
 
 \emph{\textbf{Code explanation here}}
 
-\section*{Create year wise trend lines of prices.}\label{create-year-wise-trend-lines-of-prices.}
-\addcontentsline{toc}{section}{Create year wise trend lines of prices.}
-
 \begin{itemize}
 \tightlist
 \item
@@ -491,6 +466,9 @@ Copy the BitCoin data frame to a new data frame named BitCoin\_df. In the new da
 \item
   Outliers beyond this range are shown as individual points.
 \end{itemize}
+
+\section*{Create year wise trend lines of prices.}\label{create-year-wise-trend-lines-of-prices.}
+\addcontentsline{toc}{section}{Create year wise trend lines of prices.}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -583,11 +561,20 @@ Copy the BitCoin data frame to a new data frame named BitCoin\_df. In the new da
 \emph{\textbf{Explanation of Plot}}
 
 Explanation of the Plot:
-- Horizontal Axis (Year): Represents the timeline from 2016 to 2024.
-- Vertical Axis (Close Price): Represents the closing price of Bitcoin at the end of each month.
-- Blue Dots: Each dot represents the closing price of Bitcoin for a particular month.
-- Blue Line: Connects the dots to show the trend and continuity of Bitcoin prices over time.
-- The plot provides a visual representation of Bitcoin's price volatility and trends, making it easier to analyze patterns and potential factors affecting its value over the given period.
+
+\begin{itemize}
+\tightlist
+\item
+  Horizontal Axis (Year): Represents the timeline from 2016 to 2024.
+\item
+  Vertical Axis (Close Price): Represents the closing price of Bitcoin at the end of each month.
+\item
+  Blue Dots: Each dot represents the closing price of Bitcoin for a particular month.
+\item
+  Blue Line: Connects the dots to show the trend and continuity of Bitcoin prices over time.
+\item
+  The plot provides a visual representation of Bitcoin's price volatility and trends, making it easier to analyze patterns and potential factors affecting its value over the given period.
+\end{itemize}
 
 \emph{\textbf{Result}}
 
@@ -731,6 +718,20 @@ The linear model predicts Bitcoin's closing price based on the date. The slope s
 ## F-statistic: 148.6 on 1 and 105 DF,  p-value: < 2.2e-16
 \end{verbatim}
 
+\emph{\textbf{In Summary}}
+
+\begin{itemize}
+\tightlist
+\item
+  The model indicates a statistically significant relationship between the date and the closing price of Bitcoin, as shown by the very small p-value (\textless{} 2.2e-16).
+\item
+  The date explains about 58.6\% of the variation in closing prices, as reflected by the Multiple R-squared and Adjusted R-squared values.
+\item
+  The average prediction error is approximately 10430, as indicated by the Residual Standard Error.
+\item
+  For each unit increase in the numeric date, the closing price of Bitcoin rises by about 13.08 units, which is determined by the slope of the regression line.
+\end{itemize}
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# Create a new column with fitted values}
@@ -751,11 +752,11 @@ The linear model predicts Bitcoin's closing price based on the date. The slope s
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-17-1.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-18-1.pdf}
 
 \emph{\textbf{Code explanation here}}
 
-The provided graph and summary show a linear regression model of Bitcoin prices over time. The blue points represent the original data, while the red line represents the fitted linear model. The coefficients table and statistical measures indicate a significant relationship between time and Bitcoin prices, with an R-squared value of 0.586, suggesting that approximately 58.6\% of the variance in Bitcoin prices can be explained by the model. The residuals indicate some variability around the fitted line.
+The provided graph and summary show a linear regression model of Bitcoin prices over time. The blue points represent the original data, while the red line represents the fitted linear model.
 
 \subsubsection{Create a plot of the linear model on top of the time series dataset line plot with scatter data points.}\label{create-a-plot-of-the-linear-model-on-top-of-the-time-series-dataset-line-plot-with-scatter-data-points.}
 
@@ -775,49 +776,12 @@ The provided graph and summary show a linear regression model of Bitcoin prices 
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-18-1.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-19-1.pdf}
 
 \emph{\textbf{Code explanation here}}
 The graph shows Bitcoin prices over time with blue dots representing the original data points and a blue dashed line representing the time series trend. The red line indicates the fitted linear model. The linear model captures the general upward trend but misses some of the more volatile fluctuations in Bitcoin prices.
 
 \subsubsection{Perform residual analysis}\label{perform-residual-analysis}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\# Convert Date to numeric format for linear modeling}
-\NormalTok{BitCoin\_df }\OtherTok{\textless{}{-}}\NormalTok{ BitCoin\_df }\SpecialCharTok{\%\textgreater{}\%}
-\FunctionTok{mutate}\NormalTok{(}\AttributeTok{Date\_numeric =} \FunctionTok{as.numeric}\NormalTok{(Date))}
-
-
-
-\CommentTok{\# Fit the linear model}
-\NormalTok{linear\_model }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Close }\SpecialCharTok{\textasciitilde{}}\NormalTok{ Date\_numeric, }\AttributeTok{data =}\NormalTok{ BitCoin\_df)}
-\CommentTok{\#y=mx+c}
-\CommentTok{\#close price = m*numeric date + c}
-\FunctionTok{summary}\NormalTok{(linear\_model)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-## Call:
-## lm(formula = Close ~ Date_numeric, data = BitCoin_df)
-## 
-## Residuals:
-##    Min     1Q Median     3Q    Max 
-## -15114  -7997  -2255   3065  35626 
-## 
-## Coefficients:
-##                Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)  -2.211e+05  1.939e+04  -11.40   <2e-16 ***
-## Date_numeric  1.308e+01  1.073e+00   12.19   <2e-16 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 10430 on 105 degrees of freedom
-## Multiple R-squared:  0.586,  Adjusted R-squared:  0.5821 
-## F-statistic: 148.6 on 1 and 105 DF,  p-value: < 2.2e-16
-\end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -828,27 +792,12 @@ The graph shows Bitcoin prices over time with blue dots representing the origina
 \CommentTok{\#residual calcultion in different way}
 \CommentTok{\#res\_dual\_values \textless{}{-} residuals(linear\_model)}
 \CommentTok{\#summary(res\_dual\_values)}
-
-
-
-\CommentTok{\# Print the first few rows to verify}
-\FunctionTok{head}\NormalTok{(BitCoin\_df)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{verbatim}
-##         Date   Close month year Date_numeric Fitted_Close Residuals
-## 1 2015-01-01 217.464    01 2015        16436    -6142.536  6360.000
-## 2 2015-02-01 254.263    02 2015        16467    -5737.165  5991.428
-## 3 2015-03-01 244.224    03 2015        16495    -5371.023  5615.247
-## 4 2015-04-01 236.145    04 2015        16526    -4965.652  5201.797
-## 5 2015-05-01 230.190    05 2015        16556    -4573.357  4803.547
-## 6 2015-06-01 263.072    06 2015        16587    -4167.986  4431.058
-\end{verbatim}
-
 \emph{\textbf{Code explanation here}}
 
-The code snippet converts dates in the Bitcoin dataset to numeric format for linear modeling. A linear model is then fitted to predict the closing price based on the numeric date. The model's summary shows a significant positive relationship between date and closing price, with an R-squared value of 0.586, indicating moderate explanatory power. Residuals are calculated to assess model fit. The dataset includes date, closing price, month, year, numeric date, fitted close values, and residuals for verification.
+Residuals are calculated to assess model fit. The dataset includes date, closing price, month, year, numeric date, fitted close values, and residuals for verification.
 
 \subsubsection{Perform residual analysis and create a line \& scatter plot of the}\label{perform-residual-analysis-and-create-a-line-scatter-plot-of-the}
 
@@ -864,7 +813,7 @@ The code snippet converts dates in the Bitcoin dataset to numeric format for lin
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-20-1.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-21-1.pdf}
 
 \emph{\textbf{Code explanation here}}
 The graph shows a blue line plotting the difference between actual values and predicted values for a Bitcoin data set, over time. Basically, it shows how much the actual Bitcoin values differed from what a model predicted on certain dates.
@@ -884,7 +833,7 @@ The graph shows a blue line plotting the difference between actual values and pr
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-21-1.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-22-1.pdf}
 
 \emph{\textbf{Code explanation here}}
 
@@ -923,11 +872,12 @@ The summary statistics of the residuals provide insight into the accuracy of the
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-23-1.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-24-1.pdf}
 
 \emph{\textbf{Code explanation here}}
 
-The graph shows a bar chart of prediction errors (residuals) for Bitcoin prices. Each bar represents how many errors fell within a specific price range. The center area, with more bars, suggests most predictions were close. Ideally, the bars would be symmetrical around zero (no errors), but some errors exist on both positive and negative sides.
+Ideally, the residuals should be normally distributed (bell-shaped curve centered around zero).
+The histogram here shows some deviation from normality, indicating that the model may not perfectly capture the data distribution.
 
 \subsubsection{Create a histogram plot of the residuals with}\label{create-a-histogram-plot-of-the-residuals-with}
 
@@ -960,7 +910,7 @@ The graph shows a bar chart of prediction errors (residuals) for Bitcoin prices.
 ## generated.
 \end{verbatim}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-24-1.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-25-1.pdf}
 
 \emph{\textbf{code explanation here}}
 
@@ -974,11 +924,10 @@ This graph shows a histogram of prediction errors (residuals) for Bitcoin prices
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-25-1.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-26-1.pdf}
 
 \emph{\textbf{Code explanation here}}
-
-ACF measures the correlation between residuals at different lags. Most bars falling within significance bounds (dashed lines) indicate no significant autocorrelation, suggesting the model captures data patterns adequately.
+In this plot, the residuals have significant autocorrelations up to around lag 5. This suggests that the residuals are not purely random and that there is some pattern left unexplained by the model.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -986,22 +935,34 @@ ACF measures the correlation between residuals at different lags. Most bars fall
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-26-1.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-27-1.pdf}
 
-PACF measures the correlation between residuals and lagged values, accounting for shorter lags. Bars within significance bounds indicate no significant partial autocorrelation, meaning past values don't provide additional predictive information.
-Both plots help determine if residuals are random (white noise), validating the model. Most lags within bounds suggest errors are random and uncorrelated, indicating a good model fit.
+In a well-fitted model, the PACF should show no significant partial autocorrelation beyond the first few lags.
+This plot shows a significant partial autocorrelation at lag 1 and some minor significant lags afterward, suggesting that there might be some remaining structure in the residuals.
+
+These analyses suggest that the linear regression model may not be the best fit for this time series data, and a more complex model may be needed to better capture the underlying patterns and trends in Bitcoin prices.
 
 \subsubsection{Create QQ plot of residuals. Explain the outcome.}\label{create-qq-plot-of-residuals.-explain-the-outcome.}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-  \CommentTok{\# S}
+\CommentTok{\# QQ plot of residuals}
+\FunctionTok{qqnorm}\NormalTok{(BitCoin\_df}\SpecialCharTok{$}\NormalTok{Residuals)}
+\FunctionTok{qqline}\NormalTok{(BitCoin\_df}\SpecialCharTok{$}\NormalTok{Residuals, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-28-1.pdf}
+
 \emph{\textbf{Code explanation here}}
 
-The graph shows a QQ plot of prediction errors (residuals). It compares these errors to a perfect normal distribution (red line). Ideally, the points would fall on the red line, indicating normally distributed errors. In this plot, the points veer away from the line, especially at the edges. This suggests the errors may not be normally distributed.
+\begin{itemize}
+\tightlist
+\item
+  The residuals do not follow a normal distribution, as indicated by the significant deviations in the tails.
+\item
+  Since many statistical methods (like linear regression) assume normally distributed residuals, the non-normality observed here indicates that the model assumptions are violated.
+\end{itemize}
 
 \subsubsection{Perform Shapiro-Wilk test on residuals. Explain the outcome.}\label{perform-shapiro-wilk-test-on-residuals.-explain-the-outcome.}
 
@@ -1034,8 +995,43 @@ W is 0.85983, and the p-value is 1.215e-08, which is much less than 0.05. This i
 \subsubsection{Explain if linear model is appropriate or not.}\label{explain-if-linear-model-is-appropriate-or-not.}
 
 \emph{\textbf{Code explanation here}}
+The linear regression model is not a suitable choice for Bitcoin price forecasting. The model explains about 58.6\% of the variation in closing Bitcoin prices, as indicated by the Multiple R-squared and Adjusted R-squared values of Linear Model.
 
-The linear model may not be appropriate because the Shapiro-Wilk test reveals non-normal residuals (p-value = 1.215e-08). Non-normality violates a key assumption of linear regression, potentially leading to unreliable estimates and inferences. This indicates that the model may not capture the data's underlying patterns accurately.
+With some Residual Analysis we also get same indication:
+
+\begin{itemize}
+\item
+  ACF test of Residuals:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The ACF plot of residuals shows significant autocorrelations up to around lag 5.
+    This suggests that the residuals are not purely random and that some patterns remain unexplained by the model.
+  \end{itemize}
+\item
+  PACF test of Residuals:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    In a well-fitted model, the PACF should show no significant partial autocorrelation beyond the first few lags.
+    -The PACF plot shows a significant partial autocorrelation at lag 1 and some minor significant lags afterward, indicating remaining structure in the residuals.
+  \end{itemize}
+\item
+  QQ Plot:
+  -The QQ plot reveals that the residuals do not follow a normal distribution, as evidenced by significant deviations in the tails.
+\item
+  Shapiro-Wilk Test:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The Shapiro-Wilk test yields a p-value of 1.215e-08, indicating that the residuals are not normally distributed.
+  \end{itemize}
+\end{itemize}
+
+The residuals exhibit significant autocorrelation and non-normality, confirming that the linear regression model is not capturing all the patterns in the data.
 
 \subsection{Quadratic Regression}\label{quadratic-regression}
 
@@ -1097,7 +1093,23 @@ The dataset is enhanced by adding a squared numeric date column to capture non-l
 
 \emph{\textbf{Code explanation here}}
 
-The summary of the quadratic regression model shows that the relationship between Bitcoin's closing price and the date (both linear and squared) is analyzed. The residuals indicate the spread of prediction errors. The coefficients for the intercept, Date\_numeric, and Date\_numeric2 are not statistically significant (p-values \textgreater{} 0.05), means weak relationships. Despite this, the model explains about 58.85\% of the variance in closing prices (R-squared = 0.5885). The F-statistic (74.36) and its p-value (\textless{} 2.2e-16) indicate the overall model is significant.
+\begin{itemize}
+\tightlist
+\item
+  Coefficients:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    the coefficients for Date\_numeric and Date\_numeric\^{}2 are not statistically significant (p-values \textgreater{} 0.05). This suggests that neither the linear nor the quadratic term significantly predicts the closing price of Bitcoin.
+    Model Fit:
+  \end{itemize}
+\item
+  The R-squared value of 0.5885 indicates that the model explains about 58.85\% of the variance in Bitcoin's closing prices. This is a moderate level of explanation.
+  The significant F-statistic indicates that the model as a whole is statistically significant, even though individual predictors are not.
+\end{itemize}
+
+In the context of financial markets and Bitcoin price forecasting, a model explaining 58\% of the variance can be seen as relatively decent, given the high volatility and complexity of financial data.
 
 \subsubsection{Explain if quadratic model is appropriate or not.}\label{explain-if-quadratic-model-is-appropriate-or-not.}
 
@@ -1119,7 +1131,7 @@ The summary of the quadratic regression model shows that the relationship betwee
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-32-1.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-33-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1134,7 +1146,7 @@ The summary of the quadratic regression model shows that the relationship betwee
 
 \emph{\textbf{Code explanation here}}
 
-The code creates a new column for predicted closing prices based on a quadratic model in the BitCoin\_df data frame. The plotted lines show the original data (blue dots), the fitted linear model (red dashed), and the quadratic model (green). The quadratic curve better reflects the data's trend, suggesting an accelerating increase in closing prices over time.
+The quadratic model shows some ability to explain the variance in Bitcoin's closing prices, but the lack of significance in the individual coefficients suggests that it might not be the best fit. Additional predictors or a different modeling approach (e.g., non-linear models, time series models) might be needed to better capture the underlying patterns in the data.
 
 \chapter{ARIMA Model}\label{arima-model}
 
@@ -1389,7 +1401,7 @@ Non-Stationary Data: The combined evidence from the ACF, PACF, and ADF tests str
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-36-1.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-37-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1430,7 +1442,7 @@ Non-Stationary Data: The combined evidence from the ACF, PACF, and ADF tests str
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-37-1.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-38-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1473,7 +1485,7 @@ Stationarity:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-38-1.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-39-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1481,29 +1493,12 @@ Stationarity:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-38-2.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-39-2.pdf}
 
 Code explanation here
 
 Stationarity:
 The ACF plot of the differenced Bitcoin prices shows a significant autocorrelation at lag 1 and quickly diminishing autocorrelations at higher lags. This suggests that the first differencing has effectively made the series stationary and has successfully removed trends and seasonality
-
-Model Identification:
-The significant autocorrelation at lag 1 suggests that an ARIMA model with an AR (autoregressive) term might be appropriate. Specifically, an ARIMA(1,1,0) or ARIMA(1,1,1) model could be considered,
-where:
-- The first ``1'' indicates one AR term.
-- The ``1'' indicates first differencing.
-- The last ``0'' or ``1'' indicates the number of MA (moving average) terms.
-
-\begin{itemize}
-\tightlist
-\item
-  he differenced Bitcoin prices seem to have eliminated much of the non-stationarity, but there is still some autocorrelation present, as indicated by the significant spikes at certain lags.
-\item
-  This suggests that while differencing has helped stabilize the series, it may not have completely removed all dependencies between observations.
-\item
-  An ARIMA model could be appropriate for further analysis, with the AR component determined by the significant lags observed in the PACF plot.
-\end{itemize}
 
 \section{Perform EACF test to comprehensively test the possible candidate models. Mention the models that you have selected for modeling (select at least 3 models).}\label{perform-eacf-test-to-comprehensively-test-the-possible-candidate-models.-mention-the-models-that-you-have-selected-for-modeling-select-at-least-3-models.}
 
@@ -1561,38 +1556,15 @@ where:
 ## 3 x o x o
 \end{verbatim}
 
-ARIMA(0, d, 0)
+\emph{\textbf{Code explanation here}}
 
-ARIMA(0, d, 3)
-
-ARIMA(1, d, 3)
-ARIMA(2, d, 0)
-
-ARIMA(2, d, 3)
-ARIMA(3, d, 1)
-ARIMA(3, d, 3)
-
--ARIMA(0, d, 1)
--ARIMA(0, d, 2)
--ARIMA(1, d, 2)
--ARIMA(2, d, 2)
-
-Code explanation here
-The EACF (Extended Autocorrelation Function) table is used in the identification of ARMA (AutoRegressive Moving Average) models. In the table, `o' indicates non-significant (near zero) values, and `x' indicates significant values.
-In this case, the smallest rectangle of 'o's is found for AR = 0 and MA = 2:
-
-Thus, an ARMA(0, 2) model might be a good starting point.
+The EACF (Extended Autocorrelation Function) table is used in the identification of ARMA (AutoRegressive Moving Average) models.
+Based on the EACF, we select the ARIMA parameters of models (0,1,1), (0,1,2), (1,1,2), (2,1,2)
 
 This is just one method for model identification.
 we will use other diagnostics and criteria, such as AIC (Akaike Information Criterion) or BIC (Bayesian Information Criterion), to confirm the best model fit.
 
 \section{Estimate the ARIMA parameters by creating the above selected models. Perform coeftest on each model. Explain the outcome from the level of significance.}\label{estimate-the-arima-parameters-by-creating-the-above-selected-models.-perform-coeftest-on-each-model.-explain-the-outcome-from-the-level-of-significance.}
-
--ARIMA(0, d, 1)
--ARIMA(0, d, 2)
--ARIMA(1, d, 2)
--ARIMA(2, d, 2)
-Based on the EACF, we select the ARIMA parameters of models (0,1,1), (0,1,2), (3,1,1)
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1672,143 +1644,19 @@ Based on the EACF, we select the ARIMA parameters of models (0,1,1), (0,1,2), (3
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 \end{verbatim}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{\#{-}ARIMA(0, d, 1)}
-\CommentTok{\#{-}ARIMA(0, d, 2)}
-\CommentTok{\#{-}ARIMA(1, d, 2)}
-\CommentTok{\#{-}ARIMA(2, d, 2)}
-\CommentTok{\# Selecting at least 3 models based on the tests}
-
-
-\CommentTok{\# Estimate the ARIMA parameters by creating the models and perform coeftest on each model}
-\end{Highlighting}
-\end{Shaded}
-
--ARIMA(1, d, 2)
--ARIMA(0, d, 1)
--ARIMA(0, d, 2)
--ARIMA(2, d, 2)
-
-Code explanation here
-Explanation of Coefficient Test Results for ARIMA Models
-Background: The coeftest function in R is used to test the statistical significance of the coefficients in an ARIMA model. The significance is assessed using a z-test, where the p-value helps us determine whether each coefficient is significantly different from zero.
-
-Model 1: ARIMA(1, 1, 1)
-Outcome Explanation:
-
-\begin{itemize}
-\tightlist
-\item
-  ar1 (Autoregressive term): The p-value is 0.60682, which is greater than 0.05. This means the ar1 term is not statistically significant, indicating it may not be necessary for the model.
-\item
-  ma1 (Moving Average term): The p-value is 0.08135, which is slightly higher than 0.05 but below 0.1. This term is marginally significant (often denoted with a dot), meaning it has a weak influence on the model.
-  Interpretation: In simple terms, neither of the coefficients in Model 1 are strongly significant, suggesting this model might not be the best fit for the data.
-\end{itemize}
-
-Model 2: ARIMA(2, 1, 2)
-Outcome Explanation:
-
--ar1: The p-value is 0.0007635, which is much less than 0.05. This term is highly significant.
--ar2: The p-value is 0.0041544, which is also less than 0.05. This term is significant.
--ma1: The p-value is 1.312e-07, which is extremely small. This term is highly significant.
--ma2: The p-value is 3.469e-05, which is also very small. This term is highly significant.
-Interpretation: All coefficients in Model 2 are highly significant, suggesting that this model is a very good fit for the data.
-
-Model 3: ARIMA(0, 1, 1)
-Outcome Explanation:
-
-ma1: The p-value is 0.006454, which is less than 0.05. This term is significant.
-Interpretation: The coefficient in Model 3 is significant, indicating that this model also fits the data reasonably well.
-
-Summary
-Model 1: The coefficients are not significant, suggesting this model might not be the best fit for the data.
-Model 2: All coefficients are highly significant, indicating this model is a very good fit for the data.
-Model 3: The coefficient is significant, suggesting this model fits the data reasonably well.
-
-In simple terms, Model 2 (ARIMA(2, 1, 2)) appears to be the best model among the three tested, as all its coefficients are highly significant. This suggests that the features it includes are very important for accurately modeling the Bitcoin time series data.
+ARIMA Model Significance Summary:
+- ARIMA(0, 1, 1): The MA(1) term is highly significant (p-value \textless{} 2.2e-16), indicating a strong influence on the model.
+- ARIMA(0, 1, 2): Both MA(1) and MA(2) terms are significant (p-values 1.148e-13 and 0.005686, respectively), suggesting the inclusion of both terms improves the model fit.
+- ARIMA(1, 1, 2): The MA(1) term is significant (p-value = 0.002386), while AR(1) and MA(2) terms are not significant, implying a moderate model fit.
+- ARIMA(2, 1, 2): The MA(1) term is significant (p-value = 0.005151), but AR(1), AR(2), and MA(2) terms are not, indicating a less reliable model.
 
 \section{Evaluate the models through AIC \& BIC tests.}\label{evaluate-the-models-through-aic-bic-tests.}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# Extract AIC and BIC values}
-\NormalTok{model\_011}
-\end{Highlighting}
-\end{Shaded}
 
-\begin{verbatim}
-## Series: bitcoin_diff 
-## ARIMA(0,1,1) 
-## 
-## Coefficients:
-##           ma1
-##       -1.0000
-## s.e.   0.0289
-## 
-## sigma^2 = 20017875:  log likelihood = -1033.46
-## AIC=2070.91   AICc=2071.03   BIC=2076.22
-\end{verbatim}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{model\_012}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Series: bitcoin_diff 
-## ARIMA(0,1,2) 
-## 
-## Coefficients:
-##           ma1      ma2
-##       -0.7353  -0.2647
-## s.e.   0.0991   0.0957
-## 
-## sigma^2 = 19137722:  log likelihood = -1030.39
-## AIC=2066.78   AICc=2067.02   BIC=2074.74
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{model\_112}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Series: bitcoin_diff 
-## ARIMA(1,1,2) 
-## 
-## Coefficients:
-##           ar1     ma1      ma2
-##       -0.1118  -0.641  -0.3589
-## s.e.   0.2367   0.211   0.2095
-## 
-## sigma^2 = 19272606:  log likelihood = -1030.28
-## AIC=2068.56   AICc=2068.96   BIC=2079.17
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{model\_212}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Series: bitcoin_diff 
-## ARIMA(2,1,2) 
-## 
-## Coefficients:
-##          ar1      ar2      ma1     ma2
-##       0.2927  -0.2070  -1.0578  0.0578
-## s.e.  0.3727   0.1183   0.3781  0.3770
-## 
-## sigma^2 = 19008349:  log likelihood = -1029.23
-## AIC=2068.46   AICc=2069.06   BIC=2081.73
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{aic\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{AIC}\NormalTok{(model\_011), }\FunctionTok{AIC}\NormalTok{(model\_012), }\FunctionTok{AIC}\NormalTok{(model\_112),}\FunctionTok{AIC}\NormalTok{(model\_212))}
 \NormalTok{bic\_values }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{BIC}\NormalTok{(model\_011), }\FunctionTok{BIC}\NormalTok{(model\_012), }\FunctionTok{BIC}\NormalTok{(model\_112), }\FunctionTok{BIC}\NormalTok{(model\_212))}
 
@@ -1901,7 +1749,7 @@ Code explanation here
 \CommentTok{\# Set up the plotting area to have 2 rows and 2 columns for 4 plots}
 \FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{))}
 
-\CommentTok{\# Plot 1: Time series plot of standardized residuals for Model 112 (line plot)}
+\CommentTok{\# Plot 1: Time series plot of standardized residuals for Model 012 (line plot)}
 \FunctionTok{plot}\NormalTok{(residuals\_012,}
      \AttributeTok{xlab =} \StringTok{"Year Index"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Residuals"}\NormalTok{,}
      \AttributeTok{main =} \StringTok{"Time series plot of standardized residuals {-} Model 012"}\NormalTok{,}
@@ -2003,7 +1851,7 @@ Code explanation here
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{pacf}\NormalTok{(residuals\_012, }\AttributeTok{main =} \StringTok{"PACF of Residuals for Best Model 1"}\NormalTok{)}
+\FunctionTok{pacf}\NormalTok{(residuals\_012, }\AttributeTok{main =} \StringTok{"PACF of Residuals for Best Model 012"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2087,9 +1935,16 @@ Code explanation here
 
 Code explanation here
 
-\subsection{Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model.}\label{select-the-best-model-from-the-above-two-models-using-the-outcome-of-all-the-above-analysis.-this-is-going-to-be-your-final-model.}
+\section{Select the best model from the above two models using the outcome of all the above analysis. This is going to be your final model.}\label{select-the-best-model-from-the-above-two-models-using-the-outcome-of-all-the-above-analysis.-this-is-going-to-be-your-final-model.}
 
-Code explanation here
+Conclusion:
+
+\begin{itemize}
+\item
+  While model\_012 (ARIMA(0,1,2)) has the lowest AIC and BIC values, indicating it is the preferred model based on information criteria, the ARIMA(2,1,2) model has slightly better accuracy metrics. Given the trade-off between simplicity and accuracy, if model parsimony (fewer parameters) and lower information criteria are prioritized, model\_012 (ARIMA(0,1,2)) would be the best fit model. However, if slightly better accuracy is prioritized and the increase in complexity is acceptable, ARIMA(2,1,2) could be considered.
+\item
+  Overall, ARIMA(0,1,2) is a balanced choice, providing a good fit with lower AIC and BIC values.
+\end{itemize}
 
 \chapter{Forecasting}\label{forecasting}
 
@@ -2114,7 +1969,7 @@ Code explanation here
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{bitcoin\_forecast\_fit\_model }\OtherTok{\textless{}{-}} \FunctionTok{Arima}\NormalTok{(bitcoin\_ts,}\FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\NormalTok{bitcoin\_forecast\_fit\_model }\OtherTok{\textless{}{-}} \FunctionTok{Arima}\NormalTok{(bitcoin\_ts,}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
 \NormalTok{forecast\_next\_12 }\OtherTok{\textless{}{-}} \FunctionTok{forecast}\NormalTok{(bitcoin\_forecast\_fit\_model,}\AttributeTok{h=}\DecValTok{12}\NormalTok{)}
 \FunctionTok{kable}\NormalTok{(forecast\_next\_12, }\AttributeTok{digits =} \DecValTok{2}\NormalTok{, }\AttributeTok{formats=}\StringTok{"html"}\NormalTok{, }\AttributeTok{row.names =} \ConstantTok{TRUE}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%}
   \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{full\_width =}\NormalTok{ F, }\AttributeTok{font\_size =} \DecValTok{12}\NormalTok{, }\AttributeTok{position =} \StringTok{"center"}\NormalTok{)}
@@ -2128,29 +1983,29 @@ Code explanation here
 \hline
   & Point Forecast & Lo 80 & Hi 80 & Lo 95 & Hi 95\\
 \hline
-Dec 2023 & 36802.62 & 31342.01 & 42263.23 & 28451.34 & 45153.90\\
+Dec 2023 & 37492.11 & 31918.44 & 43065.77 & 28967.92 & 46016.29\\
 \hline
-Jan 2024 & 37471.90 & 28547.43 & 46396.37 & 23823.10 & 51120.69\\
+Jan 2024 & 37363.86 & 28605.25 & 46122.46 & 23968.73 & 50758.98\\
 \hline
-Feb 2024 & 37456.46 & 26299.03 & 48613.89 & 20392.64 & 54520.28\\
+Feb 2024 & 37363.86 & 26564.53 & 48163.18 & 20847.71 & 53880.00\\
 \hline
-Mar 2024 & 37087.66 & 24383.40 & 49791.91 & 17658.18 & 56517.13\\
+Mar 2024 & 37363.86 & 24852.35 & 49875.36 & 18229.16 & 56498.55\\
 \hline
-Apr 2024 & 37390.54 & 22991.72 & 51789.36 & 15369.45 & 59411.63\\
+Apr 2024 & 37363.86 & 23347.79 & 51379.92 & 15928.14 & 58799.57\\
 \hline
-May 2024 & 37359.02 & 21531.64 & 53186.40 & 13153.13 & 61564.91\\
+May 2024 & 37363.86 & 21989.78 & 52737.93 & 13851.23 & 60876.48\\
 \hline
-Jun 2024 & 37211.68 & 20163.29 & 54260.07 & 11138.42 & 63284.95\\
+Jun 2024 & 37363.86 & 20742.35 & 53985.36 & 11943.45 & 62784.26\\
 \hline
-Jul 2024 & 37347.12 & 19051.05 & 55643.20 & 9365.69 & 65328.56\\
+Jul 2024 & 37363.86 & 19582.21 & 55145.50 & 10169.18 & 64558.53\\
 \hline
-Aug 2024 & 37323.02 & 17896.03 & 56750.01 & 7612.01 & 67034.03\\
+Aug 2024 & 37363.86 & 18493.27 & 56234.44 & 8503.78 & 66223.93\\
 \hline
-Sep 2024 & 37265.12 & 16796.97 & 57733.26 & 5961.78 & 68568.45\\
+Sep 2024 & 37363.86 & 17463.82 & 57263.89 & 6929.38 & 67798.33\\
 \hline
-Oct 2024 & 37325.02 & 15826.39 & 58823.64 & 4445.70 & 70204.33\\
+Oct 2024 & 37363.86 & 16485.07 & 58242.64 & 5432.51 & 69295.20\\
 \hline
-Nov 2024 & 37310.22 & 14844.41 & 59776.03 & 2951.73 & 71668.71\\
+Nov 2024 & 37363.86 & 15550.19 & 59177.52 & 4002.74 & 70724.97\\
 \hline
 \end{tabular}
 \endgroup{}
@@ -2158,7 +2013,7 @@ Nov 2024 & 37310.22 & 14844.41 & 59776.03 & 2951.73 & 71668.71\\
 
 The forecast table provides the projected Bitcoin prices for the next 12 months along with their confidence intervals. Here's what each column represents:
 
--Point Forecast: This is the predicted value of the Bitcoin price for each month. It's the best estimate based on the ARIMA(2,1,2) model.
+-Point Forecast: This is the predicted value of the Bitcoin price for each month. It's the best estimate based on the ARIMA(0,1,2) model.
 - Lo 80 and Hi 80: These columns represent the lower and upper bounds of the 80\% confidence interval. There's an 80\% chance that the actual Bitcoin price will fall within this range.
 - Lo 95 and Hi 95: These columns represent the lower and upper bounds of the 95\% confidence interval. There's a 95\% chance that the actual Bitcoin price will fall within this range.
 
@@ -2167,26 +2022,40 @@ The forecast table provides the projected Bitcoin prices for the next 12 months 
 \begin{itemize}
 \tightlist
 \item
-  Predicted Growth: The point forecasts show a general upward trend in Bitcoin prices over the next 12 months, with the price starting at approximately \$36,802.62 in December 2023 and gradually increasing to approximately \$37,310.22 by November 2024.
+  Steady Price Increase: The point forecast predicts a steady increase in Bitcoin prices from approximately \$36,803 in December 2023 to \$37,310 in November 2024.
 \item
-  Confidence Intervals: The confidence intervals (both 80\% and 95\%) widen over time. This indicates increasing uncertainty in the forecast as we move further into the future. For example, the 80\% confidence interval for December 2023 is \$31,342.01 to \$42,263.23, while for November 2024, it is \$14,844.41 to \$59,776.03.
+  Uncertainty Range: The prediction intervals widen over time, indicating increasing uncertainty, with 95\% confidence intervals ranging from around \$28,451 to \$45,154 in December 2023 to \$2,952 to \$71,669 in November 2024.
 \item
-  Risk and Uncertainty: The widening confidence intervals highlight the volatility and uncertainty inherent in forecasting Bitcoin prices. This is important for decision-making and risk management.
+  Moderate Fluctuations: The forecasts suggest moderate monthly fluctuations, with the highest forecasted point in April 2024 and the lowest in March 2024.
 \end{itemize}
 
-\subsection{Create a plot of the forecasted data points}\label{create-a-plot-of-the-forecasted-data-points}
+\subsection{a plot of the forecasted data points of next 12 months}\label{a-plot-of-the-forecasted-data-points-of-next-12-months}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\FunctionTok{plot}\NormalTok{(forecast\_next\_12, }\AttributeTok{main =} \StringTok{"ARIMA(2,1,2) Model Forecast"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(forecast\_next\_12, }\AttributeTok{main =} \StringTok{"ARIMA(0,1,2) Model Forecast"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-56-1.pdf}
+\includegraphics{bookdown-demo_files/figure-latex/unnamed-chunk-55-1.pdf}
 
 ```
 
 \chapter{Conclusion}\label{conclusion}
+
+\section{Linear Regression:}\label{linear-regression-1}
+
+Simple and easy to interpret but limited in capturing complex patterns and sensitive to outliers.
+
+\section{Quadratic Regression:}\label{quadratic-regression-1}
+
+Adds flexibility for slight non-linearity but may overfit and has issues with coefficient significance.
+
+\section{ARIMA:}\label{arima}
+
+Best captures trends and seasonality in time series data, offering the most accurate forecasts, albeit with greater complexity.
+
+For a balanced trade-off between model simplicity and forecasting accuracy, the ARIMA(0,1,2) model emerges as a suitable choice. However, for slightly improved accuracy, the ARIMA(2,1,2) model can be considered, accepting the trade-off of increased complexity.
 
   \bibliography{book.bib,packages.bib}
 
