@@ -1,4 +1,3 @@
-tab:nice-tab
 intro
 descriptive-analytics
 regression-analysis
